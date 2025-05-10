@@ -12,6 +12,7 @@ import NotFound from "@/pages/not-found";
 import Cart from "@/pages/cart";
 import OrderHistory from "@/pages/OrderHistory";
 import Checkout from "@/pages/Checkout";
+import Account from "@/pages/Account";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -31,6 +32,7 @@ function Router() {
       <ProtectedRoute path="/cart" component={Cart} />
       <ProtectedRoute path="/checkout" component={Checkout} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />
+      <ProtectedRoute path="/account" component={Account} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -29,32 +29,39 @@ const demoOrders: Order[] = [
     items: [
       {
         id: 1,
-        name: "KavinoRa Wellness Tea",
+        name: "MotionMist™ Anti-Chafing Spray",
         quantity: 2,
-        price: 24.99,
-        image: "/products/tea.jpg"
+        price: 29.99,
+        image: "https://images.unsplash.com/photo-1556227834-09f1de7a7d14?q=80&w=1887&auto=format&fit=crop"
       },
       {
         id: 2,
-        name: "Mindfulness Journal",
+        name: "RevitaRoll™ Recovery Roller",
         quantity: 1,
-        price: 79.97,
-        image: "/products/journal.jpg"
+        price: 49.99,
+        image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1740&auto=format&fit=crop"
       }
     ]
   },
   {
     id: 1002,
     date: "2023-04-15",
-    total: 89.99,
+    total: 89.97,
     status: "shipped",
     items: [
       {
         id: 3,
-        name: "Aromatherapy Diffuser",
+        name: "EnduraBalm™ Joint Relief",
         quantity: 1,
-        price: 89.99,
-        image: "/products/diffuser.jpg"
+        price: 24.99,
+        image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?q=80&w=1887&auto=format&fit=crop"
+      },
+      {
+        id: 4,
+        name: "StaminaPlus™ Energy Supplement",
+        quantity: 1,
+        price: 39.99,
+        image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1887&auto=format&fit=crop"
       }
     ]
   },
@@ -65,18 +72,18 @@ const demoOrders: Order[] = [
     status: "delivered",
     items: [
       {
-        id: 4,
-        name: "Yoga Mat Premium",
+        id: 5,
+        name: "KavinoRa Wellness Tea",
         quantity: 1,
-        price: 99.99,
-        image: "/products/yoga-mat.jpg"
+        price: 24.99,
+        image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=1887&auto=format&fit=crop"
       },
       {
-        id: 5,
-        name: "Meditation Cushion",
+        id: 6,
+        name: "Mindfulness Journal",
         quantity: 1,
-        price: 49.98,
-        image: "/products/cushion.jpg"
+        price: 39.95,
+        image: "https://images.unsplash.com/photo-1517971129774-8a2b38fa128e?q=80&w=1887&auto=format&fit=crop"
       }
     ]
   }
@@ -156,8 +163,12 @@ export default function OrderHistory() {
                   <div className="space-y-4">
                     {order.items.map((item) => (
                       <div key={item.id} className="flex items-start space-x-4">
-                        <div className="w-16 h-16 bg-muted rounded flex-shrink-0 flex items-center justify-center">
-                          <span className="text-xs">[Image]</span>
+                        <div className="w-16 h-16 bg-muted rounded flex-shrink-0 overflow-hidden">
+                          <img 
+                            src={item.image} 
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.name}</p>
