@@ -556,10 +556,13 @@ const Product = () => {
                 onClick={() => navigate(`/product/${relatedProduct.id}`)}
               >
                 <div className="h-72 bg-muted relative overflow-hidden cursor-pointer">
-                  <img 
+                  <OptimizedImage 
                     src={relatedProduct.images[0]} 
                     alt={relatedProduct.name}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full group-hover:scale-105 transition-transform duration-500"
+                    objectFit="cover"
+                    lazyLoad={true}
+                    blurEffect={true}
                   />
                   
                   {/* Price badge */}

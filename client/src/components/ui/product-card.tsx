@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import OptimizedImage from "./optimized-image";
 
 export interface ProductCardProps {
   id: number;
@@ -36,10 +37,14 @@ export const ProductCard = ({ id, name, price, image, category }: ProductCardPro
               transition={{ duration: 0.4, ease: "easeOut" }}
               className="w-full h-full"
             >
-              <img
+              <OptimizedImage
                 src={image}
                 alt={name}
-                className="w-full h-full object-cover"
+                className="w-full h-full"
+                objectFit="cover"
+                lazyLoad={true}
+                blurEffect={true}
+                quality={85}
               />
             </motion.div>
             

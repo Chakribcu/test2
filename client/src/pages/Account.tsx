@@ -108,7 +108,7 @@ export default function Account() {
     }
   };
   
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -122,19 +122,44 @@ export default function Account() {
     
     setIsChangingPassword(true);
     
-    // Simulate API call to change password
-    setTimeout(() => {
-      setIsChangingPassword(false);
-      setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: ""
+    try {
+      const response = await fetch('/api/user/password', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword
+        }),
+        credentials: 'include'
       });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        });
+        
+        toast({
+          title: "Password Changed",
+          description: "Your password has been updated successfully.",
+        });
+      } else {
+        throw new Error(result.message || 'Failed to change password');
+      }
+    } catch (error) {
       toast({
-        title: "Password Changed",
-        description: "Your password has been updated successfully.",
+        title: "Password Change Failed",
+        description: error instanceof Error ? error.message : "An error occurred while changing your password",
+        variant: "destructive"
       });
-    }, 800);
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
   
   if (isLoading) {
