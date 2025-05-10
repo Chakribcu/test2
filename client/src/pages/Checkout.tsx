@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
@@ -6,12 +6,14 @@ import { Redirect, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { 
   Card, 
   CardContent, 
   CardFooter, 
   CardHeader, 
-  CardTitle 
+  CardTitle,
+  CardDescription
 } from "@/components/ui/card";
 import { 
   Select, 
@@ -22,11 +24,20 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, CreditCard, WalletCards } from "lucide-react";
+import { 
+  Loader2, 
+  CreditCard, 
+  ShieldCheck, 
+  WalletCards, 
+  ChevronRight,
+  Check,
+  CheckCircle2,
+  Lock
+} from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 
 // Checkout form validation schema
 const checkoutSchema = z.object({
@@ -52,27 +63,44 @@ export default function Checkout() {
   const { user, isLoading } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderNumber, setOrderNumber] = useState("");
+  
+  // Generate random order number on component mount
+  useEffect(() => {
+    const randomOrderNum = Math.floor(10000000 + Math.random() * 90000000).toString();
+    setOrderNumber(`KVR-${randomOrderNum}`);
+    
+    // Set page title with SEO in mind
+    document.title = "Secure Checkout | KavinoRa - Complete Your Order";
+  }, []);
 
   // Sample cart items - in a real app, this would come from a cart context or state
   const cartItems = [
     {
       id: 1,
-      name: "KavinoRa Wellness Tea",
-      price: 24.99,
+      name: "MotionMist™ Anti-Chafing Spray",
+      price: 29.99,
       quantity: 2,
-      image: "/products/tea.jpg"
+      image: "https://i.imgur.com/vAr3b3G.jpeg"
     },
     {
       id: 2,
-      name: "Mindfulness Journal",
-      price: 79.97,
+      name: "KavinoRa Wellness Tea",
+      price: 24.99,
       quantity: 1,
-      image: "/products/journal.jpg"
+      image: "https://i.imgur.com/kSDJFN7.jpeg"
+    },
+    {
+      id: 3,
+      name: "Mindfulness Journal",
+      price: 39.95,
+      quantity: 1,
+      image: "https://i.imgur.com/vbRMEpZ.jpeg"
     }
   ];
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const shipping = 4.99;
+  const shipping = subtotal >= 75 ? 0 : 5.99;
   const tax = subtotal * 0.07; // 7% tax
   const total = subtotal + shipping + tax;
 
@@ -129,19 +157,73 @@ export default function Checkout() {
 
   return (
     <Layout>
-      <div className="container mx-auto py-8 px-4 lg:px-6">
-        <h1 className="text-2xl md:text-3xl font-bold mb-8">Checkout</h1>
+      <div className="container mx-auto py-12 px-4">
+        {/* Checkout Progress Bar */}
+        <div className="max-w-4xl mx-auto mb-10">
+          <div className="relative">
+            <div className="absolute top-4 h-0.5 w-full bg-muted">
+              <div className="absolute top-0 h-full bg-primary" style={{ width: "50%" }}></div>
+            </div>
+            <div className="relative flex justify-between items-center">
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center z-10">
+                  <Check className="h-4 w-4" />
+                </div>
+                <span className="text-sm mt-2 font-medium">Cart</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center z-10">
+                  <span className="text-xs font-bold">2</span>
+                </div>
+                <span className="text-sm mt-2 font-medium">Checkout</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 bg-muted text-muted-foreground rounded-full flex items-center justify-center z-10">
+                  <span className="text-xs font-bold">3</span>
+                </div>
+                <span className="text-sm mt-2 text-muted-foreground">Confirmation</span>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Page Header */}
+        <div className="max-w-4xl mx-auto mb-8 text-center">
+          <h1 className="text-3xl lg:text-4xl font-bold mb-3">Complete Your Order</h1>
+          <p className="text-muted-foreground max-w-lg mx-auto">
+            You're just a few steps away from experiencing the benefits of KavinoRa products
+          </p>
+          
+          {/* Order Number & Secure Message */}
+          <div className="flex flex-col sm:flex-row items-center justify-center mt-4 gap-3 text-sm">
+            <div className="flex items-center text-muted-foreground">
+              <span className="font-medium">Order: </span>
+              <span className="ml-1">{orderNumber}</span>
+            </div>
+            <div className="hidden sm:block w-1 h-1 rounded-full bg-muted-foreground/30"></div>
+            <div className="flex items-center text-muted-foreground">
+              <Lock className="h-3 w-3 mr-1" />
+              <span>Secure Checkout</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {/* Main checkout form */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Shipping Information</CardTitle>
+                <Card className="shadow-sm border-none">
+                  <CardHeader className="border-b">
+                    <CardTitle className="flex items-center">
+                      <span className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary text-sm font-medium mr-2">1</span>
+                      Shipping Information
+                    </CardTitle>
+                    <CardDescription>
+                      Enter your shipping details below
+                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="pt-6 space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
