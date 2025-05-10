@@ -1,88 +1,111 @@
-import { useCallback } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
+import { motion } from "framer-motion";
+
+// Placeholder data (replace with real products)
+const products = [
+  {
+    id: 1,
+    name: "MotionMist™ Anti-Chafing Spray",
+    price: 29.99,
+    image: "https://images.unsplash.com/photo-1556227834-09f1de7a7d14?q=80&w=1887&auto=format&fit=crop",
+    category: "Body Care"
+  },
+  {
+    id: 2,
+    name: "RevitaRoll™ Recovery Roller",
+    price: 49.99,
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1740&auto=format&fit=crop",
+    category: "Recovery"
+  },
+  {
+    id: 3,
+    name: "EnduraBalm™ Joint Relief",
+    price: 24.99,
+    image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?q=80&w=1887&auto=format&fit=crop",
+    category: "Pain Relief"
+  },
+  {
+    id: 4,
+    name: "StaminaPlus™ Energy Supplement",
+    price: 39.99,
+    image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1887&auto=format&fit=crop",
+    category: "Supplements"
+  }
+];
 
 const ProductFeature = () => {
-  const { toast } = useToast();
-  
-  const handleAddToCart = useCallback(() => {
-    toast({
-      title: "Added to cart!",
-      description: "KavinoRa MotionMist™ has been added to your cart.",
-    });
-  }, [toast]);
-
-  const benefits = [
-    "Prevents friction and irritation",
-    "Water-resistant formula",
-    "Dermatologist tested and approved",
-    "100% plant-based ingredients"
-  ];
-
-  const tags = ["Plant-Based", "Dermatologist-Tested", "Cruelty-Free"];
-
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 mb-10 md:mb-0 md:pr-12">
-            <img 
-              src="https://pixabay.com/get/gcaad987746b5d5001966afbcd8f0ecf2b1b7d8205f291b5057e558a4d15d927a53a27226db219d14aa471f174e57c2b0ae1394ebc936a4f90ab9b3b839eb8d4d_1280.jpg" 
-              alt="KavinoRa MotionMist Product Detail" 
-              className="rounded-xl shadow-lg w-full h-auto" 
-            />
-          </div>
-          <div className="md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-4">MotionMist™</h2>
-            <div className="flex items-center mb-6">
-              <div className="text-teal mr-2">
-                <i className="ri-star-fill"></i>
-                <i className="ri-star-fill"></i>
-                <i className="ri-star-fill"></i>
-                <i className="ri-star-fill"></i>
-                <i className="ri-star-half-fill"></i>
-              </div>
-              <span className="text-gray-500 text-sm">(42 reviews)</span>
-            </div>
-            <p className="text-2xl font-montserrat font-bold text-teal mb-4">$24.99</p>
-            <p className="text-lg text-gray-600 mb-6">
-              Our breakthrough anti-chafing spray that provides long-lasting comfort during any activity. The lightweight formula applies easily and dries instantly.
-            </p>
-            
-            <div className="mb-8">
-              <h3 className="font-montserrat font-semibold text-xl mb-4">Benefits</h3>
-              <ul className="space-y-3">
-                {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-start">
-                    <i className="ri-check-line text-teal text-xl mr-2 mt-0.5"></i>
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="flex flex-wrap mb-8">
-              {tags.map((tag, index) => (
-                <span key={index} className="bg-beige rounded-full px-4 py-2 text-sm font-montserrat mr-2 mb-2">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button 
-                onClick={handleAddToCart}
-                className="bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center"
-              >
-                <i className="ri-shopping-cart-2-line mr-2"></i>
-                Add to Cart
-              </button>
-              <Link href="/product" className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center">
-                View Details
+    <section className="py-20 bg-[#f5f5f7]">
+      <div className="container mx-auto px-6">
+        {/* Apple-style section header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold text-[#1d1d1f] mb-4">Featured Products</h2>
+          <p className="text-lg text-[#6e6e73] max-w-2xl mx-auto">
+            Discover our line of premium wellness products designed for your active lifestyle.
+          </p>
+        </motion.div>
+        
+        {/* Apple-style products grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {products.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Link href={`/product/${product.id}`}>
+                <div className="group cursor-pointer">
+                  {/* Product image with hover effect */}
+                  <div className="relative overflow-hidden rounded-2xl bg-white mb-4 aspect-square">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    
+                    {/* Apple-style category tag */}
+                    <div className="absolute top-3 left-3 text-xs font-medium bg-black/10 backdrop-blur-md rounded-full px-3 py-1 text-white">
+                      {product.category}
+                    </div>
+                  </div>
+                  
+                  {/* Apple-style product info */}
+                  <div className="space-y-1 text-center">
+                    <h3 className="font-medium text-[#1d1d1f] group-hover:text-primary transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-[#6e6e73] text-sm">
+                      From ${product.price}
+                    </p>
+                  </div>
+                </div>
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          ))}
         </div>
+        
+        {/* Apple-style "View All" button */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex justify-center mt-12"
+        >
+          <Link href="/product">
+            <button className="px-8 py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors shadow-sm">
+              View All Products
+            </button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

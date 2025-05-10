@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import MobileMenu from "./MobileMenu";
 import AuthModal from "./AuthModal";
 import { AnimatePresence, motion } from "framer-motion";
 

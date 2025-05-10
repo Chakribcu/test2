@@ -1,71 +1,141 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+
 const testimonials = [
   {
-    quote: "I've tried many anti-chafing products, but MotionMist is by far the best. It lasts through my entire marathon training runs.",
-    name: "Jamie R.",
-    title: "Marathon Runner",
-    initials: "JR",
-    rating: 5
+    id: 1,
+    content: "This anti-chafing spray has been a game-changer for my marathon training. I can finally focus on my performance without worrying about discomfort.",
+    author: "Sarah J.",
+    role: "Marathon Runner",
+    avatar: "https://i.pravatar.cc/100?img=1"
   },
   {
-    quote: "Love that it's plant-based and actually works! No more uncomfortable cycling rides for me.",
-    name: "Sarah L.",
-    title: "Cyclist",
-    initials: "SL",
-    rating: 5
+    id: 2,
+    content: "As a cycling enthusiast, I've tried many products, but KavinoRa's MotionMist stands out. It's long-lasting, even during my longest rides.",
+    author: "Michael T.",
+    role: "Cycling Enthusiast",
+    avatar: "https://i.pravatar.cc/100?img=2"
   },
   {
-    quote: "Finally a solution that doesn't feel sticky! Perfect for my hot yoga sessions and summer runs.",
-    name: "Michael K.",
-    title: "Yoga Instructor",
-    initials: "MK",
-    rating: 4.5
+    id: 3,
+    content: "The plant-based formula is perfect for my sensitive skin. No irritation, just smooth comfort during my yoga and HIIT workouts.",
+    author: "Emma R.",
+    role: "Yoga Instructor",
+    avatar: "https://i.pravatar.cc/100?img=3"
+  },
+  {
+    id: 4,
+    content: "As a trail runner, I need products that can withstand tough conditions. KavinoRa delivers - it's the only brand I trust for my races.",
+    author: "David W.",
+    role: "Trail Runner",
+    avatar: "https://i.pravatar.cc/100?img=4"
   }
 ];
 
 const Testimonials = () => {
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<i key={`full-${i}`} className="ri-star-fill"></i>);
-    }
-    
-    if (hasHalfStar) {
-      stars.push(<i key="half" className="ri-star-half-fill"></i>);
-    }
-    
-    return stars;
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleNext = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+  };
+
+  const handlePrev = () => {
+    setActiveIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const handleDotClick = (index: number) => {
+    setActiveIndex(index);
   };
 
   return (
-    <section className="py-16 bg-beige-light">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-montserrat font-bold text-center mb-12">
-          What People Are Saying
-        </h2>
+    <section className="py-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-6">
+        {/* Apple-style section header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold text-[#1d1d1f] mb-4">What Our Customers Say</h2>
+          <p className="text-lg text-[#6e6e73] max-w-2xl mx-auto">
+            Join the thousands of athletes and active individuals who have made KavinoRa an essential part of their routine.
+          </p>
+        </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-8 rounded-xl shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="text-teal">
-                  {renderStars(testimonial.rating)}
-                </div>
-              </div>
-              <p className="mb-6 italic">"{testimonial.quote}"</p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 rounded-full bg-beige flex items-center justify-center mr-3">
-                  <span className="font-montserrat font-medium text-teal">{testimonial.initials}</span>
-                </div>
-                <div>
-                  <h4 className="font-montserrat font-medium">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.title}</p>
-                </div>
+        {/* Apple-style testimonial carousel */}
+        <div className="max-w-4xl mx-auto">
+          {/* Testimonial */}
+          <motion.div
+            key={testimonials[activeIndex].id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="bg-[#f5f5f7] rounded-3xl p-8 md:p-12 mb-8 relative"
+          >
+            {/* Quote mark decoration */}
+            <div className="absolute top-8 left-8 text-8xl text-primary/10 pointer-events-none font-serif">
+              "
+            </div>
+            
+            <div className="text-xl md:text-2xl text-[#1d1d1f] font-light leading-relaxed mb-8 max-w-3xl relative">
+              "{testimonials[activeIndex].content}"
+            </div>
+            
+            <div className="flex items-center">
+              <img 
+                src={testimonials[activeIndex].avatar} 
+                alt={testimonials[activeIndex].author} 
+                className="w-12 h-12 rounded-full mr-4 object-cover"
+              />
+              <div>
+                <h4 className="text-[#1d1d1f] font-medium">{testimonials[activeIndex].author}</h4>
+                <p className="text-[#6e6e73] text-sm">{testimonials[activeIndex].role}</p>
               </div>
             </div>
-          ))}
+          </motion.div>
+          
+          {/* Controls */}
+          <div className="flex justify-between items-center">
+            {/* Navigation dots */}
+            <div className="flex space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === activeIndex ? "w-6 bg-primary" : "bg-[#86868b]"
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+            
+            {/* Prev/Next buttons */}
+            <div className="flex space-x-4">
+              <button
+                onClick={handlePrev}
+                className="w-10 h-10 rounded-full border border-[#1d1d1f]/10 flex items-center justify-center hover:bg-[#f5f5f7] transition-colors"
+                aria-label="Previous testimonial"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+              </button>
+              
+              <button
+                onClick={handleNext}
+                className="w-10 h-10 rounded-full border border-[#1d1d1f]/10 flex items-center justify-center hover:bg-[#f5f5f7] transition-colors"
+                aria-label="Next testimonial"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
