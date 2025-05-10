@@ -33,8 +33,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      try {
+        const res = await apiRequest("POST", "/api/login", credentials);
+        return await res.json();
+      } catch (error) {
+        // Rethrow with a simplified message
+        throw new Error("Invalid username or password. Please try again.");
+      }
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -46,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onError: (error: Error) => {
       toast({
         title: "Login failed",
-        description: error.message || "Invalid username or password. Please try again.",
+        description: "Invalid username or password. Please try again.",
         variant: "destructive",
       });
     },

@@ -22,10 +22,23 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
+  try {
+    console.log("Comparing passwords:", { supplied, storedLength: stored.length });
+    const [hashed, salt] = stored.split(".");
+    if (!hashed || !salt) {
+      console.log("Invalid stored password format - missing hash or salt");
+      return false;
+    }
+    console.log("Extracted hash and salt:", { hashedLength: hashed.length, saltLength: salt.length });
+    const hashedBuf = Buffer.from(hashed, "hex");
+    const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+    const result = timingSafeEqual(hashedBuf, suppliedBuf);
+    console.log("Password comparison result:", result);
+    return result;
+  } catch (error) {
+    console.error("Error comparing passwords:", error);
+    return false;
+  }
 }
 
 export function setupAuth(app: Express) {
@@ -100,13 +113,31 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
+    console.log("Login attempt:", { username: req.body.username });
+    
     passport.authenticate("local", (err: any, user: SelectUser | false, info: any) => {
-      if (err) return next(err);
+      console.log("Passport authenticate result:", { 
+        hasError: !!err, 
+        authenticated: !!user, 
+        info 
+      });
+      
+      if (err) {
+        console.error("Authentication error:", err);
+        return next(err);
+      }
+      
       if (!user) {
+        console.log("Authentication failed: Invalid username or password");
         return res.status(401).json({ message: "Invalid username or password" });
       }
+      
       req.login(user, (err) => {
-        if (err) return next(err);
+        if (err) {
+          console.error("Session login error:", err);
+          return next(err);
+        }
+        console.log("Login successful for user:", user.username);
         res.status(200).json(user);
       });
     })(req, res, next);
