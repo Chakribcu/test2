@@ -60,18 +60,52 @@ export default function Account() {
     }
   }, [user]);
   
-  const handleProfileUpdate = (e: React.FormEvent) => {
+  const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsUpdating(true);
     
-    // Simulate API call to update profile
-    setTimeout(() => {
-      setIsUpdating(false);
-      toast({
-        title: "Profile Updated",
-        description: "Your profile information has been updated successfully.",
+    try {
+      // Format profile data
+      const profileData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+        street: formData.address.street,
+        city: formData.address.city,
+        state: formData.address.state,
+        postalCode: formData.address.postalCode,
+        country: formData.address.country,
+      };
+      
+      // Make API call to update profile
+      const response = await fetch('/api/user/profile', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileData),
+        credentials: 'include'
       });
-    }, 800);
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        toast({
+          title: "Profile Updated",
+          description: "Your profile information has been updated successfully.",
+        });
+      } else {
+        throw new Error(result.message || 'Failed to update profile');
+      }
+    } catch (error) {
+      toast({
+        title: "Update Failed",
+        description: error instanceof Error ? error.message : "An error occurred while updating your profile",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   };
   
   const handlePasswordChange = (e: React.FormEvent) => {
