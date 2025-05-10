@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import ProductCard from "@/components/ui/product-card";
 
 // Placeholder data (replace with real products)
 const products = [
@@ -51,44 +52,10 @@ const ProductFeature = () => {
           </p>
         </motion.div>
         
-        {/* Apple-style products grid */}
+        {/* Apple-style products grid with interactive card components */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/product/${product.id}`}>
-                <div className="group cursor-pointer">
-                  {/* Product image with hover effect */}
-                  <div className="relative overflow-hidden rounded-2xl bg-white mb-4 aspect-square">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    
-                    {/* Apple-style category tag */}
-                    <div className="absolute top-3 left-3 text-xs font-medium bg-black/10 backdrop-blur-md rounded-full px-3 py-1 text-white">
-                      {product.category}
-                    </div>
-                  </div>
-                  
-                  {/* Apple-style product info */}
-                  <div className="space-y-1 text-center">
-                    <h3 className="font-medium text-[#1d1d1f] group-hover:text-primary transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-[#6e6e73] text-sm">
-                      From ${product.price}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+          {products.map((product) => (
+            <ProductCard key={product.id} {...product} />
           ))}
         </div>
         

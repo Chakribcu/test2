@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Star, ChevronRight, ShoppingCart } from "lucide-react";
+import ProductCard from "@/components/ui/product-card";
 
 // Sample products data - in a real app, this would come from an API
 const products = [
@@ -136,91 +137,14 @@ const Product = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
             {products.map((product) => (
-              <div 
-                key={product.id} 
-                className="group rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border bg-card"
-              >
-                <div className="h-72 bg-muted relative overflow-hidden">
-                  <img 
-                    src={product.images[0]} 
-                    alt={product.name}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                  />
-                  
-                  {/* Quick actions overlay */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="flex gap-3">
-                      <Button 
-                        size="sm" 
-                        variant="secondary" 
-                        className="rounded-full" 
-                        onClick={() => navigate(`/product/${product.id}`)}
-                      >
-                        View Details
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        className="rounded-full"
-                        onClick={() => {
-                          if (user) {
-                            toast({
-                              title: "Added to Cart",
-                              description: `${product.name} has been added to your cart`,
-                            });
-                          } else {
-                            navigate("/auth");
-                          }
-                        }}
-                      >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  {/* Price badge */}
-                  <div className="absolute top-4 right-4 bg-primary text-white rounded-full px-3 py-1 text-sm font-bold">
-                    ${product.price.toFixed(2)}
-                  </div>
-                </div>
-                
-                <div className="p-6">
-                  <div className="mb-2">
-                    <h2 className="font-bold text-xl">{product.name}</h2>
-                  </div>
-                  
-                  <div className="flex items-center text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(product.rating) 
-                              ? "text-amber-400 fill-amber-400" 
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="ml-2">{product.rating} ({product.reviews} reviews)</span>
-                  </div>
-                  
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {product.tags.slice(0, 3).map((tag, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {product.tags.length > 3 && (
-                      <Badge variant="outline" className="text-xs">+{product.tags.length - 3}</Badge>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <ProductCard
+                key={product.id}
+                id={parseInt(product.id)}
+                name={product.name}
+                price={product.price}
+                image={product.images[0]}
+                category={product.tags[0]}
+              />
             ))}
           </div>
           
