@@ -1,47 +1,16 @@
 import { useCallback } from "react";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
-
-const notifySchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
-
-type NotifyFormValues = z.infer<typeof notifySchema>;
+import { Link } from "wouter";
 
 const ProductFeature = () => {
   const { toast } = useToast();
   
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<NotifyFormValues>({
-    resolver: zodResolver(notifySchema),
-  });
-  
-  const notifyMutation = useMutation({
-    mutationFn: (data: NotifyFormValues) => {
-      return apiRequest("POST", "/api/waitlist", data);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success!",
-        description: "You'll be notified when MotionMist™ becomes available.",
-      });
-      reset();
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to sign up. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-  
-  const onSubmit = useCallback((data: NotifyFormValues) => {
-    notifyMutation.mutate(data);
-  }, [notifyMutation]);
+  const handleAddToCart = useCallback(() => {
+    toast({
+      title: "Added to cart!",
+      description: "KavinoRa MotionMist™ has been added to your cart.",
+    });
+  }, [toast]);
 
   const benefits = [
     "Prevents friction and irritation",
@@ -64,7 +33,18 @@ const ProductFeature = () => {
             />
           </div>
           <div className="md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-6">MotionMist™</h2>
+            <h2 className="text-3xl md:text-4xl font-montserrat font-bold mb-4">MotionMist™</h2>
+            <div className="flex items-center mb-6">
+              <div className="text-teal mr-2">
+                <i className="ri-star-fill"></i>
+                <i className="ri-star-fill"></i>
+                <i className="ri-star-fill"></i>
+                <i className="ri-star-fill"></i>
+                <i className="ri-star-half-fill"></i>
+              </div>
+              <span className="text-gray-500 text-sm">(42 reviews)</span>
+            </div>
+            <p className="text-2xl font-montserrat font-bold text-teal mb-4">$24.99</p>
             <p className="text-lg text-gray-600 mb-6">
               Our breakthrough anti-chafing spray that provides long-lasting comfort during any activity. The lightweight formula applies easily and dries instantly.
             </p>
@@ -89,26 +69,20 @@ const ProductFeature = () => {
               ))}
             </div>
             
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-grow">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className={`w-full px-4 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-teal ${errors.email ? "border-red-500" : "border-gray-300"}`}
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="mt-1 text-red-600 text-sm">{errors.email.message}</p>
-                )}
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4">
               <button 
-                type="submit" 
-                className="bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap"
-                disabled={notifyMutation.isPending}
+                onClick={handleAddToCart}
+                className="bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center"
               >
-                {notifyMutation.isPending ? "Submitting..." : "Notify Me When Available"}
+                <i className="ri-shopping-cart-2-line mr-2"></i>
+                Add to Cart
               </button>
-            </form>
+              <Link href="/product">
+                <a className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center">
+                  View Details
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
