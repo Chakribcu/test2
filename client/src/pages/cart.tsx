@@ -1,5 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
+import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { 
+  ShoppingCart, 
+  Trash2, 
+  Plus, 
+  Minus, 
+  ArrowLeft, 
+  CreditCard, 
+  Truck 
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface CartItem {
   id: number;
@@ -10,6 +24,8 @@ interface CartItem {
 }
 
 const Cart = () => {
+  const [, navigate] = useLocation();
+  
   useEffect(() => {
     document.title = "Your Cart | KavinoRa";
   }, []);
@@ -19,17 +35,24 @@ const Cart = () => {
     {
       id: 1,
       name: "MotionMist™ Anti-Chafing Spray",
-      price: 24.99,
+      price: 29.99,
       quantity: 2,
-      image: "https://pixabay.com/get/gbd20e1f06248868b2321297688b4c6d759a99b67d53173f852fb2cd83347348017d39e1f97d3a9c0a72d23e2a146826858308734326d6e60642e3760b60e2a8c_1280.jpg",
+      image: "https://i.imgur.com/vAr3b3G.jpeg",
     },
     {
       id: 2,
-      name: "KavinoRa Gift Set",
-      price: 59.99,
+      name: "KavinoRa Wellness Tea",
+      price: 24.99,
       quantity: 1,
-      image: "https://pixabay.com/get/g35d6b45c0b4cce7ae6afdb5fe6b0f5f2e2d94ad95ec5c5f38c9a8b95ad16e0e7b4c1fa4dd13f5cfe43c50b5b16e98c81f2fe51ebdb3a86d7a82b93b56d24ebca_1280.jpg",
+      image: "https://i.imgur.com/kSDJFN7.jpeg",
     },
+    {
+      id: 3,
+      name: "Mindfulness Journal",
+      price: 39.95,
+      quantity: 1,
+      image: "https://i.imgur.com/vbRMEpZ.jpeg",
+    }
   ]);
 
   const increaseQuantity = (id: number) => {
@@ -66,175 +89,198 @@ const Cart = () => {
   const total = subtotal + shipping;
 
   return (
-    <div className="pt-12 pb-20">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl md:text-4xl font-montserrat font-bold text-gray-800 mb-8 text-center">
-          Your Cart
-        </h1>
+    <Layout>
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
 
         {cartItems.length > 0 ? (
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
-            <div className="lg:w-2/3">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-6">
-                  <h2 className="font-montserrat font-semibold text-xl mb-4">
-                    Cart Items
-                  </h2>
-
-                  <div className="divide-y divide-gray-200">
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Items in Your Cart ({cartItems.length})</CardTitle>
+                </CardHeader>
+                
+                <CardContent>
+                  <div className="divide-y">
                     {cartItems.map((item) => (
-                      <div key={item.id} className="py-6 flex flex-wrap md:flex-nowrap">
-                        <div className="md:w-24 h-24 bg-gray-100 rounded-md overflow-hidden mr-4 mb-4 md:mb-0">
+                      <div key={item.id} className="py-6 flex flex-col sm:flex-row gap-4">
+                        <div className="w-full sm:w-24 h-24 bg-muted rounded overflow-hidden shrink-0">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-center"
                           />
                         </div>
+                        
                         <div className="flex-grow">
-                          <h3 className="font-montserrat font-medium text-lg mb-1">
-                            {item.name}
-                          </h3>
-                          <p className="text-teal font-semibold mb-3">
-                            ${item.price.toFixed(2)}
-                          </p>
-                          <div className="flex items-center">
-                            <button
-                              onClick={() => decreaseQuantity(item.id)}
-                              className="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center transition-all"
-                              aria-label="Decrease quantity"
-                            >
-                              <i className="ri-subtract-line"></i>
-                            </button>
-                            <span className="mx-3 w-8 text-center">
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => increaseQuantity(item.id)}
-                              className="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center transition-all"
-                              aria-label="Increase quantity"
-                            >
-                              <i className="ri-add-line"></i>
-                            </button>
+                          <div className="flex flex-col sm:flex-row sm:justify-between">
+                            <h3 className="font-medium text-lg mb-1">
+                              {item.name}
+                            </h3>
+                            <p className="font-bold text-primary">
+                              ${item.price.toFixed(2)}
+                            </p>
                           </div>
-                        </div>
-                        <div className="w-full md:w-auto mt-4 md:mt-0 flex items-start md:items-center justify-between md:justify-end">
-                          <p className="font-semibold text-lg md:mr-8">
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </p>
-                          <button
-                            onClick={() => removeItem(item.id)}
-                            className="text-gray-400 hover:text-red-500 transition-all"
-                            aria-label="Remove item"
-                          >
-                            <i className="ri-delete-bin-line text-xl"></i>
-                          </button>
+                          
+                          <div className="flex items-center justify-between mt-4">
+                            <div className="flex items-center">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => decreaseQuantity(item.id)}
+                                disabled={item.quantity <= 1}
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                              <span className="mx-3 w-8 text-center">
+                                {item.quantity}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => increaseQuantity(item.id)}
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="flex items-center gap-4">
+                              <span className="font-semibold">
+                                ${(item.price * item.quantity).toFixed(2)}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-muted-foreground hover:text-destructive"
+                                onClick={() => removeItem(item.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-between">
-                <Link href="/">
-                  <a className="inline-flex items-center text-teal hover:text-teal-dark transition-all">
-                    <i className="ri-arrow-left-line mr-2"></i>
+                </CardContent>
+                
+                <CardFooter className="flex justify-between">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate("/product")}
+                    className="flex items-center gap-1"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
                     Continue Shopping
-                  </a>
-                </Link>
-                <button
-                  onClick={() => setCartItems([])}
-                  className="inline-flex items-center text-gray-500 hover:text-red-500 transition-all"
-                >
-                  <i className="ri-delete-bin-line mr-2"></i>
-                  Clear Cart
-                </button>
-              </div>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="text-muted-foreground hover:text-destructive"
+                    onClick={() => setCartItems([])}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear Cart
+                  </Button>
+                </CardFooter>
+              </Card>
             </div>
 
             {/* Order Summary */}
-            <div className="lg:w-1/3">
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="font-montserrat font-semibold text-xl mb-6">
-                  Order Summary
-                </h2>
-
-                <div className="space-y-4 mb-6">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order Summary</CardTitle>
+                </CardHeader>
+                
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span>${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Shipping</span>
+                      <span>${shipping.toFixed(2)}</span>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="flex justify-between font-bold">
+                      <span>Total</span>
+                      <span>
+                        ${total.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span>${shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="border-t border-gray-200 pt-4 flex justify-between">
-                    <span className="font-montserrat font-semibold">Total</span>
-                    <span className="font-montserrat font-semibold">
-                      ${total.toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  className="w-full bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 rounded-full transition-all flex items-center justify-center"
-                >
-                  <i className="ri-secure-payment-line mr-2"></i>
-                  Proceed to Checkout
-                </button>
-
-                <div className="mt-6">
-                  <div className="text-sm text-gray-500 text-center mb-4">
-                    We accept
-                  </div>
-                  <div className="flex justify-center space-x-3">
-                    <i className="ri-visa-line text-3xl text-gray-600"></i>
-                    <i className="ri-mastercard-line text-3xl text-gray-600"></i>
-                    <i className="ri-paypal-line text-3xl text-gray-600"></i>
-                    <i className="ri-amazon-pay-line text-3xl text-gray-600"></i>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-beige-light rounded-xl p-4 mt-6">
-                <div className="flex items-start">
-                  <i className="ri-truck-line text-teal text-xl mr-3 mt-1"></i>
-                  <div>
-                    <h4 className="font-montserrat font-medium mb-1">
-                      Free shipping on orders over $75
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Add ${(75 - subtotal).toFixed(2)} more to qualify for free
-                      shipping!
+                  
+                  <Button
+                    className="w-full mt-6"
+                    onClick={() => navigate("/checkout")}
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Proceed to Checkout
+                  </Button>
+                  
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      We accept all major credit cards
                     </p>
+                    <div className="flex justify-center space-x-3">
+                      <Badge variant="outline">Visa</Badge>
+                      <Badge variant="outline">Mastercard</Badge>
+                      <Badge variant="outline">PayPal</Badge>
+                      <Badge variant="outline">Apple Pay</Badge>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+                
+                <CardFooter>
+                  <div className="bg-muted/40 p-3 rounded-lg w-full">
+                    <div className="flex items-start gap-3">
+                      <Truck className="h-5 w-5 text-primary mt-0.5" />
+                      <div>
+                        <h4 className="font-medium text-sm">
+                          Free shipping on orders over $75
+                        </h4>
+                        {subtotal < 75 && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Add ${(75 - subtotal).toFixed(2)} more to qualify for free shipping!
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardFooter>
+              </Card>
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-8 text-center">
-            <div className="mb-6 inline-block p-5 bg-beige-light rounded-full">
-              <i className="ri-shopping-cart-line text-teal text-4xl"></i>
-            </div>
-            <h2 className="text-2xl font-montserrat font-semibold mb-4">
-              Your cart is empty
-            </h2>
-            <p className="text-gray-600 mb-8">
-              Looks like you haven't added any products to your cart yet.
-            </p>
-            <Link href="/product">
-              <a className="inline-block bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all">
+          <Card className="text-center py-12 px-4">
+            <CardContent>
+              <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-6">
+                <ShoppingCart className="h-10 w-10 text-primary/60" />
+              </div>
+              <h2 className="text-2xl font-bold mb-4">
+                Your cart is empty
+              </h2>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                Looks like you haven't added any products to your cart yet. Browse our collection to find the perfect wellness products for you.
+              </p>
+              <Button 
+                size="lg"
+                onClick={() => navigate("/product")}
+              >
                 Browse Products
-              </a>
-            </Link>
-          </div>
+              </Button>
+            </CardContent>
+          </Card>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

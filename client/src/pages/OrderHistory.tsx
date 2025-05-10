@@ -128,7 +128,7 @@ export default function OrderHistory() {
           <div className="text-center py-12">
             <h2 className="text-xl font-medium mb-4">You haven't placed any orders yet</h2>
             <p className="text-muted-foreground mb-6">Start shopping and your orders will appear here</p>
-            <Button href="/" className="mt-4">Browse Products</Button>
+            <Button onClick={() => window.location.href='/'} className="mt-4">Browse Products</Button>
           </div>
         ) : (
           <div className="space-y-8">
