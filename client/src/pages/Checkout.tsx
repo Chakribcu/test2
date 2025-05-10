@@ -354,13 +354,29 @@ export default function Checkout() {
                   </CardContent>
                 </Card>
                 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Payment Method</CardTitle>
+                <Card className="shadow-sm border-none">
+                  <CardHeader className="border-b">
+                    <CardTitle className="flex items-center">
+                      <span className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary text-sm font-medium mr-2">2</span>
+                      Payment Method
+                    </CardTitle>
+                    <CardDescription>
+                      All transactions are secure and encrypted
+                    </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-6">
+                    <div className="bg-muted/30 p-4 rounded-lg mb-6 flex items-start gap-3">
+                      <ShieldCheck className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
+                      <div>
+                        <h4 className="text-sm font-medium">Secure Payment Processing</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Your payment information is protected with industry-standard encryption
+                        </p>
+                      </div>
+                    </div>
+                    
                     <Tabs defaultValue="credit-card">
-                      <TabsList className="grid w-full grid-cols-2">
+                      <TabsList className="grid w-full grid-cols-2 mb-6">
                         <TabsTrigger value="credit-card" className="flex items-center">
                           <CreditCard className="h-4 w-4 mr-2" />
                           Credit Card
@@ -371,7 +387,7 @@ export default function Checkout() {
                         </TabsTrigger>
                       </TabsList>
                       
-                      <TabsContent value="credit-card" className="space-y-4 mt-4">
+                      <TabsContent value="credit-card" className="space-y-6 mt-2">
                         <FormField
                           control={form.control}
                           name="cardName"
@@ -406,7 +422,7 @@ export default function Checkout() {
                             name="expMonth"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Month</FormLabel>
+                                <FormLabel>Expiry Month</FormLabel>
                                 <Select 
                                   defaultValue={field.value} 
                                   onValueChange={field.onChange}
@@ -417,11 +433,14 @@ export default function Checkout() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                    {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                                      <SelectItem key={month} value={month.toString().padStart(2, '0')}>
-                                        {month.toString().padStart(2, '0')}
-                                      </SelectItem>
-                                    ))}
+                                    {Array.from({length: 12}, (_, i) => {
+                                      const month = (i + 1).toString().padStart(2, '0');
+                                      return (
+                                        <SelectItem key={month} value={month}>
+                                          {month}
+                                        </SelectItem>
+                                      );
+                                    })}
                                   </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -434,7 +453,7 @@ export default function Checkout() {
                             name="expYear"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Year</FormLabel>
+                                <FormLabel>Expiry Year</FormLabel>
                                 <Select 
                                   defaultValue={field.value} 
                                   onValueChange={field.onChange}
@@ -445,11 +464,14 @@ export default function Checkout() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                    {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(year => (
-                                      <SelectItem key={year} value={year.toString()}>
-                                        {year}
-                                      </SelectItem>
-                                    ))}
+                                    {Array.from({length: 10}, (_, i) => {
+                                      const year = (new Date().getFullYear() + i).toString();
+                                      return (
+                                        <SelectItem key={year} value={year}>
+                                          {year}
+                                        </SelectItem>
+                                      );
+                                    })}
                                   </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -464,7 +486,7 @@ export default function Checkout() {
                               <FormItem>
                                 <FormLabel>CVV</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="123" {...field} />
+                                  <Input placeholder="123" {...field} maxLength={4} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -473,86 +495,141 @@ export default function Checkout() {
                         </div>
                       </TabsContent>
                       
-                      <TabsContent value="paypal" className="mt-4">
-                        <div className="text-center p-4">
-                          <p className="mb-4">You will be redirected to PayPal to complete your payment</p>
-                          <Button type="button" className="w-full">Continue with PayPal</Button>
+                      <TabsContent value="paypal" className="py-4">
+                        <div className="text-center p-6">
+                          <p className="text-muted-foreground mb-4">Click the button below to pay with PayPal</p>
+                          <Button type="button" className="w-full">
+                            Continue with PayPal
+                          </Button>
                         </div>
                       </TabsContent>
                     </Tabs>
                   </CardContent>
                 </Card>
                 
-                <div className="flex justify-between items-center mt-8">
-                  <Button variant="outline" type="button" onClick={() => navigate("/cart")}>
-                    Back to Cart
-                  </Button>
-                  
-                  <Button type="submit" className="min-w-[150px]" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing
-                      </>
-                    ) : (
-                      "Place Order"
-                    )}
-                  </Button>
-                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full py-6 text-base"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
+                      Processing...
+                    </>
+                  ) : (
+                    <>Complete Order</>
+                  )}
+                </Button>
+                
+                <p className="text-xs text-muted-foreground text-center">
+                  By placing your order, you agree to our <a href="/terms-of-service" className="text-primary hover:underline">Terms of Service</a> and <a href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</a>
+                </p>
               </form>
             </Form>
           </div>
           
           {/* Order summary */}
           <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-start py-2">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-12 h-12 bg-muted rounded flex items-center justify-center text-xs">
-                        [Image]
-                      </div>
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+            <div className="lg:sticky lg:top-24">
+              <Card className="shadow-sm overflow-hidden border-none">
+                <CardHeader className="bg-primary/5 border-b">
+                  <CardTitle>Order Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  {/* Cart Items */}
+                  <div className="p-6 border-b">
+                    <div className="mb-4">
+                      <p className="font-medium mb-3">Items ({cartItems.length})</p>
+                      <div className="space-y-4">
+                        {cartItems.map((item) => (
+                          <div key={item.id} className="flex gap-3">
+                            <div className="w-16 h-16 rounded-md overflow-hidden border bg-muted shrink-0">
+                              <img 
+                                src={item.image} 
+                                alt={item.name}
+                                className="w-full h-full object-cover object-center"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-sm truncate">{item.name}</h4>
+                              <div className="flex justify-between items-baseline mt-1">
+                                <span className="text-xs text-muted-foreground">Qty: {item.quantity}</span>
+                                <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                    
+                    <Button 
+                      variant="link" 
+                      size="sm"
+                      className="p-0 h-auto text-primary text-sm flex items-center"
+                      onClick={() => navigate("/cart")}
+                    >
+                      <ChevronRight className="h-3.5 w-3.5 rotate-180 mr-1" />
+                      Edit Cart
+                    </Button>
                   </div>
-                ))}
-                
-                <Separator />
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <p className="text-muted-foreground">Subtotal</p>
-                    <p>${subtotal.toFixed(2)}</p>
+                  
+                  {/* Price Breakdown */}
+                  <div className="p-6 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span>${subtotal.toFixed(2)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Shipping</span>
+                      {subtotal >= 75 ? (
+                        <span className="text-green-600 font-medium">FREE</span>
+                      ) : (
+                        <span>${shipping.toFixed(2)}</span>
+                      )}
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Estimated Tax</span>
+                      <span>${tax.toFixed(2)}</span>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="flex justify-between font-bold text-lg">
+                      <span>Total</span>
+                      <span>${(subtotal + shipping + tax).toFixed(2)}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <p className="text-muted-foreground">Shipping</p>
-                    <p>${shipping.toFixed(2)}</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-muted-foreground">Tax</p>
-                    <p>${tax.toFixed(2)}</p>
-                  </div>
-                </div>
+                </CardContent>
                 
-                <Separator />
-                
-                <div className="flex justify-between items-center font-semibold text-lg">
-                  <p>Total</p>
-                  <p>${total.toFixed(2)}</p>
-                </div>
-              </CardContent>
-              <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
-                <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
-              </CardFooter>
-            </Card>
+                <CardFooter className="border-t p-6 bg-muted/30">
+                  <div className="w-full space-y-4">
+                    <h3 className="text-sm font-medium">Our Guarantees</h3>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                        <span>100% Satisfaction Guarantee</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                        <span>Free Shipping on Orders Over $75</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                        <span>30-Day Easy Returns</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-center text-xs text-muted-foreground mt-4">
+                      <Lock className="h-3 w-3 mr-1" />
+                      <span>Secure Checkout</span>
+                    </div>
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
