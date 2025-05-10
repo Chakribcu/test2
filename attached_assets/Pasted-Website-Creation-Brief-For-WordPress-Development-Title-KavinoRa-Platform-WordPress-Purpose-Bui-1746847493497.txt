@@ -1,0 +1,99 @@
+Website Creation Brief – For WordPress Development
+
+Title: KavinoRa
+Platform: WordPress
+Purpose: Build a clean, mobile-first, fast-loading, scalable e-commerce website for the brand KavinoRa, starting with a single hero product and expanding later to multiple wellness/self-care products. The site must be WooCommerce-ready and SEO-optimized, with a professional user interface, minimal design, and strong branding presence.
+
+
+
+Website Summary (For Developer/AI Tool)
+
+Hi! I want you to create a fully functional, modern, and professional WordPress website for my brand KavinoRa. It should have a clean, elegant design that reflects our identity as a wellness brand focused on comfort, confidence, and simplicity. Our first product is a plant-based anti-chafing spray called KavinoRa MotionMist™, designed for runners, athletes, and active individuals. The site will initially focus on this single product but must be designed in a way that supports multiple products in the future using WooCommerce.
+
+The website should run on WordPress, using Elementor as the page builder and a lightweight, responsive theme such as Astra, Kadence, or Blocksy. It must be mobile-optimized, load fast, and be easy to update. I want full ownership and access to edit pages in the future.
+
+
+Key Pages & Functional Requirements
+
+1. Homepage
+	•	Hero banner with brand message and product visual
+	•	Headline: “Effortless Comfort for Every Step”
+	•	Subheadline: Short intro to MotionMist™
+	•	Call-to-action button (e.g., “Notify Me” or “Join Waitlist”)
+	•	3 feature icons/benefits below hero section
+	•	Mini brand story (inspired by my mother Kavitha)
+	•	Testimonials slider (or placeholder)
+	•	Email signup form
+	•	Footer with links, social icons, and legal pages
+
+2. About Us
+	•	Full paragraph-based brand story
+	•	Description of founder inspiration (mother Kavitha)
+	•	Mission and brand values (comfort, clarity, confidence)
+	•	A photo section (founder or symbolic image)
+	•	Optional quote block
+
+3. Product Page – MotionMist™
+	•	Product name and description
+	•	High-quality image/3D render
+	•	Bullet-point benefits
+	•	Usage instructions
+	•	“Notify me” or pre-launch signup button
+	•	Trust badges (plant-based, dermatologist-tested, cruelty-free)
+	•	Future support for WooCommerce “Buy Now” button
+	•	Placeholder for product reviews
+
+4. Learn / Blog Page
+	•	Intro paragraph about KavinoRa’s Journal
+	•	List of 3–5 articles with images and short summaries
+	•	Sample blog titles like “How to Prevent Skin Chafing” or “Skincare for Runners”
+	•	Easy-to-navigate post layout
+
+5. Contact Page
+	•	Short friendly intro (“We’d love to hear from you”)
+	•	Contact form (Name, Email, Message)
+	•	Email: hello@kavinora.com
+	•	Social media links (Instagram, TikTok, etc.)
+
+6. Footer (Global)
+	•	Email signup form
+	•	Quick links to Home, About, Product, Blog, Contact
+	•	Privacy Policy + Terms & Conditions links
+	•	Copyright notice
+	•	Branded font and logo
+
+
+
+Design & UI Requirements
+	•	Minimal, airy layout with white space
+	•	Color palette: Soft teal, light beige, pastel neutrals
+	•	Typography:
+	•	Headings: Montserrat or Poppins
+	•	Body: Lato or Open Sans
+	•	Button styling: Rounded, high-contrast CTA with hover effect
+	•	Mobile-first responsive design
+	•	Optimized for speed (WebP images, caching, minified CSS/JS)
+	•	No clutter, no popups, no autoplay videos
+	•	Smooth animations (subtle fade-in, hover effects)
+
+
+Technical Setup
+	•	CMS: WordPress
+	•	Builder: Elementor (Pro or free)
+	•	Theme: Astra, Blocksy, or Kadence
+	•	Store: WooCommerce-ready (even if not active at launch)
+	•	Plugins:
+	•	WPForms (for contact form)
+	•	Mailchimp or Brevo (email signup integration)
+	•	RankMath SEO (for on-page SEO)
+	•	LiteSpeed Cache or WP Rocket (for performance)
+	•	SiteGround Security or Wordfence (optional)
+
+
+Goals for This Website
+	•	Build early brand trust
+	•	Collect pre-launch emails
+	•	Share brand story and wellness values
+	•	Prepare for smooth product launch on Amazon & beyond
+	•	Scale to support a full e-commerce store in the future
+
