@@ -10,6 +10,12 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   firstName: text("first_name"),
   lastName: text("last_name"),
+  phone: text("phone"),
+  street: text("street"),
+  city: text("city"),
+  state: text("state"),
+  postalCode: text("postal_code"),
+  country: text("country"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -38,6 +44,12 @@ export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   firstName: true,
   lastName: true,
+  phone: true,
+  street: true,
+  city: true,
+  state: true,
+  postalCode: true,
+  country: true,
 });
 
 export const insertContactSchema = createInsertSchema(contacts).pick({

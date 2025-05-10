@@ -80,10 +80,29 @@ export class MemStorage implements IStorage {
       id, 
       firstName: insertUser.firstName || null,
       lastName: insertUser.lastName || null,
+      phone: insertUser.phone || null,
+      street: insertUser.street || null,
+      city: insertUser.city || null,
+      state: insertUser.state || null,
+      postalCode: insertUser.postalCode || null,
+      country: insertUser.country || null,
       createdAt: now
     };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUserProfile(id: number, userData: Partial<Omit<User, 'id' | 'password' | 'createdAt'>>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser = { 
+      ...user,
+      ...userData,
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   // Contact methods

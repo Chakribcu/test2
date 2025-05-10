@@ -48,13 +48,13 @@ export default function Account() {
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         email: user.email || user.username || "",
-        phone: "", // Default empty since this is not in the user type
+        phone: user.phone || "",
         address: {
-          street: "",
-          city: "",
-          state: "",
-          postalCode: "",
-          country: ""
+          street: user.street || "",
+          city: user.city || "",
+          state: user.state || "",
+          postalCode: user.postalCode || "",
+          country: user.country || ""
         }
       });
     }

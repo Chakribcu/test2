@@ -49,10 +49,14 @@ const Hero = () => {
           className="relative mx-auto max-w-5xl mb-16"
         >
           <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#f2f2f2] to-white">
-            <img 
+            <OptimizedImage 
               src="https://i.imgur.com/vAr3b3G.jpeg" 
               alt="KavinoRa MotionMist Anti-Chafing Spray" 
-              className="w-full object-cover h-[300px] md:h-[500px] lg:h-[600px] object-center shadow-lg" 
+              className="w-full h-[300px] md:h-[500px] lg:h-[600px] shadow-lg" 
+              objectFit="cover"
+              sizes="(max-width: 768px) 100vw, 1200px"
+              lazyLoad={false}
+              blurEffect={true}
             />
           </div>
           
