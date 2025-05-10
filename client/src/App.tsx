@@ -13,6 +13,7 @@ import Cart from "@/pages/cart";
 import OrderHistory from "@/pages/OrderHistory";
 import Checkout from "@/pages/Checkout";
 import Account from "@/pages/Account";
+import AuthPage from "@/pages/auth-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
+      <Route path="/auth" component={AuthPage} />
       <ProtectedRoute path="/cart" component={Cart} />
       <ProtectedRoute path="/checkout" component={Checkout} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useLocation, useRoute } from "wouter";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
 import OptimizedImage from "@/components/ui/optimized-image";
@@ -82,15 +82,14 @@ const AuthPage = () => {
         <div className="flex flex-col md:flex-row gap-12 max-w-6xl mx-auto">
           {/* Form Section */}
           <div className="md:w-1/2 bg-white rounded-2xl shadow-md p-10">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="mb-8"
-            >
-              <h2 className="text-3xl font-semibold text-[#1d1d1f] mb-2">{isLogin ? 'Welcome back' : 'Create your account'}</h2>
-              <p className="text-[#6e6e73]">{isLogin ? 'Sign in to your account to continue' : 'Join KavinoRa and discover premium wellness products'}</p>
-            </motion.div>
+            <div className="mb-8">
+              <h2 className="text-3xl font-semibold text-[#1d1d1f] mb-2">
+                {isLogin ? 'Welcome back' : 'Create your account'}
+              </h2>
+              <p className="text-[#6e6e73]">
+                {isLogin ? 'Sign in to your account to continue' : 'Join KavinoRa and discover premium wellness products'}
+              </p>
+            </div>
             
             <div className="mb-8 flex space-x-2">
               <button
@@ -118,10 +117,7 @@ const AuthPage = () => {
             </div>
 
             {isLogin ? (
-              <motion.form 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+              <form
                 onSubmit={handleLoginSubmit(onLoginSubmit)}
                 className="space-y-6"
               >
@@ -193,12 +189,9 @@ const AuthPage = () => {
                     </div>
                   )}
                 </button>
-              </motion.form>
+              </form>
             ) : (
-              <motion.form 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+              <form
                 onSubmit={handleSignupSubmit(onRegisterSubmit)}
                 className="space-y-6"
               >
@@ -338,7 +331,7 @@ const AuthPage = () => {
                     </div>
                   )}
                 </button>
-              </motion.form>
+              </form>
             )}
           </div>
 
@@ -380,8 +373,8 @@ const AuthPage = () => {
                 blurEffect={true}
               />
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </div>
   );
