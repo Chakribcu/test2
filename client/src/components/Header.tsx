@@ -290,23 +290,25 @@ const Header = () => {
                   </div>
                 ) : (
                   <div className="border-t border-border/20 pt-4 space-y-4">
-                    <Link 
-                      href="/auth" 
+                    <button 
                       className="block w-full py-2.5 text-center rounded-full bg-primary text-white font-medium"
-                      onClick={closeMenu}
+                      onClick={() => {
+                        closeMenu();
+                        setIsAuthModalOpen(true);
+                      }}
                     >
                       Sign In
-                    </Link>
-                    <Link 
-                      href="/auth"
+                    </button>
+                    <button 
                       className="block w-full py-2.5 text-center rounded-full border border-foreground/10 text-foreground font-medium"
                       onClick={() => {
                         localStorage.setItem('authTab', 'signup');
                         closeMenu();
+                        setIsAuthModalOpen(true);
                       }}
                     >
                       Create Account
-                    </Link>
+                    </button>
                   </div>
                 )}
               </nav>

@@ -9,7 +9,6 @@ import Contact from "@/pages/Contact";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import NotFound from "@/pages/not-found";
-import AuthPage from "@/pages/auth-page";
 import Cart from "@/pages/cart";
 import OrderHistory from "@/pages/OrderHistory";
 import Checkout from "@/pages/Checkout";
@@ -29,7 +28,6 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
-      <Route path="/auth" component={AuthPage} />
       <ProtectedRoute path="/cart" component={Cart} />
       <ProtectedRoute path="/checkout" component={Checkout} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />

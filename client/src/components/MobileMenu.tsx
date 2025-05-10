@@ -22,7 +22,7 @@ interface MobileMenuProps {
   openAuthModal?: () => void;
 }
 
-const MobileMenu = ({ isOpen, onClose, currentPath }: MobileMenuProps) => {
+const MobileMenu = ({ isOpen, onClose, currentPath, openAuthModal }: MobileMenuProps) => {
   const { user, logoutMutation } = useAuth();
   
   if (!isOpen) return null;
@@ -154,26 +154,28 @@ const MobileMenu = ({ isOpen, onClose, currentPath }: MobileMenuProps) => {
             </div>
           ) : (
             <div className="space-y-1">
-              <Link 
-                href="/auth" 
-                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
-                onClick={onClose}
+              <button 
+                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted w-full text-left"
+                onClick={() => {
+                  onClose();
+                  openAuthModal && openAuthModal();
+                }}
               >
                 <LogIn className="h-4 w-4 mr-3" />
                 Sign In
-              </Link>
+              </button>
               
-              <Link 
-                href="/auth" 
-                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+              <button 
+                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted w-full text-left"
                 onClick={() => {
                   localStorage.setItem('authTab', 'signup');
                   onClose();
+                  openAuthModal && openAuthModal();
                 }}
               >
                 <UserPlus className="h-4 w-4 mr-3" />
                 Create Account
-              </Link>
+              </button>
             </div>
           )}
           
