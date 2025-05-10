@@ -19,6 +19,7 @@ interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   currentPath: string;
+  openAuthModal?: () => void;
 }
 
 const MobileMenu = ({ isOpen, onClose, currentPath }: MobileMenuProps) => {
