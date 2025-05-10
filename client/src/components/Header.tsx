@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import AuthModal from "./AuthModal";
 import { AnimatePresence, motion } from "framer-motion";
+import OptimizedImage from "./ui/optimized-image";
 
 // Apple-inspired Header component
 const Header = () => {
@@ -61,15 +62,15 @@ const Header = () => {
   return (
     <>
       <header 
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`fixed w-full top-0 z-50 transition-all duration-300 ${
           isScrolled 
-            ? "bg-white/80 backdrop-blur-md border-b border-border/30 shadow-sm" 
-            : "bg-background"
+            ? "bg-white/95 backdrop-blur-md border-b border-border/30 shadow-sm" 
+            : "bg-white/90 backdrop-blur-sm"
         }`}
       >
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
           {/* Logo - Apple Style */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center relative z-10">
             <svg 
               width="28" 
               height="28" 
@@ -87,8 +88,8 @@ const Header = () => {
           </Link>
           
           {/* Desktop Navigation - Apple Style */}
-          <nav className="hidden md:flex items-center">
-            <div className="bg-secondary/50 backdrop-blur-sm rounded-full px-2 py-1 flex space-x-1">
+          <nav className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
+            <div className="bg-[#f5f5f7]/80 backdrop-blur-sm rounded-full px-2 py-1 flex space-x-1">
               {[
                 { href: "/", label: "Home" },
                 { href: "/about", label: "About" },
@@ -101,8 +102,8 @@ const Header = () => {
                   href={item.href} 
                   className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
                     location === item.href 
-                      ? "bg-white text-foreground shadow-sm" 
-                      : "text-foreground/80 hover:text-foreground"
+                      ? "bg-white text-[#1d1d1f] shadow-sm font-medium" 
+                      : "text-[#1d1d1f]/80 hover:text-[#1d1d1f]"
                   }`}
                 >
                   {item.label}
@@ -112,9 +113,9 @@ const Header = () => {
           </nav>
           
           {/* Header Actions - Apple Style */}
-          <div className="flex items-center space-x-5">
+          <div className="flex items-center space-x-5 relative z-10">
             {/* Search button */}
-            <button className="text-foreground/80 hover:text-foreground transition-colors hidden md:flex items-center text-sm">
+            <button className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors hidden md:flex items-center text-sm">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
                 <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -124,7 +125,7 @@ const Header = () => {
             {/* Cart button */}
             <Link 
               href="/cart" 
-              className="text-foreground/80 hover:text-foreground transition-colors flex items-center text-sm relative"
+              className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors flex items-center text-sm relative"
               aria-label="Shopping Cart"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
@@ -140,7 +141,7 @@ const Header = () => {
             {/* User account button */}
             <div className="relative" ref={userMenuRef}>
               <button
-                className="text-foreground/80 hover:text-foreground transition-colors flex items-center text-sm"
+                className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors flex items-center text-sm"
                 onClick={user ? toggleUserMenu : openAuthModal}
                 aria-label="Account"
               >
@@ -164,20 +165,20 @@ const Header = () => {
 
               {/* User dropdown menu - Apple Style */}
               {isUserMenuOpen && user && (
-                <div className="absolute right-0 mt-2 w-60 rounded-xl overflow-hidden bg-white/90 backdrop-blur-md shadow-lg border border-border/40 py-1 z-10">
+                <div className="absolute right-0 mt-2 w-60 rounded-xl overflow-hidden bg-white/95 backdrop-blur-md shadow-lg border border-border/40 py-1 z-10">
                   <div className="px-4 py-3 border-b border-border/30">
                     <p className="text-sm font-medium">{user.firstName ? `${user.firstName} ${user.lastName || ''}` : user.username}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
                   </div>
                   <div className="py-1">
-                    <Link href="/account" className="flex items-center px-4 py-2 text-sm hover:bg-secondary/50">
+                    <Link href="/account" className="flex items-center px-4 py-2 text-sm hover:bg-[#f5f5f7]">
                       <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                       </svg>
                       My Account
                     </Link>
-                    <Link href="/order-history" className="flex items-center px-4 py-2 text-sm hover:bg-secondary/50">
+                    <Link href="/order-history" className="flex items-center px-4 py-2 text-sm hover:bg-[#f5f5f7]">
                       <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                         <polyline points="14 2 14 8 20 8"/>
@@ -191,7 +192,7 @@ const Header = () => {
                   <div className="border-t border-border/30 py-1">
                     <button 
                       onClick={handleLogout}
-                      className="flex w-full items-center px-4 py-2 text-sm hover:bg-secondary/50 text-left"
+                      className="flex w-full items-center px-4 py-2 text-sm hover:bg-[#f5f5f7] text-left"
                     >
                       <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -207,7 +208,7 @@ const Header = () => {
             
             {/* Mobile menu button - Apple Style */}
             <button
-              className="md:hidden flex items-center justify-center w-8 h-8 text-foreground"
+              className="md:hidden flex items-center justify-center w-8 h-8 text-[#1d1d1f]"
               onClick={toggleMenu}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -252,7 +253,7 @@ const Header = () => {
                       className={`block py-2 text-base ${
                         location === item.href 
                           ? "text-primary font-medium" 
-                          : "text-foreground"
+                          : "text-[#1d1d1f]"
                       }`}
                       onClick={closeMenu}
                     >
@@ -265,14 +266,14 @@ const Header = () => {
                   <div className="border-t border-border/20 pt-4 space-y-3">
                     <Link 
                       href="/account" 
-                      className="block py-2 text-base text-foreground"
+                      className="block py-2 text-base text-[#1d1d1f]"
                       onClick={closeMenu}
                     >
                       My Account
                     </Link>
                     <Link 
                       href="/order-history" 
-                      className="block py-2 text-base text-foreground"
+                      className="block py-2 text-base text-[#1d1d1f]"
                       onClick={closeMenu}
                     >
                       Order History
@@ -282,7 +283,7 @@ const Header = () => {
                         handleLogout();
                         closeMenu();
                       }}
-                      className="block py-2 text-base text-foreground w-full text-left"
+                      className="block py-2 text-base text-[#1d1d1f] w-full text-left"
                     >
                       Sign Out
                     </button>
@@ -299,7 +300,7 @@ const Header = () => {
                       Sign In
                     </button>
                     <button 
-                      className="block w-full py-2.5 text-center rounded-full border border-foreground/10 text-foreground font-medium"
+                      className="block w-full py-2.5 text-center rounded-full border border-[#1d1d1f]/10 text-[#1d1d1f] font-medium"
                       onClick={() => {
                         localStorage.setItem('authTab', 'signup');
                         closeMenu();
@@ -315,6 +316,9 @@ const Header = () => {
           )}
         </AnimatePresence>
       </header>
+
+      {/* Spacer to compensate for fixed header */}
+      <div className="h-16 md:h-20"></div>
 
       {/* Auth Modal */}
       <AuthModal 

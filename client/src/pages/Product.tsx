@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Star, ChevronRight, ShoppingCart } from "lucide-react";
 import ProductCard from "@/components/ui/product-card";
+import ImageSlider from "@/components/ui/image-slider";
+import OptimizedImage from "@/components/ui/optimized-image";
 
 // Sample products data - in a real app, this would come from an API
 const products = [
@@ -19,7 +21,10 @@ const products = [
     rating: 4.8,
     reviews: 124,
     images: [
-      "https://i.imgur.com/vAr3b3G.jpeg"
+      "https://images.unsplash.com/photo-1556227834-09f1de7a7d14?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1607004468138-e7e23ea26947?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1614267861476-0d129972a0f5?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1556227834-09f1de7a7d14?q=80&w=1887&auto=format&fit=crop"
     ],
     description: "Our breakthrough anti-chafing spray provides long-lasting comfort during any activity. The lightweight formula applies easily, dries instantly, and creates an invisible protective barrier between your skin and clothing.",
     features: [
@@ -43,7 +48,9 @@ const products = [
     rating: 4.9,
     reviews: 89,
     images: [
-      "https://i.imgur.com/kSDJFN7.jpeg"
+      "https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1603567941882-60d5490643b8?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1565945887714-d5139f4eb0ce?q=80&w=1887&auto=format&fit=crop"
     ],
     description: "Our signature herbal tea blend crafted to promote relaxation, reduce stress, and enhance overall wellness. Each cup delivers a soothing experience with carefully selected organic ingredients.",
     features: [
@@ -67,7 +74,9 @@ const products = [
     rating: 4.7,
     reviews: 56,
     images: [
-      "https://i.imgur.com/vbRMEpZ.jpeg"
+      "https://images.unsplash.com/photo-1517971129774-8a2b38fa128e?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518893063132-36e46dbe2428?q=80&w=1887&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1887&auto=format&fit=crop"
     ],
     description: "Our beautiful, eco-friendly journal designed specifically to guide your mindfulness practice. With structured prompts, reflection pages, and mood tracking, it's the perfect companion for your wellness journey.",
     features: [
@@ -239,17 +248,32 @@ const Product = () => {
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Left Column - Images & Details */}
           <div className="lg:w-7/12">
-            {/* Main product image with zoom effect */}
-            <div className="relative bg-background border rounded-2xl overflow-hidden mb-6 aspect-square">
-              <img 
-                src={product.images[0]} 
-                alt={product.name}
-                className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
-              />
+            {/* Product image slider with zoom effect */}
+            <div className="relative mb-6">
+              {/* If there are multiple images, use slider */}
+              {product.images.length > 1 ? (
+                <ImageSlider 
+                  images={product.images}
+                  aspectRatio="square"
+                  showArrows={true}
+                  showDots={true}
+                  autoplay={false}
+                  className="shadow-lg"
+                />
+              ) : (
+                <div className="relative bg-background rounded-2xl overflow-hidden aspect-square shadow-lg">
+                  <OptimizedImage 
+                    src={product.images[0]} 
+                    alt={product.name}
+                    objectFit="cover"
+                    className="w-full h-full hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+              )}
               
               {/* Sale badge if applicable */}
               {product.id === "1" && (
-                <div className="absolute top-4 left-4 bg-green-500 text-white rounded-full px-3 py-1 text-sm font-bold">
+                <div className="absolute top-4 left-4 bg-green-500 text-white rounded-full px-3 py-1.5 text-sm font-medium z-10">
                   New
                 </div>
               )}
