@@ -87,13 +87,31 @@
     @apply border-border;
   }
 
+  html,
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased overflow-x-hidden;
     font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     font-size: 17px;
     font-weight: 400;
     line-height: 1.47059;
     letter-spacing: -0.022em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Apple-style smooth scrolling behaviors */
+  @media (pointer: fine) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Fix for iOS scrolling issues */
+  @supports (-webkit-overflow-scrolling: touch) {
+    body {
+      -webkit-overflow-scrolling: touch;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {

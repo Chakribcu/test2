@@ -6,22 +6,36 @@ import Testimonials from "@/components/Testimonials";
 import BlogPreview from "@/components/BlogPreview";
 import ContactForm from "@/components/ContactForm";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 const Home = () => {
   useEffect(() => {
     document.title = "KavinoRa - Effortless Comfort for Every Step";
+    
+    // Add smooth scrolling behavior to the entire page
+    document.documentElement.style.scrollBehavior = "smooth";
+    
+    return () => {
+      document.documentElement.style.scrollBehavior = "";
+    };
   }, []);
 
   return (
-    <>
-      <Hero />
-      <Benefits />
-      <BrandStory />
-      <ProductFeature />
-      <Testimonials />
-      <BlogPreview />
-      <ContactForm />
-    </>
+    <div className="overflow-x-hidden">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Hero />
+        <Benefits />
+        <BrandStory />
+        <ProductFeature />
+        <Testimonials />
+        <BlogPreview />
+        <ContactForm />
+      </motion.div>
+    </div>
   );
 };
 
