@@ -1,35 +1,56 @@
+import { Leaf, Clock, Droplets, Feather } from "lucide-react";
+
 const benefits = [
   {
-    icon: "ri-leaf-line",
+    icon: Leaf,
     title: "Plant-Based Formula",
-    description: "Gentle on your skin with natural ingredients that provide lasting protection."
+    description: "Gentle on your skin with natural ingredients that provide lasting protection without harsh chemicals."
   },
   {
-    icon: "ri-timer-line",
+    icon: Clock,
     title: "Long-Lasting Protection",
-    description: "Stays active throughout your workout or run, so you can focus on performance."
+    description: "Stays active for up to 8 hours, so you can focus on your performance without interruptions."
   },
   {
-    icon: "ri-drop-line",
+    icon: Droplets,
     title: "Non-Greasy Formula",
-    description: "Dries quickly without leaving any residue while providing smooth comfort."
+    description: "Dries quickly without leaving any residue while providing smooth comfort throughout your activities."
+  },
+  {
+    icon: Feather,
+    title: "Ultra-Lightweight Feel",
+    description: "So light you'll forget it's there, but with powerful protection when you need it most."
   }
 ];
 
 const Benefits = () => {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {benefits.map((benefit, index) => (
-            <div key={index} className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 flex items-center justify-center bg-beige rounded-full mb-4">
-                <i className={`${benefit.icon} text-teal text-2xl`}></i>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose KavinoRa</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Our innovative formulas are designed with your active lifestyle in mind, 
+            providing superior protection and comfort in every situation.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {benefits.map((benefit, index) => {
+            const Icon = benefit.icon;
+            return (
+              <div 
+                key={index} 
+                className="flex flex-col p-6 rounded-xl border bg-card hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg mb-5 text-primary">
+                  <Icon size={22} />
+                </div>
+                <h3 className="font-semibold text-xl mb-3">{benefit.title}</h3>
+                <p className="text-muted-foreground text-sm">{benefit.description}</p>
               </div>
-              <h3 className="font-montserrat font-semibold text-xl mb-3">{benefit.title}</h3>
-              <p className="text-gray-600">{benefit.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

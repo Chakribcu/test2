@@ -96,24 +96,97 @@ const Product = () => {
   if (!id) {
     return (
       <Layout>
-        <div className="container mx-auto py-12 px-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8">Our Products</h1>
+        <div className="container mx-auto py-16 px-4">
+          {/* Hero section for products page */}
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 to-background mb-16">
+            <div className="absolute top-10 right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+            <div className="py-16 px-8 relative z-10">
+              <div className="max-w-2xl">
+                <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Premium Products</h1>
+                <p className="text-lg text-muted-foreground mb-0">
+                  Discover our range of plant-based wellness products designed to enhance your active lifestyle with natural ingredients and superior performance.
+                </p>
+              </div>
+            </div>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Filters and sort - can be expanded with functionality */}
+          <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-4">
+              <Badge variant="outline" className="px-3 py-1 rounded-full font-medium">
+                All Products
+              </Badge>
+              <Badge variant="outline" className="px-3 py-1 rounded-full">
+                Anti-Chafing
+              </Badge>
+              <Badge variant="outline" className="px-3 py-1 rounded-full">
+                Wellness
+              </Badge>
+              <Badge variant="outline" className="px-3 py-1 rounded-full">
+                Lifestyle
+              </Badge>
+            </div>
+            
+            <div>
+              <Button variant="ghost" size="sm">
+                Sort by: Featured
+              </Button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
             {products.map((product) => (
-              <div key={product.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-64 bg-muted relative overflow-hidden">
+              <div 
+                key={product.id} 
+                className="group rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border bg-card"
+              >
+                <div className="h-72 bg-muted relative overflow-hidden">
                   <img 
                     src={product.images[0]} 
                     alt={product.name}
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
+                  
+                  {/* Quick actions overlay */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="flex gap-3">
+                      <Button 
+                        size="sm" 
+                        variant="secondary" 
+                        className="rounded-full" 
+                        onClick={() => navigate(`/product/${product.id}`)}
+                      >
+                        View Details
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        className="rounded-full"
+                        onClick={() => {
+                          if (user) {
+                            toast({
+                              title: "Added to Cart",
+                              description: `${product.name} has been added to your cart`,
+                            });
+                          } else {
+                            navigate("/auth");
+                          }
+                        }}
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {/* Price badge */}
+                  <div className="absolute top-4 right-4 bg-primary text-white rounded-full px-3 py-1 text-sm font-bold">
+                    ${product.price.toFixed(2)}
+                  </div>
                 </div>
                 
-                <div className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h2 className="font-bold text-lg">{product.name}</h2>
-                    <Badge variant="outline" className="text-primary">${product.price.toFixed(2)}</Badge>
+                <div className="p-6">
+                  <div className="mb-2">
+                    <h2 className="font-bold text-xl">{product.name}</h2>
                   </div>
                   
                   <div className="flex items-center text-sm text-muted-foreground mb-3">
@@ -123,7 +196,7 @@ const Product = () => {
                           key={i}
                           className={`w-4 h-4 ${
                             i < Math.floor(product.rating) 
-                              ? "text-yellow-400 fill-yellow-400" 
+                              ? "text-amber-400 fill-amber-400" 
                               : "text-gray-300"
                           }`}
                         />
@@ -136,41 +209,40 @@ const Product = () => {
                     {product.description}
                   </p>
                   
-                  <div className="flex flex-wrap gap-1 mb-4">
+                  <div className="flex flex-wrap gap-1.5 mb-4">
                     {product.tags.slice(0, 3).map((tag, i) => (
                       <Badge key={i} variant="secondary" className="text-xs">
                         {tag}
                       </Badge>
                     ))}
                     {product.tags.length > 3 && (
-                      <Badge variant="outline" className="text-xs">+{product.tags.length - 3} more</Badge>
+                      <Badge variant="outline" className="text-xs">+{product.tags.length - 3}</Badge>
                     )}
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <Button variant="outline" size="sm" onClick={() => navigate(`/product/${product.id}`)}>
-                      View Details
-                    </Button>
-                    <Button 
-                      size="sm"
-                      onClick={() => {
-                        if (user) {
-                          toast({
-                            title: "Added to Cart",
-                            description: `${product.name} has been added to your cart`,
-                          });
-                        } else {
-                          navigate("/auth");
-                        }
-                      }}
-                    >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Add to Cart
-                    </Button>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+          
+          {/* Newsletter signup */}
+          <div className="mt-24 bg-slate-50 rounded-2xl p-8 lg:p-12">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
+                <p className="text-muted-foreground mb-0">
+                  Join our newsletter to receive updates on new product launches, 
+                  wellness tips, and exclusive offers.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+                <Button>Subscribe</Button>
+              </div>
+            </div>
           </div>
         </div>
       </Layout>
@@ -217,166 +289,369 @@ const Product = () => {
   
   return (
     <Layout>
-      <div className="container mx-auto py-8 px-4">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Left Column - Images */}
-          <div className="md:w-1/2">
-            <div className="relative bg-muted rounded-lg overflow-hidden mb-4 h-96">
+      {/* Product detail with sticky purchasing panel */}
+      <div className="container mx-auto py-12 px-4">
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center mb-8 text-sm">
+          <Button 
+            variant="link" 
+            className="text-muted-foreground p-0 h-auto font-medium" 
+            onClick={() => navigate("/")}
+          >
+            Home
+          </Button>
+          <ChevronRight className="w-4 h-4 mx-1 text-muted-foreground" />
+          <Button 
+            variant="link" 
+            className="text-muted-foreground p-0 h-auto font-medium" 
+            onClick={() => navigate("/product")}
+          >
+            Products
+          </Button>
+          <ChevronRight className="w-4 h-4 mx-1 text-muted-foreground" />
+          <span className="text-foreground font-medium">{product.name}</span>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Left Column - Images & Details */}
+          <div className="lg:w-7/12">
+            {/* Main product image with zoom effect */}
+            <div className="relative bg-background border rounded-2xl overflow-hidden mb-6 aspect-square">
               <img 
                 src={product.images[0]} 
                 alt={product.name}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
               />
+              
+              {/* Sale badge if applicable */}
+              {product.id === "1" && (
+                <div className="absolute top-4 left-4 bg-green-500 text-white rounded-full px-3 py-1 text-sm font-bold">
+                  New
+                </div>
+              )}
+            </div>
+
+            {/* Product Description & Details */}
+            <div className="mb-12">
+              <div className="flex items-center border-b pb-4 mb-6">
+                <h2 className="text-xl font-bold flex-1">Product Details</h2>
+              </div>
+              
+              <div className="prose max-w-none text-muted-foreground">
+                <p className="mb-4">{product.description}</p>
+                <p>
+                  Experience the difference with KavinoRa's premium quality products, 
+                  designed with your active lifestyle in mind. Our {product.name} is perfect 
+                  for athletes, fitness enthusiasts, and anyone seeking natural, high-performance solutions.
+                </p>
+              </div>
+            </div>
+
+            {/* Features in cards */}
+            <div className="mb-12">
+              <div className="flex items-center border-b pb-4 mb-6">
+                <h2 className="text-xl font-bold flex-1">Key Features</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {product.features.map((feature, i) => (
+                  <div key={i} className="flex p-4 border rounded-xl bg-card hover:border-primary/50 transition-colors">
+                    <div className="mr-4 mt-1 bg-primary/10 p-1.5 rounded-full h-fit">
+                      <Check className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-sm">{feature}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Customer Reviews Section */}
+            <div className="mb-12">
+              <div className="flex items-center border-b pb-4 mb-6">
+                <h2 className="text-xl font-bold flex-1">Customer Reviews</h2>
+                <div className="flex items-center">
+                  <div className="flex mr-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < Math.floor(product.rating) 
+                            ? "text-amber-400 fill-amber-400" 
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-medium">{product.rating} · {product.reviews} reviews</span>
+                </div>
+              </div>
+              
+              {/* Sample reviews - in a real app, these would come from a database */}
+              <div className="space-y-6">
+                <div className="border-b pb-6">
+                  <div className="flex justify-between mb-2">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
+                        JD
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Jane Doe</h4>
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-3.5 h-3.5 ${i < 5 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-sm text-muted-foreground">2 months ago</span>
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    This product has been amazing for my marathon training. No more chafing issues on my long runs.
+                    I've recommended it to everyone in my running club!
+                  </p>
+                </div>
+                
+                <div className="border-b pb-6">
+                  <div className="flex justify-between mb-2">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
+                        MS
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Michael Smith</h4>
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-3.5 h-3.5 ${i < 4 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-sm text-muted-foreground">1 month ago</span>
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    I love that this is plant-based and doesn't have any harmful chemicals. Works just as well as the 
+                    other brands I've tried but feels much better on my skin.
+                  </p>
+                </div>
+                
+                <Button variant="outline" className="w-full">View All {product.reviews} Reviews</Button>
+              </div>
             </div>
           </div>
           
-          {/* Right Column - Details */}
-          <div className="md:w-1/2">
-            <div className="flex items-center mb-2 text-sm">
-              <Button 
-                variant="link" 
-                className="text-muted-foreground p-0 h-auto" 
-                onClick={() => navigate("/product")}
-              >
-                Products
-              </Button>
-              <ChevronRight className="w-4 h-4 mx-1 text-muted-foreground" />
-              <span className="text-muted-foreground">{product.name}</span>
-            </div>
-            
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            
-            <div className="flex items-center mb-4">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < Math.floor(product.rating) 
-                        ? "text-yellow-400 fill-yellow-400" 
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="ml-2 text-sm text-muted-foreground">
-                {product.rating} ({product.reviews} reviews)
-              </span>
-            </div>
-            
-            <p className="text-2xl font-bold mb-4">${product.price.toFixed(2)}</p>
-            
-            <div className="mb-6">
-              <p className="mb-4">{product.description}</p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {product.tags.map((tag, i) => (
-                  <Badge key={i} variant="secondary">{tag}</Badge>
-                ))}
-              </div>
-              
-              <div className="flex items-center text-sm mb-4">
-                <span className={product.inStock ? "text-green-600" : "text-red-600"}>
-                  {product.inStock ? "In Stock" : "Out of Stock"}
-                </span>
-              </div>
-            </div>
-            
-            <div className="space-y-4 mb-6">
-              <div className="flex items-center">
-                <label htmlFor="quantity" className="w-24">Quantity:</label>
-                <div className="flex items-center">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-8 w-8 rounded-r-none"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    disabled={quantity <= 1}
-                  >
-                    -
-                  </Button>
-                  <div className="h-8 px-4 flex items-center justify-center border-y">
-                    {quantity}
+          {/* Right Column - Purchase Panel */}
+          <div className="lg:w-5/12">
+            {/* Sticky product purchase card */}
+            <div className="lg:sticky lg:top-24">
+              <div className="bg-card rounded-2xl border shadow-sm p-6 mb-8">
+                <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.name}</h1>
+
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 ${
+                          i < Math.floor(product.rating) 
+                            ? "text-amber-400 fill-amber-400" 
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
                   </div>
+                  <span className="ml-2 text-sm text-muted-foreground">
+                    {product.rating} ({product.reviews} reviews)
+                  </span>
+                </div>
+                
+                <div className="text-3xl font-bold text-primary mb-6">${product.price.toFixed(2)}</div>
+                
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {product.tags.map((tag, i) => (
+                    <Badge key={i} variant="secondary">{tag}</Badge>
+                  ))}
+                </div>
+                
+                <div className="flex items-center text-sm mb-6">
+                  <div className={`flex items-center ${product.inStock ? "text-green-600" : "text-red-600"}`}>
+                    <div className={`w-2 h-2 rounded-full mr-2 ${product.inStock ? "bg-green-600" : "bg-red-600"}`}></div>
+                    <span className="font-medium">{product.inStock ? "In Stock" : "Out of Stock"}</span>
+                  </div>
+                  {product.inStock && <span className="text-muted-foreground ml-2">Ready to ship</span>}
+                </div>
+                
+                <div className="border-t border-b py-6 mb-6">
+                  <div className="flex items-center mb-4">
+                    <label htmlFor="quantity" className="w-24 font-medium">Quantity:</label>
+                    <div className="flex items-center">
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-10 w-10 rounded-r-none"
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        disabled={quantity <= 1}
+                      >
+                        -
+                      </Button>
+                      <div className="h-10 w-12 flex items-center justify-center border-y">
+                        {quantity}
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-10 w-10 rounded-l-none"
+                        onClick={() => setQuantity(quantity + 1)}
+                      >
+                        +
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>Total:</span>
+                    <span className="font-medium text-foreground">${(product.price * quantity).toFixed(2)}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  <Button 
+                    className="w-full text-base h-12"
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart || !product.inStock}
+                  >
+                    {isAddingToCart ? (
+                      "Adding..."
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
                   <Button 
                     variant="outline" 
-                    size="icon" 
-                    className="h-8 w-8 rounded-l-none"
-                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-full text-base h-12"
+                    onClick={() => {
+                      handleAddToCart();
+                      setTimeout(() => navigate("/checkout"), 600);
+                    }}
+                    disabled={isAddingToCart || !product.inStock}
                   >
-                    +
+                    Buy Now
                   </Button>
                 </div>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                className="flex-1"
-                onClick={handleAddToCart}
-                disabled={isAddingToCart || !product.inStock}
-              >
-                {isAddingToCart ? (
-                  "Adding..."
-                ) : (
-                  <>
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart
-                  </>
-                )}
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex-1"
-                onClick={() => {
-                  handleAddToCart();
-                  setTimeout(() => navigate("/cart"), 600);
-                }}
-                disabled={isAddingToCart || !product.inStock}
-              >
-                Buy Now
-              </Button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Features */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {product.features.map((feature, i) => (
-              <div key={i} className="flex items-start">
-                <div className="mr-3 mt-1 bg-primary/10 p-1 rounded-full">
-                  <Check className="w-4 h-4 text-primary" />
+                
+                {/* Secure payment information */}
+                <div className="flex items-center justify-center text-xs text-muted-foreground gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide-lock">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span>Secure checkout powered by Stripe</span>
                 </div>
-                <p>{feature}</p>
               </div>
-            ))}
+              
+              {/* Shipping & Returns */}
+              <div className="bg-card rounded-xl border shadow-sm p-6">
+                <h3 className="font-bold text-base mb-4">Shipping & Returns</h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 text-primary">
+                      <rect width="16" height="13" x="4" y="5" rx="2"/>
+                      <path d="M16 2v3"/>
+                      <path d="M8 2v3"/>
+                      <path d="M4 10h16"/>
+                    </svg>
+                    <div>
+                      <p className="font-medium">Free shipping</p>
+                      <p className="text-muted-foreground">2-5 business days</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 text-primary">
+                      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                      <path d="m9 9 3-3 3 3"/>
+                      <path d="M12 6v9"/>
+                    </svg>
+                    <div>
+                      <p className="font-medium">Easy returns</p>
+                      <p className="text-muted-foreground">30-day return policy</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
         {/* Related Products */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-24">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold">You Might Also Like</h2>
+            <Button variant="outline" onClick={() => navigate("/product")}>
+              View All Products
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.filter(p => p.id !== product.id).map((relatedProduct) => (
-              <div key={relatedProduct.id} className="border rounded-lg overflow-hidden">
-                <div className="h-48 bg-muted">
+              <div 
+                key={relatedProduct.id} 
+                className="group rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border bg-card"
+                onClick={() => navigate(`/product/${relatedProduct.id}`)}
+              >
+                <div className="h-72 bg-muted relative overflow-hidden cursor-pointer">
                   <img 
                     src={relatedProduct.images[0]} 
                     alt={relatedProduct.name}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
+                  
+                  {/* Price badge */}
+                  <div className="absolute top-4 right-4 bg-primary text-white rounded-full px-3 py-1 text-sm font-bold">
+                    ${relatedProduct.price.toFixed(2)}
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold mb-2">{relatedProduct.name}</h3>
-                  <p className="text-primary font-bold mb-3">${relatedProduct.price.toFixed(2)}</p>
+                
+                <div className="p-5">
+                  <h3 className="font-bold text-lg mb-2">{relatedProduct.name}</h3>
+                  <div className="flex items-center mb-3">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(relatedProduct.rating) 
+                              ? "text-amber-400 fill-amber-400" 
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      ({relatedProduct.reviews})
+                    </span>
+                  </div>
+                  
                   <Button 
-                    variant="outline" 
                     className="w-full"
-                    onClick={() => navigate(`/product/${relatedProduct.id}`)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toast({
+                        title: "Added to Cart",
+                        description: `${relatedProduct.name} has been added to your cart`,
+                      });
+                    }}
                   >
-                    View Product
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Add to Cart
                   </Button>
                 </div>
               </div>

@@ -1,33 +1,95 @@
 import { Link } from "wouter";
+import { ArrowRight, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="pt-16 pb-20 md:pt-20 md:pb-24 bg-beige-light">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 md:pr-12">
-            <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-gray-800 mb-4">
-              Effortless Comfort for Every Step
+    <section className="relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background pointer-events-none"></div>
+      
+      {/* Decorative elements */}
+      <div className="absolute top-20 right-[10%] w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 left-[5%] w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+      
+      <div className="container relative mx-auto px-4 py-20 md:py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center px-3 py-1 rounded-full border bg-background shadow-sm text-sm font-medium text-foreground/80 mb-6">
+              <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2"></span>
+              New product launch: MotionMist™
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6">
+              Effortless Comfort for <span className="text-primary">Every Step</span>
             </h1>
-            <p className="text-lg text-gray-600 mb-8">
-              Introducing MotionMist™, the plant-based anti-chafing spray designed for runners, athletes, and active individuals.
+            
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Discover our plant-based anti-chafing spray designed for runners, athletes, and active individuals to protect your skin when it matters most.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/product" className="inline-flex items-center justify-center bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap">
-                Shop Now
-                <i className="ri-arrow-right-line ml-2"></i>
-              </Link>
-              <Link href="/about" className="inline-flex items-center justify-center bg-white hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap border border-gray-300">
-                Learn More
-              </Link>
+            
+            <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex items-center text-sm">
+                <Check className="h-4 w-4 text-primary mr-2" />
+                100% Plant-Based
+              </div>
+              <div className="flex items-center text-sm">
+                <Check className="h-4 w-4 text-primary mr-2" />
+                Long-Lasting Protection
+              </div>
+              <div className="flex items-center text-sm">
+                <Check className="h-4 w-4 text-primary mr-2" />
+                Dermatologist Tested
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap gap-4">
+              <Button asChild size="lg" className="rounded-full">
+                <Link href="/product">
+                  Shop Now
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" size="lg" className="rounded-full">
+                <Link href="/about">
+                  Learn More
+                </Link>
+              </Button>
             </div>
           </div>
-          <div className="md:w-1/2 mt-12 md:mt-0">
-            <img 
-              src="https://pixabay.com/get/gbd20e1f06248868b2321297688b4c6d759a99b67d53173f852fb2cd83347348017d39e1f97d3a9c0a72d23e2a146826858308734326d6e60642e3760b60e2a8c_1280.jpg" 
-              alt="KavinoRa MotionMist Anti-Chafing Spray" 
-              className="rounded-xl shadow-lg w-full h-auto" 
-            />
+          
+          <div className="relative">
+            {/* Product image with shadow and border */}
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border bg-white aspect-square md:aspect-[4/5] lg:aspect-square">
+              <img 
+                src="https://i.imgur.com/vAr3b3G.jpeg" 
+                alt="KavinoRa MotionMist Anti-Chafing Spray" 
+                className="w-full h-full object-cover object-center" 
+              />
+              
+              {/* Floating testimonial card */}
+              <div className="absolute -bottom-6 -left-6 bg-background rounded-lg p-4 shadow-lg border max-w-[200px] hidden md:block">
+                <div className="flex items-center mb-2">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="text-amber-400">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                      </svg>
+                    ))}
+                  </div>
+                  <span className="ml-1 text-xs font-medium">5.0</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  "This spray has been a game-changer for my long-distance runs!"
+                </p>
+              </div>
+              
+              {/* Price tag */}
+              <div className="absolute top-6 right-6 bg-primary text-white rounded-full px-4 py-2 font-bold shadow-lg">
+                $29.99
+              </div>
+            </div>
           </div>
         </div>
       </div>
