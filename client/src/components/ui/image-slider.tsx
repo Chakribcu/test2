@@ -82,6 +82,9 @@ export const ImageSlider = ({
     }
   };
   
+  // Calculate next slide index for preloading
+  const nextIndex = (currentIndex + 1) % images.length;
+  
   return (
     <div 
       className={`relative overflow-hidden rounded-2xl ${aspectRatioClass} ${className}`}
@@ -91,6 +94,20 @@ export const ImageSlider = ({
       onTouchMove={handleTouchMoveEvent}
       onTouchEnd={handleTouchEndEvent}
     >
+      {/* Preload next image */}
+      {images.length > 1 && (
+        <div className="hidden">
+          <OptimizedImage 
+            src={images[nextIndex]}
+            alt={`Preload ${nextIndex + 1}`}
+            width={1}
+            height={1}
+            lazyLoad={false}
+            blurEffect={false}
+          />
+        </div>
+      )}
+      
       {/* Images */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -106,8 +123,9 @@ export const ImageSlider = ({
             alt={`Slide ${currentIndex + 1}`}
             className="w-full h-full"
             objectFit="cover"
-            lazyLoad={currentIndex !== 0}
+            lazyLoad={false}
             blurEffect={true}
+            quality={90}
           />
         </motion.div>
       </AnimatePresence>

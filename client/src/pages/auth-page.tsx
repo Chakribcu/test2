@@ -7,6 +7,9 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation, useRoute } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { motion } from "framer-motion";
+import OptimizedImage from "@/components/ui/optimized-image";
+import { Check, User, Mail, Lock, ArrowRight } from "lucide-react";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -74,86 +77,128 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="pt-12 pb-20">
+    <div className="pt-24 pb-24 bg-[#f5f5f7]">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row gap-12 max-w-6xl mx-auto"
+        >
           {/* Form Section */}
-          <div className="md:w-1/2 bg-white rounded-xl shadow-md p-8">
-            <div className="mb-6 flex justify-center space-x-4">
+          <div className="md:w-1/2 bg-white rounded-2xl shadow-md p-10">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="mb-8"
+            >
+              <h2 className="text-3xl font-semibold text-[#1d1d1f] mb-2">{isLogin ? 'Welcome back' : 'Create your account'}</h2>
+              <p className="text-[#6e6e73]">{isLogin ? 'Sign in to your account to continue' : 'Join KavinoRa and discover premium wellness products'}</p>
+            </motion.div>
+            
+            <div className="mb-8 flex space-x-2">
               <button
-                className={`font-montserrat font-medium text-lg pb-2 px-4 ${
+                className={`relative px-6 py-2 ${
                   isLogin 
-                    ? "text-teal border-b-2 border-teal" 
-                    : "text-gray-400 hover:text-gray-600"
+                    ? "text-[#1d1d1f] font-medium" 
+                    : "text-[#6e6e73] hover:text-[#1d1d1f]"
                 }`}
                 onClick={() => setIsLogin(true)}
               >
                 Sign In
+                {isLogin && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
               </button>
               <button
-                className={`font-montserrat font-medium text-lg pb-2 px-4 ${
+                className={`relative px-6 py-2 ${
                   !isLogin 
-                    ? "text-teal border-b-2 border-teal" 
-                    : "text-gray-400 hover:text-gray-600"
+                    ? "text-[#1d1d1f] font-medium" 
+                    : "text-[#6e6e73] hover:text-[#1d1d1f]"
                 }`}
                 onClick={() => setIsLogin(false)}
               >
-                Sign Up
+                Create Account
+                {!isLogin && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
               </button>
             </div>
 
             {isLogin ? (
-              <form onSubmit={handleLoginSubmit(onLoginSubmit)}>
-                <div className="mb-4">
-                  <label htmlFor="login-username" className="block font-montserrat font-medium mb-2">
+              <motion.form 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                onSubmit={handleLoginSubmit(onLoginSubmit)}
+                className="space-y-6"
+              >
+                <div>
+                  <label htmlFor="login-username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
                     Username
                   </label>
-                  <input
-                    id="login-username"
-                    type="text"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal ${
-                      loginErrors.username ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your username"
-                    {...registerLogin("username")}
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <User className="h-5 w-5 text-[#86868b]" />
+                    </div>
+                    <input
+                      id="login-username"
+                      type="text"
+                      className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                        loginErrors.username ? "ring-2 ring-red-500" : ""
+                      }`}
+                      placeholder="Enter your username"
+                      {...registerLogin("username")}
+                    />
+                  </div>
                   {loginErrors.username && (
-                    <p className="mt-1 text-red-600 text-sm">{loginErrors.username.message}</p>
+                    <p className="mt-1.5 text-red-600 text-xs">{loginErrors.username.message}</p>
                   )}
                 </div>
 
-                <div className="mb-6">
-                  <label htmlFor="login-password" className="block font-montserrat font-medium mb-2">
-                    Password
-                  </label>
-                  <input
-                    id="login-password"
-                    type="password"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal ${
-                      loginErrors.password ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your password"
-                    {...registerLogin("password")}
-                  />
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <label htmlFor="login-password" className="block text-sm font-medium text-[#1d1d1f]">
+                      Password
+                    </label>
+                    <a href="#" className="text-xs text-primary hover:text-primary/80 transition-colors">
+                      Forgot password?
+                    </a>
+                  </div>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-5 w-5 text-[#86868b]" />
+                    </div>
+                    <input
+                      id="login-password"
+                      type="password"
+                      className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                        loginErrors.password ? "ring-2 ring-red-500" : ""
+                      }`}
+                      placeholder="Enter your password"
+                      {...registerLogin("password")}
+                    />
+                  </div>
                   {loginErrors.password && (
-                    <p className="mt-1 text-red-600 text-sm">{loginErrors.password.message}</p>
+                    <p className="mt-1.5 text-red-600 text-xs">{loginErrors.password.message}</p>
                   )}
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 rounded-full transition-all"
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3.5 rounded-full transition-colors flex items-center justify-center"
                   disabled={loginMutation.isPending}
                 >
-                  {loginMutation.isPending ? "Signing in..." : "Sign In"}
+                  {loginMutation.isPending ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                      <span>Signing in...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <span>Sign In</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </div>
+                  )}
                 </button>
-
-                <div className="mt-4 text-center">
-                  <a href="#" className="text-teal hover:text-teal-dark text-sm">
-                    Forgot your password?
-                  </a>
-                </div>
-              </form>
+              </motion.form>
             ) : (
               <form onSubmit={handleSignupSubmit(onRegisterSubmit)}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
