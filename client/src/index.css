@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Base colors */
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  
+  /* Muted colors */
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  
+  /* Card colors */
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  
+  /* Popover colors */
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  
+  /* Border and input colors */
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  
+  /* Primary colors - Teal */
+  --primary: 174 42% 51%;
+  --primary-foreground: 0 0% 100%;
+  
+  /* Secondary colors - Beige */
+  --secondary: 39 41% 95%;
+  --secondary-foreground: 24 9.8% 10%;
+  
+  /* Accent colors */
+  --accent: 39 41% 95%;
+  --accent-foreground: 24 9.8% 10%;
+  
+  /* Destructive colors */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  
+  /* Ring color */
+  --ring: 174 42% 51%;
+  
+  /* Border radius */
+  --radius: 0.5rem;
+
+  /* Chart colors */
+  --chart-1: 174 42% 51%;
+  --chart-2: 39 41% 95%;
+  --chart-3: 0 84.2% 60.2%;
+  --chart-4: 220 14.3% 95.9%;
+  --chart-5: 220 8.9% 46.1%;
+  
+  /* Sidebar colors */
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 20 14.3% 4.1%;
+  --sidebar-primary: 174 42% 51%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 39 41% 95%;
+  --sidebar-accent-foreground: 24 9.8% 10%;
+  --sidebar-border: 20 5.9% 90%;
+  --sidebar-ring: 174 42% 51%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 174 42% 51%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Lato', sans-serif;
+    color: #555555;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+  }
+}
+
+/* Custom Utility Classes */
+@layer utilities {
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .font-lato {
+    font-family: 'Lato', sans-serif;
+  }
+  
+  .text-teal {
+    color: hsl(174, 42%, 51%);
+  }
+  
+  .bg-teal {
+    background-color: hsl(174, 42%, 51%);
+  }
+  
+  .hover\:bg-teal-dark:hover {
+    background-color: hsl(174, 42%, 41%);
+  }
+  
+  .bg-beige {
+    background-color: hsl(39, 41%, 95%);
+  }
+  
+  .bg-beige-light {
+    background-color: hsl(39, 41%, 98%);
+  }
+  
+  .hover\:bg-beige-dark:hover {
+    background-color: hsl(39, 41%, 90%);
+  }
+  
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+}
