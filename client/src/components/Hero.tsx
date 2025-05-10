@@ -1,97 +1,133 @@
 import { Link } from "wouter";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background pointer-events-none"></div>
+    <section className="relative overflow-hidden bg-[#fafafa]">
+      {/* Apple-style minimal design with subtle gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#f5f5f7] to-[#fbfbfd] pointer-events-none"></div>
       
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-[10%] w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 left-[5%] w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
-      
-      <div className="container relative mx-auto px-4 py-20 md:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center px-3 py-1 rounded-full border bg-background shadow-sm text-sm font-medium text-foreground/80 mb-6">
-              <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2"></span>
-              New product launch: MotionMist™
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6">
-              Effortless Comfort for <span className="text-primary">Every Step</span>
-            </h1>
-            
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Discover our plant-based anti-chafing spray designed for runners, athletes, and active individuals to protect your skin when it matters most.
-            </p>
-            
-            <div className="flex flex-wrap gap-3 mb-8">
-              <div className="flex items-center text-sm">
-                <Check className="h-4 w-4 text-primary mr-2" />
-                100% Plant-Based
-              </div>
-              <div className="flex items-center text-sm">
-                <Check className="h-4 w-4 text-primary mr-2" />
-                Long-Lasting Protection
-              </div>
-              <div className="flex items-center text-sm">
-                <Check className="h-4 w-4 text-primary mr-2" />
-                Dermatologist Tested
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="rounded-full">
-                <Link href="/product">
-                  Shop Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" size="lg" className="rounded-full">
-                <Link href="/about">
-                  Learn More
-                </Link>
-              </Button>
-            </div>
+      <div className="container relative mx-auto pt-12 pb-16 md:pt-24 md:pb-32 px-6 md:px-8">
+        {/* New product announcement - Apple style pill */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-center mb-6"
+        >
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#f5f5f7] shadow-sm text-sm font-medium text-[#1d1d1f] mb-6">
+            New
+            <span className="mx-2 text-[#6e6e73]">•</span>
+            MotionMist™ Anti-Chafing Spray
+          </div>
+        </motion.div>
+        
+        {/* Apple-style big product headline */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-[#1d1d1f] mx-auto max-w-4xl leading-tight">
+            Protection that moves <span className="text-primary">with you.</span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-[#6e6e73] mt-6 max-w-3xl mx-auto leading-relaxed font-light">
+            Our breakthrough anti-chafing formula. For runners, athletes, and the everyday active.
+          </p>
+        </motion.div>
+        
+        {/* Product display - Apple style centered product showcase */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="relative mx-auto max-w-5xl mb-16"
+        >
+          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#f2f2f2] to-white">
+            <img 
+              src="https://i.imgur.com/vAr3b3G.jpeg" 
+              alt="KavinoRa MotionMist Anti-Chafing Spray" 
+              className="w-full object-cover h-[300px] md:h-[500px] lg:h-[600px] object-center shadow-lg" 
+            />
           </div>
           
-          <div className="relative">
-            {/* Product image with shadow and border */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl border bg-white aspect-square md:aspect-[4/5] lg:aspect-square">
-              <img 
-                src="https://i.imgur.com/vAr3b3G.jpeg" 
-                alt="KavinoRa MotionMist Anti-Chafing Spray" 
-                className="w-full h-full object-cover object-center" 
-              />
-              
-              {/* Floating testimonial card */}
-              <div className="absolute -bottom-6 -left-6 bg-background rounded-lg p-4 shadow-lg border max-w-[200px] hidden md:block">
-                <div className="flex items-center mb-2">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <svg key={star} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="text-amber-400">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="ml-1 text-xs font-medium">5.0</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  "This spray has been a game-changer for my long-distance runs!"
-                </p>
+          {/* Apple-style floating price indicator */}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="absolute top-8 right-8 bg-black/80 backdrop-blur-md text-white rounded-full px-5 py-2.5 font-medium"
+          >
+            From $29.99
+          </motion.div>
+        </motion.div>
+        
+        {/* Feature highlights - Apple style three column grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-5xl mx-auto text-center">
+            <div className="space-y-3">
+              <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                </svg>
               </div>
-              
-              {/* Price tag */}
-              <div className="absolute top-6 right-6 bg-primary text-white rounded-full px-4 py-2 font-bold shadow-lg">
-                $29.99
+              <h3 className="text-lg font-semibold text-[#1d1d1f]">100% Plant-Based</h3>
+              <p className="text-[#6e6e73] text-sm">Natural formula with zero synthetic ingredients</p>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12" y2="16" />
+                </svg>
               </div>
+              <h3 className="text-lg font-semibold text-[#1d1d1f]">Long-Lasting</h3>
+              <p className="text-[#6e6e73] text-sm">Up to 8 hours of continuous protection</p>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-[#1d1d1f]">Dermatologist Tested</h3>
+              <p className="text-[#6e6e73] text-sm">Safe for all skin types including sensitive skin</p>
             </div>
           </div>
-        </div>
+        </motion.div>
+        
+        {/* Call to action buttons - Apple style centered buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <Button asChild size="lg" className="rounded-full bg-primary text-white hover:bg-primary/90 shadow-md px-8 w-full sm:w-auto">
+            <Link href="/product">
+              Buy Now
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          
+          <Button asChild variant="outline" size="lg" className="rounded-full border-[#1d1d1f]/20 hover:bg-[#f5f5f7] text-[#1d1d1f] w-full sm:w-auto">
+            <Link href="/about">
+              Learn More
+            </Link>
+          </Button>
+        </motion.div>
       </div>
     </section>
   );
