@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { useAuth } from "../hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -20,45 +20,40 @@ const MobileMenu = ({ isOpen, onClose, currentPath }: MobileMenuProps) => {
   return (
     <div className="md:hidden bg-white p-4 shadow-md">
       <nav className="flex flex-col space-y-4">
-        <Link href="/">
-          <a 
-            className={`font-montserrat text-sm font-medium ${currentPath === "/" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-            onClick={onClose}
-          >
-            Home
-          </a>
+        <Link 
+          href="/" 
+          className={`font-montserrat text-sm font-medium ${currentPath === "/" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
+          onClick={onClose}
+        >
+          Home
         </Link>
-        <Link href="/about">
-          <a 
-            className={`font-montserrat text-sm font-medium ${currentPath === "/about" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-            onClick={onClose}
-          >
-            About
-          </a>
+        <Link 
+          href="/about" 
+          className={`font-montserrat text-sm font-medium ${currentPath === "/about" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
+          onClick={onClose}
+        >
+          About
         </Link>
-        <Link href="/product">
-          <a 
-            className={`font-montserrat text-sm font-medium ${currentPath === "/product" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-            onClick={onClose}
-          >
-            MotionMist™
-          </a>
+        <Link 
+          href="/product" 
+          className={`font-montserrat text-sm font-medium ${currentPath === "/product" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
+          onClick={onClose}
+        >
+          MotionMist™
         </Link>
-        <Link href="/blog">
-          <a 
-            className={`font-montserrat text-sm font-medium ${currentPath === "/blog" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-            onClick={onClose}
-          >
-            Journal
-          </a>
+        <Link 
+          href="/blog" 
+          className={`font-montserrat text-sm font-medium ${currentPath === "/blog" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
+          onClick={onClose}
+        >
+          Journal
         </Link>
-        <Link href="/contact">
-          <a 
-            className={`font-montserrat text-sm font-medium ${currentPath === "/contact" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-            onClick={onClose}
-          >
-            Contact
-          </a>
+        <Link 
+          href="/contact" 
+          className={`font-montserrat text-sm font-medium ${currentPath === "/contact" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
+          onClick={onClose}
+        >
+          Contact
         </Link>
 
         <hr className="border-gray-200 my-2" />
@@ -105,26 +100,24 @@ const MobileMenu = ({ isOpen, onClose, currentPath }: MobileMenuProps) => {
           </>
         ) : (
           <>
-            <Link href="/auth">
-              <a 
-                className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
-                onClick={onClose}
-              >
-                <i className="ri-login-circle-line mr-3"></i>
-                Sign In
-              </a>
+            <Link 
+              href="/auth" 
+              className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
+              onClick={onClose}
+            >
+              <i className="ri-login-circle-line mr-3"></i>
+              Sign In
             </Link>
-            <Link href="/auth">
-              <a 
-                className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
-                onClick={() => {
-                  localStorage.setItem('authTab', 'signup');
-                  onClose();
-                }}
-              >
-                <i className="ri-user-add-line mr-3"></i>
-                Create Account
-              </a>
+            <Link 
+              href="/auth" 
+              className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
+              onClick={() => {
+                localStorage.setItem('authTab', 'signup');
+                onClose();
+              }}
+            >
+              <i className="ri-user-add-line mr-3"></i>
+              Create Account
             </Link>
           </>
         )}

@@ -44,10 +44,8 @@ const BlogPreview = () => {
               <div className="p-6">
                 <h3 className="font-montserrat font-semibold text-xl mb-2">{post.title}</h3>
                 <p className="text-gray-600 mb-4">{post.summary}</p>
-                <Link href={`/blog/${post.id}`}>
-                  <a className="text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
-                    Read more
-                  </a>
+                <Link href={`/blog/${post.id}`} className="text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
+                  Read more
                 </Link>
               </div>
             </article>
@@ -55,10 +53,8 @@ const BlogPreview = () => {
         </div>
         
         <div className="text-center mt-10">
-          <Link href="/blog">
-            <a className="inline-block bg-beige hover:bg-beige-dark text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all">
-              View All Articles
-            </a>
+          <Link href="/blog" className="inline-block bg-beige hover:bg-beige-dark text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all">
+            View All Articles
           </Link>
         </div>
       </div>

@@ -13,16 +13,12 @@ const Hero = () => {
               Introducing MotionMist™, the plant-based anti-chafing spray designed for runners, athletes, and active individuals.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/product">
-                <a className="inline-flex items-center justify-center bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap">
-                  Shop Now
-                  <i className="ri-arrow-right-line ml-2"></i>
-                </a>
+              <Link href="/product" className="inline-flex items-center justify-center bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap">
+                Shop Now
+                <i className="ri-arrow-right-line ml-2"></i>
               </Link>
-              <Link href="/about">
-                <a className="inline-flex items-center justify-center bg-white hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap border border-gray-300">
-                  Learn More
-                </a>
+              <Link href="/about" className="inline-flex items-center justify-center bg-white hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap border border-gray-300">
+                Learn More
               </Link>
             </div>
           </div>

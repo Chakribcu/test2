@@ -77,10 +77,8 @@ const ProductFeature = () => {
                 <i className="ri-shopping-cart-2-line mr-2"></i>
                 Add to Cart
               </button>
-              <Link href="/product">
-                <a className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center">
-                  View Details
-                </a>
+              <Link href="/product" className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center">
+                View Details
               </Link>
             </div>
           </div>

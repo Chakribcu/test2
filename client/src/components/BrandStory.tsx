@@ -9,10 +9,8 @@ const BrandStory = () => {
           <p className="text-lg text-gray-600 mb-8">
             KavinoRa was inspired by my mother Kavitha, whose wisdom and care taught me the importance of natural solutions for everyday comfort. Our brand combines innovation with plant-based ingredients to create products that support your active lifestyle.
           </p>
-          <Link href="/about">
-            <a className="inline-block text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
-              Learn more about us <i className="ri-arrow-right-line align-middle ml-1"></i>
-            </a>
+          <Link href="/about" className="inline-block text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
+            Learn more about us <i className="ri-arrow-right-line align-middle ml-1"></i>
           </Link>
         </div>
 

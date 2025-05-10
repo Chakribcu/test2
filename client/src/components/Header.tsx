@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { useAuth } from "../hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import MobileMenu from "./MobileMenu";
 
 const Header = () => {
@@ -53,39 +53,37 @@ const Header = () => {
   return (
     <header className={`sticky top-0 z-50 bg-white ${isScrolled ? "shadow-sm" : ""} transition-all`}>
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/">
-          <a className="text-2xl font-montserrat font-bold text-teal">KavinoRa</a>
+        <Link href="/" className="text-2xl font-montserrat font-bold text-teal">
+          KavinoRa
         </Link>
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-8">
-          <Link href="/">
-            <a className={`font-montserrat text-sm font-medium ${location === "/" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>Home</a>
+          <Link href="/" className={`font-montserrat text-sm font-medium ${location === "/" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>
+            Home
           </Link>
-          <Link href="/about">
-            <a className={`font-montserrat text-sm font-medium ${location === "/about" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>About</a>
+          <Link href="/about" className={`font-montserrat text-sm font-medium ${location === "/about" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>
+            About
           </Link>
-          <Link href="/product">
-            <a className={`font-montserrat text-sm font-medium ${location === "/product" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>MotionMist™</a>
+          <Link href="/product" className={`font-montserrat text-sm font-medium ${location === "/product" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>
+            MotionMist™
           </Link>
-          <Link href="/blog">
-            <a className={`font-montserrat text-sm font-medium ${location === "/blog" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>Journal</a>
+          <Link href="/blog" className={`font-montserrat text-sm font-medium ${location === "/blog" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>
+            Journal
           </Link>
-          <Link href="/contact">
-            <a className={`font-montserrat text-sm font-medium ${location === "/contact" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>Contact</a>
+          <Link href="/contact" className={`font-montserrat text-sm font-medium ${location === "/contact" ? "text-teal" : "text-gray-800"} hover:text-teal transition-all`}>
+            Contact
           </Link>
         </nav>
         
         {/* Header Icons */}
         <div className="flex items-center space-x-4">
-          <Link href="/cart">
-            <a className="text-gray-800 hover:text-teal transition-all relative" aria-label="Shopping Cart">
-              <i className="ri-shopping-cart-2-line text-xl"></i>
-              {/* Cart Item Count Badge */}
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-teal text-white text-xs rounded-full flex items-center justify-center">
-                2
-              </span>
-            </a>
+          <Link href="/cart" className="text-gray-800 hover:text-teal transition-all relative" aria-label="Shopping Cart">
+            <i className="ri-shopping-cart-2-line text-xl"></i>
+            {/* Cart Item Count Badge */}
+            <span className="absolute -top-2 -right-2 w-5 h-5 bg-teal text-white text-xs rounded-full flex items-center justify-center">
+              2
+            </span>
           </Link>
 
           <button 
@@ -138,20 +136,17 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <Link href="/auth">
-                      <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Sign In
-                      </a>
+                    <Link href="/auth" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Sign In
                     </Link>
-                    <Link href="/auth">
-                      <a 
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => {
-                          localStorage.setItem('authTab', 'signup');
-                        }}
-                      >
-                        Create Account
-                      </a>
+                    <Link 
+                      href="/auth" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        localStorage.setItem('authTab', 'signup');
+                      }}
+                    >
+                      Create Account
                     </Link>
                   </>
                 )}
@@ -161,13 +156,11 @@ const Header = () => {
           
           {/* Mobile Menu Button with Combined Icons */}
           <div className="md:hidden flex items-center space-x-3">
-            <Link href="/cart">
-              <a className="text-gray-800 hover:text-teal transition-all relative" aria-label="Shopping Cart">
-                <i className="ri-shopping-cart-2-line text-xl"></i>
-                <span className="absolute -top-2 -right-2 w-5 h-5 bg-teal text-white text-xs rounded-full flex items-center justify-center">
-                  2
-                </span>
-              </a>
+            <Link href="/cart" className="text-gray-800 hover:text-teal transition-all relative" aria-label="Shopping Cart">
+              <i className="ri-shopping-cart-2-line text-xl"></i>
+              <span className="absolute -top-2 -right-2 w-5 h-5 bg-teal text-white text-xs rounded-full flex items-center justify-center">
+                2
+              </span>
             </Link>
             <button
               className="text-gray-800 focus:outline-none"

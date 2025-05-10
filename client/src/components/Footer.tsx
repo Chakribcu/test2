@@ -31,28 +31,28 @@ const Footer = () => {
               <h3 className="font-montserrat font-bold text-lg mb-4">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/">
-                    <a className="text-gray-400 hover:text-white transition-all">Home</a>
+                  <Link href="/" className="text-gray-400 hover:text-white transition-all">
+                    Home
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about">
-                    <a className="text-gray-400 hover:text-white transition-all">About</a>
+                  <Link href="/about" className="text-gray-400 hover:text-white transition-all">
+                    About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/product">
-                    <a className="text-gray-400 hover:text-white transition-all">MotionMist™</a>
+                  <Link href="/product" className="text-gray-400 hover:text-white transition-all">
+                    MotionMist™
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog">
-                    <a className="text-gray-400 hover:text-white transition-all">Journal</a>
+                  <Link href="/blog" className="text-gray-400 hover:text-white transition-all">
+                    Journal
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact">
-                    <a className="text-gray-400 hover:text-white transition-all">Contact</a>
+                  <Link href="/contact" className="text-gray-400 hover:text-white transition-all">
+                    Contact
                   </Link>
                 </li>
               </ul>
@@ -62,13 +62,13 @@ const Footer = () => {
               <h3 className="font-montserrat font-bold text-lg mb-4">Legal</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/privacy-policy">
-                    <a className="text-gray-400 hover:text-white transition-all">Privacy Policy</a>
+                  <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-all">
+                    Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms-of-service">
-                    <a className="text-gray-400 hover:text-white transition-all">Terms of Service</a>
+                  <Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-all">
+                    Terms of Service
                   </Link>
                 </li>
                 <li>

@@ -5,6 +5,11 @@ import {
 } from "@shared/schema";
 
 // Interface for all storage methods
+import session from "express-session";
+import createMemoryStore from "memorystore";
+
+const MemoryStore = createMemoryStore(session);
+
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
@@ -23,6 +28,9 @@ export interface IStorage {
   getSubscriptionByEmail(email: string, type: string): Promise<Subscription | undefined>;
   getAllSubscriptions(type?: string): Promise<Subscription[]>;
   createSubscription(subscription: InsertSubscription): Promise<Subscription>;
+  
+  // Session store
+  sessionStore: session.Store;
 }
 
 // In-memory storage implementation
@@ -33,6 +41,7 @@ export class MemStorage implements IStorage {
   private userIdCounter: number;
   private contactIdCounter: number;
   private subscriptionIdCounter: number;
+  public sessionStore: session.Store;
 
   constructor() {
     this.users = new Map();
@@ -41,6 +50,9 @@ export class MemStorage implements IStorage {
     this.userIdCounter = 1;
     this.contactIdCounter = 1;
     this.subscriptionIdCounter = 1;
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000, // Prune expired entries every 24h
+    });
   }
 
   // User methods
@@ -66,6 +78,8 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id, 
+      firstName: insertUser.firstName || null,
+      lastName: insertUser.lastName || null,
       createdAt: now
     };
     this.users.set(id, user);
