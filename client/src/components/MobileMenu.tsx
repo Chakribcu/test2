@@ -1,5 +1,19 @@
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { 
+  Home, 
+  Info, 
+  ShoppingBag, 
+  BookOpen, 
+  MessageSquare,
+  User,
+  History,
+  LogOut,
+  LogIn,
+  UserPlus,
+  HelpCircle,
+  ShoppingCart
+} from "lucide-react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -18,121 +32,162 @@ const MobileMenu = ({ isOpen, onClose, currentPath }: MobileMenuProps) => {
   };
   
   return (
-    <div className="md:hidden bg-white p-4 shadow-md">
-      <nav className="flex flex-col space-y-4">
-        <Link 
-          href="/" 
-          className={`font-montserrat text-sm font-medium ${currentPath === "/" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-          onClick={onClose}
-        >
-          Home
-        </Link>
-        <Link 
-          href="/about" 
-          className={`font-montserrat text-sm font-medium ${currentPath === "/about" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-          onClick={onClose}
-        >
-          About
-        </Link>
-        <Link 
-          href="/product" 
-          className={`font-montserrat text-sm font-medium ${currentPath === "/product" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-          onClick={onClose}
-        >
-          MotionMist™
-        </Link>
-        <Link 
-          href="/blog" 
-          className={`font-montserrat text-sm font-medium ${currentPath === "/blog" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-          onClick={onClose}
-        >
-          Journal
-        </Link>
-        <Link 
-          href="/contact" 
-          className={`font-montserrat text-sm font-medium ${currentPath === "/contact" ? "text-teal" : "text-gray-800"} hover:text-teal py-2`}
-          onClick={onClose}
-        >
-          Contact
-        </Link>
-
-        <hr className="border-gray-200 my-2" />
-        
-        {/* User Account Section */}
-        {user ? (
-          <>
-            <div className="flex items-center py-2">
-              <div className="w-8 h-8 bg-teal text-white rounded-full flex items-center justify-center overflow-hidden mr-3">
-                {user.firstName ? (
-                  user.firstName.charAt(0) + (user.lastName ? user.lastName.charAt(0) : '')
-                ) : (
-                  user.username.charAt(0).toUpperCase()
-                )}
-              </div>
-              <div>
-                <p className="font-montserrat font-medium text-sm">{user.firstName ? `${user.firstName} ${user.lastName || ''}` : user.username}</p>
-                <p className="text-xs text-gray-500">{user.email}</p>
-              </div>
-            </div>
-            <a
-              href="#"
-              className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
+    <div className="fixed inset-0 z-50 md:hidden bg-black bg-opacity-50" onClick={onClose}>
+      <div className="fixed right-0 top-0 h-full w-3/4 max-w-sm bg-background shadow-xl p-6 overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <nav className="flex flex-col space-y-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Menu</h2>
+            <button 
               onClick={onClose}
+              className="p-1 rounded-full hover:bg-muted"
             >
-              <i className="ri-user-settings-line mr-3"></i>
-              My Account
-            </a>
-            <a
-              href="#"
-              className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
-              onClick={onClose}
-            >
-              <i className="ri-history-line mr-3"></i>
-              Order History
-            </a>
-            <button
-              className="flex items-center w-full text-left font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
-              onClick={handleLogout}
-            >
-              <i className="ri-logout-box-line mr-3"></i>
-              Sign Out
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide-x">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
             </button>
-          </>
-        ) : (
-          <>
+          </div>
+          
+          <div className="space-y-1 py-2">
             <Link 
-              href="/auth" 
-              className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
+              href="/" 
+              className={`flex items-center py-2 px-3 rounded-md text-sm font-medium ${currentPath === "/" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
               onClick={onClose}
             >
-              <i className="ri-login-circle-line mr-3"></i>
-              Sign In
+              <Home className="h-4 w-4 mr-3" />
+              Home
             </Link>
+            
             <Link 
-              href="/auth" 
-              className="flex items-center font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
-              onClick={() => {
-                localStorage.setItem('authTab', 'signup');
-                onClose();
-              }}
+              href="/about" 
+              className={`flex items-center py-2 px-3 rounded-md text-sm font-medium ${currentPath === "/about" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              onClick={onClose}
             >
-              <i className="ri-user-add-line mr-3"></i>
-              Create Account
+              <Info className="h-4 w-4 mr-3" />
+              About
             </Link>
-          </>
-        )}
-        
-        <hr className="border-gray-200 my-2" />
-        
-        {/* Help Button */}
-        <button
-          className="flex items-center w-full text-left font-montserrat text-sm font-medium text-gray-800 hover:text-teal py-2"
-          onClick={onClose}
-        >
-          <i className="ri-question-line mr-3"></i>
-          Help & Support
-        </button>
-      </nav>
+            
+            <Link 
+              href="/product" 
+              className={`flex items-center py-2 px-3 rounded-md text-sm font-medium ${currentPath === "/product" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              onClick={onClose}
+            >
+              <ShoppingBag className="h-4 w-4 mr-3" />
+              Shop
+            </Link>
+            
+            <Link 
+              href="/blog" 
+              className={`flex items-center py-2 px-3 rounded-md text-sm font-medium ${currentPath === "/blog" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              onClick={onClose}
+            >
+              <BookOpen className="h-4 w-4 mr-3" />
+              Journal
+            </Link>
+            
+            <Link 
+              href="/contact" 
+              className={`flex items-center py-2 px-3 rounded-md text-sm font-medium ${currentPath === "/contact" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              onClick={onClose}
+            >
+              <MessageSquare className="h-4 w-4 mr-3" />
+              Contact
+            </Link>
+            
+            <Link 
+              href="/cart" 
+              className={`flex items-center py-2 px-3 rounded-md text-sm font-medium ${currentPath === "/cart" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              onClick={onClose}
+            >
+              <ShoppingCart className="h-4 w-4 mr-3" />
+              Shopping Cart
+            </Link>
+          </div>
+
+          <div className="border-t pt-4 my-2">
+            <h3 className="text-sm font-medium text-muted-foreground px-3 mb-2">Account</h3>
+          </div>
+          
+          {/* User Account Section */}
+          {user ? (
+            <div className="space-y-1">
+              <div className="flex items-center py-2 px-3">
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center overflow-hidden mr-3">
+                  {user.firstName ? (
+                    user.firstName.charAt(0) + (user.lastName ? user.lastName.charAt(0) : '')
+                  ) : (
+                    user.username.charAt(0).toUpperCase()
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-sm">{user.firstName ? `${user.firstName} ${user.lastName || ''}` : user.username}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                </div>
+              </div>
+              
+              <Link
+                href="/account"
+                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+                onClick={onClose}
+              >
+                <User className="h-4 w-4 mr-3" />
+                My Account
+              </Link>
+              
+              <Link
+                href="/order-history"
+                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+                onClick={onClose}
+              >
+                <History className="h-4 w-4 mr-3" />
+                Order History
+              </Link>
+              
+              <button
+                className="flex items-center w-full text-left py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 mr-3" />
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              <Link 
+                href="/auth" 
+                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+                onClick={onClose}
+              >
+                <LogIn className="h-4 w-4 mr-3" />
+                Sign In
+              </Link>
+              
+              <Link 
+                href="/auth" 
+                className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+                onClick={() => {
+                  localStorage.setItem('authTab', 'signup');
+                  onClose();
+                }}
+              >
+                <UserPlus className="h-4 w-4 mr-3" />
+                Create Account
+              </Link>
+            </div>
+          )}
+          
+          <div className="border-t pt-4 mt-2">
+            <Link
+              href="/contact"
+              className="flex items-center py-2 px-3 rounded-md text-sm font-medium hover:bg-muted"
+              onClick={onClose}
+            >
+              <HelpCircle className="h-4 w-4 mr-3" />
+              Help & Support
+            </Link>
+          </div>
+        </nav>
+      </div>
     </div>
   );
 };
