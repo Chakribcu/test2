@@ -103,8 +103,17 @@ export function setupAuth(app: Express) {
       });
 
       // Auto-login the user after registration
-      req.login(user, (err) => {
+      req.login(user, async (err) => {
         if (err) return next(err);
+        
+        // Seed wellness data for the dashboard demo
+        try {
+          await storage.seedWellnessDataIfNeeded();
+        } catch (seedErr) {
+          console.error("Error seeding wellness data:", seedErr);
+          // Continue anyway, this is just for demo purposes
+        }
+        
         res.status(201).json(user);
       });
     } catch (err) {
@@ -132,11 +141,20 @@ export function setupAuth(app: Express) {
         return res.status(401).json({ message: "Invalid username or password" });
       }
       
-      req.login(user, (err) => {
+      req.login(user, async (err) => {
         if (err) {
           console.error("Session login error:", err);
           return next(err);
         }
+        
+        // Seed wellness data for the dashboard demo
+        try {
+          await storage.seedWellnessDataIfNeeded();
+        } catch (seedErr) {
+          console.error("Error seeding wellness data:", seedErr);
+          // Continue anyway, this is just for demo purposes
+        }
+        
         console.log("Login successful for user:", user.username);
         res.status(200).json(user);
       });

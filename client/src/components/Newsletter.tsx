@@ -21,13 +21,11 @@ const Newsletter = ({ forcedDisplay = false }: NewsletterProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
   
-  // Don't display for logged in users unless forcedDisplay is true
-  if (user && !forcedDisplay) {
-    return null;
-  }
-  
   const { register, handleSubmit, reset, formState: { errors } } = useForm<NewsletterFormValues>({
     resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      email: ""
+    }
   });
   
   const newsletterMutation = useMutation({
@@ -53,6 +51,11 @@ const Newsletter = ({ forcedDisplay = false }: NewsletterProps) => {
   const onSubmit = useCallback((data: NewsletterFormValues) => {
     newsletterMutation.mutate(data);
   }, [newsletterMutation]);
+  
+  // Don't display for logged in users unless forcedDisplay is true
+  if (user && !forcedDisplay) {
+    return null;
+  }
 
   return (
     <section className="py-16 bg-teal text-white">

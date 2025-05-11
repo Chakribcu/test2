@@ -52,9 +52,7 @@ const Dashboard = () => {
   const { data: wellnessData, isLoading: isLoadingWellness } = useQuery({
     queryKey: ["/api/user/wellness-data"],
     queryFn: getQueryFn({ on401: "returnNull" }),
-    // Enable when API is ready
-    enabled: false,
-    // Fallback data for development
+    enabled: !!user,
     placeholderData: {
       sleepHours: [6.5, 7.2, 8.1, 7.8, 6.9, 7.5, 8.3],
       waterIntake: [1800, 2100, 2400, 2000, 2200, 2500, 2300],
@@ -69,14 +67,27 @@ const Dashboard = () => {
   const { data: recentPurchases, isLoading: isLoadingPurchases } = useQuery({
     queryKey: ["/api/user/recent-purchases"],
     queryFn: getQueryFn({ on401: "returnNull" }),
-    // Enable when API is ready
-    enabled: false,
-    // Fallback data for development
-    placeholderData: [
-      { id: 1, name: "Kavinora Comfort Insoles", category: "Footwear", imageUrl: "/product-1.jpg", price: 39.99, lastPurchased: "2025-04-25" },
-      { id: 2, name: "Premium Wellness Tea", category: "Wellness", imageUrl: "/product-2.jpg", price: 24.99, lastPurchased: "2025-05-02" },
-      { id: 3, name: "Bamboo Compression Socks", category: "Footwear", imageUrl: "/product-3.jpg", price: 19.99, lastPurchased: "2025-05-08" }
-    ]
+    enabled: !!user,
+    // Data structure transformation to match the component's expectations
+    select: (data) => {
+      if (!data || !data.data) return [];
+      return data.data.map((purchase: any) => ({
+        id: purchase.id,
+        name: purchase.productName,
+        category: purchase.productCategory,
+        imageUrl: purchase.productImage || '/placeholder.jpg',
+        price: Number(purchase.price),
+        lastPurchased: new Date(purchase.purchaseDate).toISOString().split('T')[0]
+      }));
+    },
+    placeholderData: {
+      success: true,
+      data: [
+        { id: 1, productName: "Comfort Plus Insoles", productCategory: "Footwear", productImage: "/product-1.jpg", price: "39.99", purchaseDate: "2025-04-25" },
+        { id: 2, productName: "Wellness Tea Collection", productCategory: "Wellness", productImage: "/product-2.jpg", price: "24.99", purchaseDate: "2025-05-02" },
+        { id: 3, productName: "Bamboo Compression Socks", productCategory: "Footwear", productImage: "/product-3.jpg", price: "19.99", purchaseDate: "2025-05-08" }
+      ]
+    }
   });
 
   // Generate personalized insights based on wellness data
