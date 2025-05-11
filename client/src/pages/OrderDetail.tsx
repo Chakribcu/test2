@@ -1,42 +1,33 @@
-import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
-import { useParams, useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Loader2, Package, Truck, CreditCard, Calendar } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryFn } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import SEOHead from "@/components/SEOHead";
 
-interface OrderDetail {
+// Interfaces for the order data
+interface OrderItem {
+  id: number;
+  orderId: number;
+  productId: number;
+  productName: string;
+  quantity: number;
+  price: string;
+  image: string;
+  createdAt: string;
+}
+
+interface Order {
   id: number;
   orderNumber: string;
   userId: number;
   status: string;
   paymentStatus: string;
   shippingStatus: string;
-  total: number;
-  createdAt: string;
-  items: OrderItem[];
+  total: string;
   shippingAddress: {
     name: string;
     address: string;
@@ -46,250 +37,264 @@ interface OrderDetail {
     country: string;
   };
   paymentMethod: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface OrderItem {
-  id: number;
-  productId: number;
-  productName: string;
-  quantity: number;
-  price: number;
-  image: string;
+interface OrderWithItems {
+  order: Order;
+  items: OrderItem[];
 }
 
-export default function OrderDetail() {
-  const { id } = useParams<{ id: string }>();
-  const [, setLocation] = useLocation();
+export default function OrderDetail({ params }: { params: { id: string } }) {
+  const orderId = parseInt(params.id);
   const { user, isLoading: isLoadingUser } = useAuth();
+  const [, setLocation] = useLocation();
 
-  // Redirect to auth page if not logged in
-  useEffect(() => {
-    if (!isLoadingUser && !user) {
-      setLocation("/auth");
-    }
-  }, [user, isLoadingUser, setLocation]);
-
-  // Fetch order details
-  const { data: order, isLoading, error } = useQuery<OrderDetail>({
-    queryKey: [`/api/orders/${id}`],
+  // Fetch order details from API
+  const { data, isLoading, error } = useQuery<{ success: boolean; data: OrderWithItems }>({
+    queryKey: ["/api/orders", orderId],
     queryFn: getQueryFn({ on401: "returnNull" }),
-    enabled: !!user && !!id,
+    enabled: !!user && !isNaN(orderId),
   });
 
-  // Status badge color based on order status
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "processing":
-        return "bg-yellow-500";
-      case "shipped":
-        return "bg-blue-500";
-      case "delivered":
-        return "bg-green-500";
-      case "cancelled":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
+  // Redirect to login if not authenticated
+  if (!isLoadingUser && !user) {
+    setLocation("/auth");
+    return null;
+  }
 
   // Loading state
-  if (isLoading || isLoadingUser) {
+  if (isLoadingUser || isLoading) {
     return (
-      <Layout>
-        <div className="container mx-auto py-12 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </Layout>
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
     );
   }
 
   // Error state
-  if (error || !order) {
+  if (error || !data?.data) {
     return (
       <Layout>
-        <div className="container mx-auto py-12">
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Not Found</CardTitle>
-              <CardDescription>
-                We couldn't find the order you're looking for.
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button onClick={() => setLocation("/order-history")}>
-                Back to Order History
-              </Button>
-            </CardFooter>
-          </Card>
+        <div className="container mx-auto py-8 px-4 md:px-6 text-center">
+          <h1 className="text-2xl font-bold mb-4">Order Not Found</h1>
+          <p className="mb-6">We couldn't find the order you're looking for.</p>
+          <Button onClick={() => setLocation("/order-history")}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Orders
+          </Button>
         </div>
       </Layout>
     );
   }
 
+  const { order, items } = data.data;
+
+  // Get status badge color
+  const getStatusBadgeClass = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "delivered":
+        return "bg-green-100 text-green-800";
+      case "shipped":
+        return "bg-blue-100 text-blue-800";
+      case "processing":
+        return "bg-yellow-100 text-yellow-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // Calculate subtotal
+  const subtotal = items.reduce((acc, item) => {
+    return acc + (parseFloat(item.price) * item.quantity);
+  }, 0);
+
+  // Calculate shipping (simplified for demo)
+  const shipping = 5.99;
+  
+  // Calculate tax (simplified for demo)
+  const tax = subtotal * 0.08;
+
   return (
     <Layout>
-      <SEOHead
+      <SEOHead 
         title={`Order #${order.orderNumber} | KavinoRa`}
-        description="View your order details and track your shipment."
+        description="View the details of your KavinoRa order, including status, items, and shipping information."
       />
-      <div className="container mx-auto py-8 px-4 lg:px-0">
-        <div className="mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center">
+      <div className="container mx-auto py-8 px-4 md:px-6">
+        <div className="mb-6">
+          <Button variant="ghost" onClick={() => setLocation("/order-history")} className="pl-0">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Orders
+          </Button>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-montserrat mb-2">
-              Order #{order.orderNumber}
-            </h1>
-            <p className="text-gray-600">
-              Placed on {formatDate(order.createdAt)}
-            </p>
+            <h1 className="text-2xl md:text-3xl font-bold">Order #{order.orderNumber}</h1>
+            <p className="text-muted-foreground">Placed on {formatDate(order.createdAt)}</p>
           </div>
-          <div className="mt-4 lg:mt-0 flex flex-wrap gap-3">
-            <Badge className={getStatusColor(order.status)}>
+          <div className="mt-4 md:mt-0">
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClass(order.status)}`}>
               {order.status}
-            </Badge>
-            <Badge
-              className={
-                order.paymentStatus === "Paid"
-                  ? "bg-green-500"
-                  : "bg-yellow-500"
-              }
-            >
-              Payment: {order.paymentStatus}
-            </Badge>
-            <Badge
-              className={
-                order.shippingStatus === "Delivered"
-                  ? "bg-green-500"
-                  : order.shippingStatus === "Shipped"
-                  ? "bg-blue-500"
-                  : "bg-yellow-500"
-              }
-            >
-              Shipping: {order.shippingStatus}
-            </Badge>
+            </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Order Items */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Items</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead className="text-right">Quantity</TableHead>
-                      <TableHead className="text-right">Price</TableHead>
-                      <TableHead className="text-right">Total</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {order.items.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-md overflow-hidden">
-                              <img
-                                src={item.image || "/placeholder-product.jpg"}
-                                alt={item.productName}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div>
-                              <div className="font-medium">
-                                {item.productName}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          {/* Order Status */}
+          <div className="bg-card p-6 rounded-lg shadow-sm border">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <Package className="h-5 w-5 mr-2" />
+              Order Status
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Order Status</p>
+                <p className="font-medium">{order.status}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Payment Status</p>
+                <p className="font-medium">{order.paymentStatus}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Shipping Status</p>
+                <p className="font-medium">{order.shippingStatus}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Shipping Information */}
+          <div className="bg-card p-6 rounded-lg shadow-sm border">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <Truck className="h-5 w-5 mr-2" />
+              Shipping Information
+            </h2>
+            <div className="space-y-2">
+              <p className="font-medium">{order.shippingAddress.name}</p>
+              <p>{order.shippingAddress.address}</p>
+              <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}</p>
+              <p>{order.shippingAddress.country}</p>
+            </div>
+          </div>
+
+          {/* Payment Information */}
+          <div className="bg-card p-6 rounded-lg shadow-sm border">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <CreditCard className="h-5 w-5 mr-2" />
+              Payment Information
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Payment Method</p>
+                <p className="font-medium">{order.paymentMethod}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Order Date</p>
+                <p className="font-medium">{formatDate(order.createdAt)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total</p>
+                <p className="font-medium">{formatCurrency(parseFloat(order.total))}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Order Items */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Order Items</h2>
+          <div className="border rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full divide-y divide-border">
+                <thead className="bg-muted">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Product
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Price
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Quantity
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-card divide-y divide-border">
+                  {items.map((item) => (
+                    <tr key={item.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 flex-shrink-0 bg-muted rounded overflow-hidden">
+                            {item.image ? (
+                              <img src={item.image} alt={item.productName} className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="flex items-center justify-center h-full w-full bg-muted text-muted-foreground">
+                                <Package className="h-5 w-5" />
                               </div>
-                            </div>
+                            )}
                           </div>
-                        </TableCell>
-                        <TableCell className="text-right">{item.quantity}</TableCell>
-                        <TableCell className="text-right">
-                          {formatCurrency(item.price)}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {formatCurrency(item.price * item.quantity)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-              <CardFooter className="flex justify-end">
-                <div className="text-xl font-montserrat">
-                  Total: {formatCurrency(order.total)}
-                </div>
-              </CardFooter>
-            </Card>
-          </div>
-
-          {/* Order Information */}
-          <div className="lg:col-span-1 flex flex-col gap-6">
-            {/* Shipping Address */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Shipping Address</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p className="font-medium">{order.shippingAddress.name}</p>
-                  <p>{order.shippingAddress.address}</p>
-                  <p>
-                    {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
-                    {order.shippingAddress.postalCode}
-                  </p>
-                  <p>{order.shippingAddress.country}</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p>
-                    <span className="font-medium">Method:</span>{" "}
-                    {order.paymentMethod}
-                  </p>
-                  <p>
-                    <span className="font-medium">Status:</span>{" "}
-                    {order.paymentStatus}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Need Help?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => setLocation("/contact")}
-                >
-                  Contact Support
-                </Button>
-                {order.status !== "Cancelled" && (
-                  <Button variant="destructive" className="w-full">
-                    Request Return
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium">{item.productName}</div>
+                            <div className="text-xs text-muted-foreground">ID: {item.productId}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {formatCurrency(parseFloat(item.price))}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {item.quantity}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        {formatCurrency(parseFloat(item.price) * item.quantity)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8">
-          <Button onClick={() => setLocation("/order-history")}>
-            Back to Order History
+        {/* Order Summary */}
+        <div className="bg-card p-6 rounded-lg shadow-sm border max-w-md ml-auto">
+          <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Subtotal</span>
+              <span>{formatCurrency(subtotal)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Shipping</span>
+              <span>{formatCurrency(shipping)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Tax</span>
+              <span>{formatCurrency(tax)}</span>
+            </div>
+            <div className="border-t pt-2 mt-2">
+              <div className="flex justify-between font-semibold">
+                <span>Total</span>
+                <span>{formatCurrency(parseFloat(order.total))}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 flex justify-between">
+          <Button variant="outline" onClick={() => setLocation("/order-history")}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Orders
+          </Button>
+          <Button variant="default" onClick={() => window.print()}>
+            Print Receipt
           </Button>
         </div>
       </div>
