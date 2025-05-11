@@ -198,6 +198,15 @@ const Header = () => {
                     <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
                   </div>
                   <div className="py-1">
+                    <Link href="/dashboard" className="flex items-center px-4 py-2 text-sm hover:bg-[#f5f5f7]">
+                      <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                      </svg>
+                      Wellness Dashboard
+                    </Link>
                     <Link href="/account" className="flex items-center px-4 py-2 text-sm hover:bg-[#f5f5f7]">
                       <svg className="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
