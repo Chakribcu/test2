@@ -33,8 +33,8 @@ function Router() {
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/cart" component={Cart} />
-      <ProtectedRoute path="/checkout" component={Checkout} />
+      <Route path="/cart" component={Cart} />
+      <Route path="/checkout" component={Checkout} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />
       <ProtectedRoute path="/account" component={Account} />
       <Route component={NotFound} />
