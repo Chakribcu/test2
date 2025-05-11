@@ -45,6 +45,8 @@ function Router() {
       <Route path="/cart" component={Cart} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/wishlist" component={Wishlist} />
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password/:token" component={ResetPassword} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />
       <ProtectedRoute path="/order/:id" component={OrderDetail} />
       <ProtectedRoute path="/account" component={Account} />

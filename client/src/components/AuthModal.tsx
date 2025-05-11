@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
-import { X } from "lucide-react";
+import { X, Mail, Lock } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SocialButton } from "@/components/ui/social-buttons";
+import { Separator } from "@/components/ui/separator";
 
 // Validation schemas
 const loginSchema = z.object({
@@ -156,205 +158,289 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
             </div>
             
             {activeTab === "login" ? (
-              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-5">
-                <div>
-                  <label htmlFor="login-username" className="block text-sm font-medium mb-1.5">
-                    Username
-                  </label>
-                  <input
-                    id="login-username"
-                    type="text"
-                    className="input-apple w-full"
-                    placeholder="Enter your username"
-                    {...loginForm.register("username")}
-                  />
-                  {loginForm.formState.errors.username && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {loginForm.formState.errors.username.message}
-                    </p>
-                  )}
+              <div className="space-y-5">
+                {/* Social Login Buttons */}
+                <div className="space-y-3">
+                  <SocialButton provider="google" onClick={() => console.log("Google login clicked")} />
+                  <SocialButton provider="apple" onClick={() => console.log("Apple login clicked")} />
+                  <SocialButton provider="facebook" onClick={() => console.log("Facebook login clicked")} />
                 </div>
                 
-                <div>
-                  <label htmlFor="login-password" className="block text-sm font-medium mb-1.5">
-                    Password
-                  </label>
-                  <input
-                    id="login-password"
-                    type="password"
-                    className="input-apple w-full"
-                    placeholder="Enter your password"
-                    {...loginForm.register("password")}
-                  />
-                  {loginForm.formState.errors.password && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {loginForm.formState.errors.password.message}
-                    </p>
-                  )}
+                {/* Separator */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-2 text-xs text-muted-foreground">
+                      OR CONTINUE WITH EMAIL
+                    </span>
+                  </div>
                 </div>
                 
-                <button
-                  type="submit"
-                  className="btn-primary w-full py-3"
-                  disabled={loginMutation.isPending}
-                >
-                  {loginMutation.isPending ? (
-                    <div className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span>Signing in...</span>
+                {/* Login Form */}
+                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                  <div>
+                    <label htmlFor="login-username" className="block text-sm font-medium mb-1.5">
+                      Username
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        id="login-username"
+                        type="text"
+                        className="input-apple w-full pl-10"
+                        placeholder="Enter your username"
+                        {...loginForm.register("username")}
+                      />
                     </div>
-                  ) : (
-                    "Sign In"
-                  )}
-                </button>
-                
-                <p className="text-center text-xs text-muted-foreground mt-4">
-                  <a 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onClose();
-                      setLocation("/forgot-password");
-                    }}
-                    href="/forgot-password" 
-                    className="text-primary hover:underline cursor-pointer"
+                    {loginForm.formState.errors.username && (
+                      <p className="mt-1 text-red-500 text-xs">
+                        {loginForm.formState.errors.username.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label htmlFor="login-password" className="block text-sm font-medium">
+                        Password
+                      </label>
+                      <a 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onClose();
+                          setLocation("/forgot-password");
+                        }}
+                        href="/forgot-password" 
+                        className="text-xs font-medium text-primary hover:underline cursor-pointer"
+                      >
+                        Forgot password?
+                      </a>
+                    </div>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        id="login-password"
+                        type="password"
+                        className="input-apple w-full pl-10"
+                        placeholder="Enter your password"
+                        {...loginForm.register("password")}
+                      />
+                    </div>
+                    {loginForm.formState.errors.password && (
+                      <p className="mt-1 text-red-500 text-xs">
+                        {loginForm.formState.errors.password.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center space-x-2 py-2">
+                    <input
+                      type="checkbox"
+                      id="remember-me"
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <label htmlFor="remember-me" className="text-sm text-foreground">
+                      Remember me
+                    </label>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="btn-primary w-full py-3"
+                    disabled={loginMutation.isPending}
                   >
-                    Forgot your password?
-                  </a>
-                </p>
-              </form>
+                    {loginMutation.isPending ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Signing in...</span>
+                      </div>
+                    ) : (
+                      "Sign In"
+                    )}
+                  </button>
+                </form>
+              </div>
             ) : (
-              <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium mb-1.5">
-                      First Name
-                    </label>
-                    <input
-                      id="firstName"
-                      type="text"
-                      className="input-apple w-full"
-                      placeholder="First name"
-                      {...registerForm.register("firstName")}
-                    />
+              <div className="space-y-5">
+                {/* Social Sign Up Buttons */}
+                <div className="space-y-3">
+                  <SocialButton provider="google" onClick={() => console.log("Google signup clicked")} />
+                  <SocialButton provider="apple" onClick={() => console.log("Apple signup clicked")} />
+                  <SocialButton provider="facebook" onClick={() => console.log("Facebook signup clicked")} />
+                </div>
+                
+                {/* Separator */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
                   </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium mb-1.5">
-                      Last Name
-                    </label>
-                    <input
-                      id="lastName"
-                      type="text"
-                      className="input-apple w-full"
-                      placeholder="Last name"
-                      {...registerForm.register("lastName")}
-                    />
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-2 text-xs text-muted-foreground">
+                      OR SIGN UP WITH EMAIL
+                    </span>
                   </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="username" className="block text-sm font-medium mb-1.5">
-                    Username
-                  </label>
-                  <input
-                    id="username"
-                    type="text"
-                    className="input-apple w-full"
-                    placeholder="Choose a username"
-                    {...registerForm.register("username")}
-                  />
-                  {registerForm.formState.errors.username && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {registerForm.formState.errors.username.message}
-                    </p>
-                  )}
-                </div>
-                
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-1.5">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    className="input-apple w-full"
-                    placeholder="Your email address"
-                    {...registerForm.register("email")}
-                  />
-                  {registerForm.formState.errors.email && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {registerForm.formState.errors.email.message}
-                    </p>
-                  )}
-                </div>
-                
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium mb-1.5">
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    className="input-apple w-full"
-                    placeholder="Create a password"
-                    {...registerForm.register("password")}
-                  />
-                  {registerForm.formState.errors.password && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {registerForm.formState.errors.password.message}
-                    </p>
-                  )}
-                </div>
-                
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1.5">
-                    Confirm Password
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    className="input-apple w-full"
-                    placeholder="Confirm your password"
-                    {...registerForm.register("confirmPassword")}
-                  />
-                  {registerForm.formState.errors.confirmPassword && (
-                    <p className="mt-1 text-red-500 text-xs">
-                      {registerForm.formState.errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
-                
-                <button
-                  type="submit"
-                  className="btn-primary w-full py-3"
-                  disabled={registerMutation.isPending}
-                >
-                  {registerMutation.isPending ? (
-                    <div className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span>Creating account...</span>
+                {/* Registration Form */}
+                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="firstName" className="block text-sm font-medium mb-1.5">
+                        First Name
+                      </label>
+                      <input
+                        id="firstName"
+                        type="text"
+                        className="input-apple w-full"
+                        placeholder="First name"
+                        {...registerForm.register("firstName")}
+                      />
                     </div>
-                  ) : (
-                    "Create Account"
-                  )}
-                </button>
-                
-                <p className="text-center text-xs text-muted-foreground mt-3">
-                  By creating an account, you agree to our{" "}
-                  <a href="/terms-of-service" className="text-primary hover:underline">
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a href="/privacy-policy" className="text-primary hover:underline">
-                    Privacy Policy
-                  </a>
-                </p>
-              </form>
+                    <div>
+                      <label htmlFor="lastName" className="block text-sm font-medium mb-1.5">
+                        Last Name
+                      </label>
+                      <input
+                        id="lastName"
+                        type="text"
+                        className="input-apple w-full"
+                        placeholder="Last name"
+                        {...registerForm.register("lastName")}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="username" className="block text-sm font-medium mb-1.5">
+                      Username
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        id="username"
+                        type="text"
+                        className="input-apple w-full pl-10"
+                        placeholder="Choose a username"
+                        {...registerForm.register("username")}
+                      />
+                    </div>
+                    {registerForm.formState.errors.username && (
+                      <p className="mt-1 text-red-500 text-xs">
+                        {registerForm.formState.errors.username.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-1.5">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        id="email"
+                        type="email"
+                        className="input-apple w-full pl-10"
+                        placeholder="Your email address"
+                        {...registerForm.register("email")}
+                      />
+                    </div>
+                    {registerForm.formState.errors.email && (
+                      <p className="mt-1 text-red-500 text-xs">
+                        {registerForm.formState.errors.email.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium mb-1.5">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        id="password"
+                        type="password"
+                        className="input-apple w-full pl-10"
+                        placeholder="Create a password"
+                        {...registerForm.register("password")}
+                      />
+                    </div>
+                    {registerForm.formState.errors.password && (
+                      <p className="mt-1 text-red-500 text-xs">
+                        {registerForm.formState.errors.password.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1.5">
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        id="confirmPassword"
+                        type="password"
+                        className="input-apple w-full pl-10"
+                        placeholder="Confirm your password"
+                        {...registerForm.register("confirmPassword")}
+                      />
+                    </div>
+                    {registerForm.formState.errors.confirmPassword && (
+                      <p className="mt-1 text-red-500 text-xs">
+                        {registerForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="btn-primary w-full py-3 mt-2"
+                    disabled={registerMutation.isPending}
+                  >
+                    {registerMutation.isPending ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Creating account...</span>
+                      </div>
+                    ) : (
+                      "Create Account"
+                    )}
+                  </button>
+                  
+                  <p className="text-center text-xs text-muted-foreground">
+                    By creating an account, you agree to our{" "}
+                    <a href="/terms-of-service" className="text-primary hover:underline">
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a href="/privacy-policy" className="text-primary hover:underline">
+                      Privacy Policy
+                    </a>
+                  </p>
+                </form>
+              </div>
             )}
           </motion.div>
         </div>
