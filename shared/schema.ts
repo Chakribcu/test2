@@ -5,12 +5,11 @@ import { z } from "zod";
 // User schema for future e-commerce functionality
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
   email: text("email").notNull().unique(),
+  password: text("password").notNull(),
   firstName: text("first_name"),
   lastName: text("last_name"),
-  phone: text("phone"),
+  phone: text("phone").unique(),
   street: text("street"),
   city: text("city"),
   state: text("state"),
@@ -39,9 +38,8 @@ export const subscriptions = pgTable("subscriptions", {
 
 // Create Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
   email: true,
+  password: true,
   firstName: true,
   lastName: true,
   phone: true,
