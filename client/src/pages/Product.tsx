@@ -6,13 +6,28 @@ import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, ChevronRight, ShoppingCart } from "lucide-react";
+import { Check, Star, ChevronRight, ShoppingCart, Plus, Minus, ShoppingBag } from "lucide-react";
 import ProductCard from "@/components/ui/product-card";
 import ImageSlider from "@/components/ui/image-slider";
 import OptimizedImage from "@/components/ui/optimized-image";
 
+// Define product type for TypeScript
+interface ProductType {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  images: string[];
+  description: string;
+  features: string[];
+  tags: string[];
+  inStock: boolean;
+}
+
 // Sample products data - in a real app, this would come from an API
-const products = [
+const products: ProductType[] = [
   {
     id: "1",
     name: "MotionMist™ Anti-Chafing Spray",
@@ -94,110 +109,135 @@ const products = [
   }
 ];
 
+// Main Product component that determines what to render based on route params
 const Product = () => {
   const [, navigate] = useLocation();
   const { id } = useParams();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [quantity, setQuantity] = useState(1);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
   
   // If we're on the main product listing page
   if (!id) {
-    return (
-      <Layout>
-        <div className="container mx-auto py-16 px-4">
-          {/* Hero section for products page */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 to-background mb-16">
-            <div className="absolute top-10 right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-            <div className="py-16 px-8 relative z-10">
-              <div className="max-w-2xl">
-                <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Premium Products</h1>
-                <p className="text-lg text-muted-foreground mb-0">
-                  Discover our range of plant-based wellness products designed to enhance your active lifestyle with natural ingredients and superior performance.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Filters and sort - can be expanded with functionality */}
-          <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className="px-3 py-1 rounded-full font-medium">
-                All Products
-              </Badge>
-              <Badge variant="outline" className="px-3 py-1 rounded-full">
-                Anti-Chafing
-              </Badge>
-              <Badge variant="outline" className="px-3 py-1 rounded-full">
-                Wellness
-              </Badge>
-              <Badge variant="outline" className="px-3 py-1 rounded-full">
-                Lifestyle
-              </Badge>
-            </div>
-            
-            <div>
-              <Button variant="ghost" size="sm">
-                Sort by: Featured
-              </Button>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={parseInt(product.id)}
-                name={product.name}
-                price={product.price}
-                image={product.images[0]}
-                category={product.tags[0]}
-              />
-            ))}
-          </div>
-          
-          {/* Newsletter signup */}
-          <div className="mt-24 bg-slate-50 rounded-2xl p-8 lg:p-12">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
-                <p className="text-muted-foreground mb-0">
-                  Join our newsletter to receive updates on new product launches, 
-                  wellness tips, and exclusive offers.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                />
-                <Button>Subscribe</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Layout>
-    );
+    return <ProductListing navigate={navigate} toast={toast} />;
   }
   
-  // Product detail page
+  // Product detail page - Find the product
   const product = products.find(p => p.id === id);
   
   if (!product) {
-    return (
-      <Layout>
-        <div className="container mx-auto py-16 px-4 text-center">
-          <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
-          <p className="mb-8">Sorry, we couldn't find the product you're looking for.</p>
-          <Button onClick={() => navigate("/product")}>
-            View All Products
-          </Button>
-        </div>
-      </Layout>
-    );
+    return <ProductNotFound navigate={navigate} />;
   }
+  
+  return <ProductDetail product={product} navigate={navigate} toast={toast} />;
+};
+
+// Product listing page component
+const ProductListing = ({ navigate, toast }: { navigate: (to: string) => void, toast: any }) => {
+  return (
+    <Layout>
+      <div className="container mx-auto py-16 px-4">
+        {/* Hero section for products page */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 to-background mb-16">
+          <div className="absolute top-10 right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+          <div className="py-16 px-8 relative z-10">
+            <div className="max-w-2xl">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Premium Products</h1>
+              <p className="text-lg text-muted-foreground mb-0">
+                Discover our range of plant-based wellness products designed to enhance your active lifestyle with natural ingredients and superior performance.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Filters and sort - can be expanded with functionality */}
+        <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <Badge variant="outline" className="px-3 py-1 rounded-full font-medium">
+              All Products
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1 rounded-full">
+              Anti-Chafing
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1 rounded-full">
+              Wellness
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1 rounded-full">
+              Lifestyle
+            </Badge>
+          </div>
+          
+          <div>
+            <Button variant="ghost" size="sm">
+              Sort by: Featured
+            </Button>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              id={parseInt(product.id)}
+              name={product.name}
+              price={product.price}
+              image={product.images[0]}
+              category={product.tags[0]}
+            />
+          ))}
+        </div>
+        
+        {/* Newsletter signup */}
+        <div className="mt-24 bg-slate-50 rounded-2xl p-8 lg:p-12">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
+              <p className="text-muted-foreground mb-0">
+                Join our newsletter to receive updates on new product launches, 
+                wellness tips, and exclusive offers.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+              <Button>Subscribe</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+// Product not found component
+const ProductNotFound = ({ navigate }: { navigate: (to: string) => void }) => {
+  return (
+    <Layout>
+      <div className="container mx-auto py-16 px-4 text-center">
+        <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
+        <p className="mb-8">Sorry, we couldn't find the product you're looking for.</p>
+        <Button onClick={() => navigate("/product")}>
+          View All Products
+        </Button>
+      </div>
+    </Layout>
+  );
+};
+
+// Product detail component
+const ProductDetail = ({ 
+  product, 
+  navigate, 
+  toast 
+}: { 
+  product: ProductType, 
+  navigate: (to: string) => void, 
+  toast: any 
+}) => {
+  const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   
   useEffect(() => {
     document.title = `${product.name} | KavinoRa`;
@@ -362,7 +402,7 @@ const Product = () => {
                   </p>
                 </div>
                 
-                <div className="border-b pb-6">
+                <div className="pb-6">
                   <div className="flex justify-between mb-2">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
@@ -383,29 +423,26 @@ const Product = () => {
                     <span className="text-sm text-muted-foreground">1 month ago</span>
                   </div>
                   <p className="text-muted-foreground text-sm">
-                    I love that this is plant-based and doesn't have any harmful chemicals. Works just as well as the 
-                    other brands I've tried but feels much better on my skin.
+                    Good product overall. I would have given 5 stars but it could last a bit longer.
+                    Still much better than other brands I've tried.
                   </p>
                 </div>
-                
-                <Button variant="outline" className="w-full">View All {product.reviews} Reviews</Button>
               </div>
             </div>
           </div>
           
-          {/* Right Column - Purchase Panel */}
+          {/* Right Column - Purchasing Information */}
           <div className="lg:w-5/12">
-            {/* Sticky product purchase card */}
-            <div className="lg:sticky lg:top-24">
-              <div className="bg-card rounded-2xl border shadow-sm p-6 mb-8">
-                <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.name}</h1>
-
+            <div className="lg:sticky lg:top-24 space-y-8">
+              {/* Product Title and Pricing */}
+              <div className="bg-card rounded-xl border shadow-sm p-6">
+                <h1 className="text-2xl md:text-3xl font-bold mb-2">{product.name}</h1>
                 <div className="flex items-center mb-4">
-                  <div className="flex items-center">
+                  <div className="flex mr-2">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-5 h-5 ${
+                        className={`w-4 h-4 ${
                           i < Math.floor(product.rating) 
                             ? "text-amber-400 fill-amber-400" 
                             : "text-gray-300"
@@ -413,91 +450,67 @@ const Product = () => {
                       />
                     ))}
                   </div>
-                  <span className="ml-2 text-sm text-muted-foreground">
-                    {product.rating} ({product.reviews} reviews)
+                  <span className="text-sm text-muted-foreground">
+                    {product.rating} · {product.reviews} reviews
                   </span>
                 </div>
                 
-                <div className="text-3xl font-bold text-primary mb-6">${product.price.toFixed(2)}</div>
-                
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {product.tags.map((tag, i) => (
-                    <Badge key={i} variant="secondary">{tag}</Badge>
-                  ))}
-                </div>
-                
-                <div className="flex items-center text-sm mb-6">
-                  <div className={`flex items-center ${product.inStock ? "text-green-600" : "text-red-600"}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${product.inStock ? "bg-green-600" : "bg-red-600"}`}></div>
-                    <span className="font-medium">{product.inStock ? "In Stock" : "Out of Stock"}</span>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <p className="text-2xl font-bold">${product.price.toFixed(2)}</p>
+                    <p className="text-sm text-muted-foreground">Free shipping on orders over $50</p>
                   </div>
-                  {product.inStock && <span className="text-muted-foreground ml-2">Ready to ship</span>}
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    In Stock
+                  </Badge>
                 </div>
                 
-                <div className="border-t border-b py-6 mb-6">
-                  <div className="flex items-center mb-4">
-                    <label htmlFor="quantity" className="w-24 font-medium">Quantity:</label>
-                    <div className="flex items-center">
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-10 w-10 rounded-r-none"
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        disabled={quantity <= 1}
-                      >
-                        -
-                      </Button>
-                      <div className="h-10 w-12 flex items-center justify-center border-y">
-                        {quantity}
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-10 w-10 rounded-l-none"
-                        onClick={() => setQuantity(quantity + 1)}
-                      >
-                        +
-                      </Button>
+                {/* Quantity Selector */}
+                <div className="mb-6">
+                  <label className="text-sm font-medium block mb-2">Quantity</label>
+                  <div className="flex items-center max-w-[10rem]">
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-9 w-9 rounded-r-none"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <div className="flex-1 h-9 flex items-center justify-center border-y">
+                      {quantity}
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>Total:</span>
-                    <span className="font-medium text-foreground">${(product.price * quantity).toFixed(2)}</span>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-9 w-9 rounded-l-none"
+                      onClick={() => setQuantity(quantity + 1)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
                 
-                <div className="space-y-3 mb-6">
+                {/* Add to Cart Button */}
+                <div className="grid grid-cols-2 gap-3">
                   <Button 
-                    className="w-full text-base h-12"
-                    onClick={handleAddToCart}
-                    disabled={isAddingToCart || !product.inStock}
+                    onClick={handleAddToCart} 
+                    disabled={isAddingToCart}
+                    className="w-full"
                   >
-                    {isAddingToCart ? (
-                      "Adding..."
-                    ) : (
-                      <>
-                        <ShoppingCart className="w-5 h-5 mr-2" />
-                        Add to Cart
-                      </>
-                    )}
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Add to Cart
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full text-base h-12"
-                    onClick={() => {
-                      handleAddToCart();
-                      setTimeout(() => navigate("/checkout"), 600);
-                    }}
-                    disabled={isAddingToCart || !product.inStock}
-                  >
+                  
+                  <Button variant="secondary" className="w-full">
+                    <ShoppingBag className="w-4 h-4 mr-2" />
                     Buy Now
                   </Button>
                 </div>
                 
-                {/* Secure payment information */}
-                <div className="flex items-center justify-center text-xs text-muted-foreground gap-1.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide-lock">
+                {/* Secure checkout message */}
+                <div className="mt-6 flex items-center justify-center text-xs text-muted-foreground">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide-lock mr-1.5">
                     <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                   </svg>
