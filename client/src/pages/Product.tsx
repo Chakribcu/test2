@@ -438,7 +438,22 @@ const ProductDetail = ({
                     Add to Cart
                   </Button>
                   
-                  <Button variant="secondary" className="w-full">
+                  <Button 
+                    variant="secondary" 
+                    className="w-full"
+                    onClick={() => {
+                      // Add to cart and redirect to checkout
+                      addItem({
+                        id: parseInt(product.id),
+                        name: product.name,
+                        price: product.price,
+                        quantity: quantity,
+                        image: product.images[0]
+                      });
+                      // Navigate to checkout page
+                      navigate("/checkout");
+                    }}
+                  >
                     <ShoppingBag className="w-4 h-4 mr-2" />
                     Buy Now
                   </Button>

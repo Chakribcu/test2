@@ -44,7 +44,14 @@ const Header = () => {
   };
 
   const closeMenu = () => {
+    // Ensure menu is closed properly
     setIsMenuOpen(false);
+    
+    // Add a small delay to ensure animation completes
+    setTimeout(() => {
+      // Force any cleanup if needed
+      document.body.style.overflow = '';
+    }, 300);
   };
 
   const toggleUserMenu = () => {
@@ -236,9 +243,9 @@ const Header = () => {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginTop: 0 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
               className="md:hidden bg-white/95 backdrop-blur-md border-t border-b border-border/20"
             >
