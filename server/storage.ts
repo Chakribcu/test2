@@ -65,6 +65,7 @@ export class MemStorage implements IStorage {
   private subscriptionIdCounter: number;
   private wellnessIdCounter: number;
   private purchaseIdCounter: number;
+  private hasSeededData: boolean;
   public sessionStore: session.Store;
 
   constructor() {
@@ -78,6 +79,7 @@ export class MemStorage implements IStorage {
     this.subscriptionIdCounter = 1;
     this.wellnessIdCounter = 1;
     this.purchaseIdCounter = 1;
+    this.hasSeededData = false;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -314,60 +316,61 @@ export class MemStorage implements IStorage {
     return newPurchase;
   }
   
-  // Demo data seeding
+  // Demo data seeding method
   async seedWellnessDataIfNeeded(): Promise<void> {
-    // Check if we have users but no wellness data yet
-    if (this.users.size > 0 && this.wellnessRecords.size === 0) {
-      // Seed data for the first user
-      const firstUser = Array.from(this.users.values())[0];
-      
-      // Sample wellness data for the past week
-      const now = new Date();
-      const weekDays = 7;
-      
-      for (let i = 0; i < weekDays; i++) {
-        const date = new Date();
-        date.setDate(now.getDate() - (weekDays - i - 1));
-        
-        await this.createWellnessData({
-          userId: firstUser.id,
-          date,
-          sleepHours: (6.5 + Math.random() * 2).toFixed(1), // Between 6.5 and 8.5 hours
-          waterIntake: Math.floor(1800 + Math.random() * 800), // Between 1800ml and 2600ml
-          activityMinutes: Math.floor(25 + Math.random() * 35), // Between 25 and 60 minutes
-          stepsCount: Math.floor(4000 + Math.random() * 5000), // Between 4000 and 9000 steps
-          moodScore: Math.floor(6 + Math.random() * 4), // Between 6 and 10
-        });
-      }
-      
-      // Sample purchase history
-      const products = [
-        { id: 1, name: "Comfort Plus Insoles", category: "Footwear", price: 39.99, image: "/product-1.jpg" },
-        { id: 2, name: "Bamboo Compression Socks", category: "Accessories", price: 19.99, image: "/product-2.jpg" },
-        { id: 3, name: "Wellness Tea Collection", category: "Wellness", price: 24.99, image: "/product-3.jpg" },
-        { id: 4, name: "Posture Support Cushion", category: "Accessories", price: 49.99, image: "/product-4.jpg" },
-        { id: 5, name: "Premium Walking Shoes", category: "Footwear", price: 129.99, image: "/product-5.jpg" }
-      ];
-      
-      // Create purchase history over the last month
-      for (let i = 0; i < products.length; i++) {
-        const purchaseDate = new Date();
-        purchaseDate.setDate(now.getDate() - Math.floor(Math.random() * 30)); // Within last month
-        
-        const product = products[i];
-        await this.createPurchase({
-          userId: firstUser.id,
-          productId: product.id,
-          productName: product.name,
-          productCategory: product.category,
-          productImage: product.image,
-          price: product.price.toString(),
-          purchaseDate,
-        });
-      }
-      
-      console.log("Seeded wellness data for dashboard demo");
+    if (this.hasSeededData || this.users.size === 0) {
+      return;
     }
+
+    // Get the first user to seed data for
+    const userId = 1;
+    const now = new Date();
+    
+    // Sample wellness data for the past week
+    const weekDays = 7;
+    for (let i = 0; i < weekDays; i++) {
+      const date = new Date();
+      date.setDate(now.getDate() - (weekDays - i - 1));
+      
+      await this.createWellnessData({
+        userId,
+        date,
+        sleepHours: (6.5 + Math.random() * 2).toFixed(1), // Between 6.5 and 8.5 hours
+        waterIntake: Math.floor(1800 + Math.random() * 800), // Between 1800ml and 2600ml
+        activityMinutes: Math.floor(25 + Math.random() * 35), // Between 25 and 60 minutes
+        stepsCount: Math.floor(4000 + Math.random() * 5000), // Between 4000 and 9000 steps
+        moodScore: Math.floor(6 + Math.random() * 4), // Between 6 and 10
+      });
+    }
+
+    // Sample purchase history
+    const products = [
+      { id: 1, name: "Comfort Plus Insoles", category: "Footwear", price: 39.99, image: "/product-1.jpg" },
+      { id: 2, name: "Bamboo Compression Socks", category: "Accessories", price: 19.99, image: "/product-2.jpg" },
+      { id: 3, name: "Wellness Tea Collection", category: "Wellness", price: 24.99, image: "/product-3.jpg" },
+      { id: 4, name: "Posture Support Cushion", category: "Accessories", price: 49.99, image: "/product-4.jpg" },
+      { id: 5, name: "Premium Walking Shoes", category: "Footwear", price: 129.99, image: "/product-5.jpg" }
+    ];
+    
+    // Create purchase history over the last month
+    for (let i = 0; i < products.length; i++) {
+      const purchaseDate = new Date();
+      purchaseDate.setDate(now.getDate() - Math.floor(Math.random() * 30)); // Within last month
+      
+      const product = products[i];
+      await this.createPurchase({
+        userId,
+        productId: product.id,
+        productName: product.name,
+        productCategory: product.category,
+        productImage: product.image,
+        price: product.price.toString(),
+        purchaseDate,
+      });
+    }
+
+    this.hasSeededData = true;
+    console.log("Seeded wellness data for dashboard demo");
   }
 }
 
