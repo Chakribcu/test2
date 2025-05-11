@@ -241,6 +241,7 @@ const ProductDetail = ({
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { addItem } = useCart();
   
   useEffect(() => {
     document.title = `${product.name} | KavinoRa`;
@@ -251,6 +252,15 @@ const ProductDetail = ({
   
   const handleAddToCart = useCallback(() => {
     setIsAddingToCart(true);
+    
+    // Add to cart using CartProvider
+    addItem({
+      id: parseInt(product.id),
+      name: product.name,
+      price: product.price,
+      quantity: quantity,
+      image: product.images[0]
+    });
     
     // Simulate API request
     setTimeout(() => {
@@ -264,7 +274,7 @@ const ProductDetail = ({
       // Reset quantity after adding to cart
       setQuantity(1);
     }, 600);
-  }, [product.name, quantity, toast]);
+  }, [product, quantity, toast, addItem]);
   
   return (
     <Layout>
