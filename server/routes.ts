@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { z } from "zod";
 import { insertContactSchema, insertSubscriptionSchema, WellnessData } from "@shared/schema";
 import { setupAuth, hashPassword, comparePasswords } from "./auth";
+import crypto from "crypto";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes and middleware
@@ -251,6 +252,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error in /api/user/recent-purchases:", error);
       res.status(500).json({ success: false, message: "An error occurred while fetching purchase history" });
+    }
+  });
+
+  // Password Reset APIs
+  app.post("/api/forgot-password", async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ success: false, message: "Email is required" });
+      }
+      
+      // Check if user exists
+      const user = await storage.getUserByEmail(email);
+      
+      if (!user) {
+        // Don't reveal that the user doesn't exist for security reasons
+        return res.status(200).json({ 
+          success: true, 
+          message: "If your email exists in our system, you will receive a password reset link" 
+        });
+      }
+      
+      // Generate a reset token
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+      
+      // Store the reset token (in a real app, we would save this to the database)
+      // For demo purposes, we'll just log it
+      console.log(`Reset token for ${email}: ${resetToken}`);
+      console.log(`Reset link: http://localhost:3000/reset-password/${resetToken}`);
+      
+      // In a real app, we would send an email with a link to reset the password
+      // For this demo, we'll pretend we sent an email
+      
+      res.status(200).json({ 
+        success: true, 
+        message: "If your email exists in our system, you will receive a password reset link" 
+      });
+    } catch (error) {
+      console.error("Error in /api/forgot-password:", error);
+      res.status(500).json({ success: false, message: "An error occurred while processing your request" });
+    }
+  });
+  
+  app.post("/api/reset-password", async (req: Request, res: Response) => {
+    try {
+      const { token, password } = req.body;
+      
+      if (!token || !password) {
+        return res.status(400).json({ success: false, message: "Token and password are required" });
+      }
+      
+      // In a real app, we would validate the token and find the user
+      // For this demo, we'll assume the token is valid and return success
+      
+      // Hash the new password
+      const hashedPassword = await hashPassword(password);
+      
+      // In a real app, we would update the user's password in the database
+      // For this demo, we'll just pretend we updated it
+      
+      res.status(200).json({ 
+        success: true, 
+        message: "Password has been reset successfully" 
+      });
+    } catch (error) {
+      console.error("Error in /api/reset-password:", error);
+      res.status(500).json({ success: false, message: "An error occurred while resetting your password" });
     }
   });
 

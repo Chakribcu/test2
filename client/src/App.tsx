@@ -18,6 +18,8 @@ import Checkout from "@/pages/Checkout";
 import Account from "@/pages/Account";
 import AuthPage from "@/pages/auth-page";
 import Wishlist from "@/pages/Wishlist";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";

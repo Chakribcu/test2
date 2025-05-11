@@ -212,7 +212,15 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
                 </button>
                 
                 <p className="text-center text-xs text-muted-foreground mt-4">
-                  <a href="#" className="text-primary hover:underline">
+                  <a 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onClose();
+                      setLocation("/forgot-password");
+                    }}
+                    href="/forgot-password" 
+                    className="text-primary hover:underline cursor-pointer"
+                  >
                     Forgot your password?
                   </a>
                 </p>
