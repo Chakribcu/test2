@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2, Package, Truck, CreditCard, Calendar } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryFn } from "@/lib/queryClient";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 import SEOHead from "@/components/SEOHead";
 
 // Interfaces for the order data
@@ -212,7 +212,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total</p>
-                <p className="font-medium">{formatCurrency(parseFloat(order.total))}</p>
+                <p className="font-medium">{formatPrice(parseFloat(order.total))}</p>
               </div>
             </div>
           </div>
@@ -263,7 +263,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {formatCurrency(parseFloat(item.price))}
+                        {formatPrice(parseFloat(item.price))}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {item.quantity}

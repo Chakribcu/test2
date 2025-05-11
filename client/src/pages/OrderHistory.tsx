@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Package } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryFn } from "@/lib/queryClient";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 import SEOHead from "@/components/SEOHead";
 
 interface Order {
@@ -106,7 +106,7 @@ export default function OrderHistory() {
                     <span className={`text-sm px-2 py-1 rounded-full ${getStatusBadgeClass(order.status)}`}>
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </span>
-                    <span className="font-medium">{formatCurrency(Number(order.total))}</span>
+                    <span className="font-medium">{formatPrice(Number(order.total))}</span>
                   </div>
                 </div>
                 
