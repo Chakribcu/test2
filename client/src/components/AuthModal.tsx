@@ -62,12 +62,12 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
       confirmPassword: "",
       firstName: "",
       lastName: "",
+      phone: "",
     }
   });
 
@@ -320,24 +320,24 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
                   </div>
                   
                   <div>
-                    <label htmlFor="username" className="block text-sm font-medium mb-1.5">
-                      Username
+                    <label htmlFor="phone" className="block text-sm font-medium mb-1.5">
+                      Phone (optional)
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Mail className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <input
-                        id="username"
-                        type="text"
+                        id="phone"
+                        type="tel"
                         className="input-apple w-full pl-10"
-                        placeholder="Choose a username"
-                        {...registerForm.register("username")}
+                        placeholder="Your phone number (optional)"
+                        {...registerForm.register("phone")}
                       />
                     </div>
-                    {registerForm.formState.errors.username && (
+                    {registerForm.formState.errors.phone && (
                       <p className="mt-1 text-red-500 text-xs">
-                        {registerForm.formState.errors.username.message}
+                        {registerForm.formState.errors.phone.message}
                       </p>
                     )}
                   </div>
