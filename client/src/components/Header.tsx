@@ -137,13 +137,12 @@ const Header = () => {
               className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors flex items-center text-sm relative"
               aria-label="Wishlist"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="hidden lg:inline">Wishlist</span>
               {/* Wishlist count badge - only show when there are items */}
               {wishlistCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 lg:-top-1.5 lg:right-16 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
+                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
                   {wishlistCount}
                 </span>
               )}
@@ -155,13 +154,12 @@ const Header = () => {
               className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors flex items-center text-sm relative"
               aria-label="Shopping Cart"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11M5 9H19L20 21H4L5 9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="hidden lg:inline">Bag</span>
               {/* Cart count badge - only show when there are items */}
               {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 lg:-top-1.5 lg:right-8 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
+                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
                   {itemCount}
                 </span>
               )}
