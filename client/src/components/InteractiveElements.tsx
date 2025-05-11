@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Ruler, Footprints, Camera, ArrowRight, HelpCircle, Check, Shoe } from "lucide-react";
+import { Ruler, Footprints, Camera, ArrowRight, HelpCircle, Check, ScanLine } from "lucide-react";
 
 interface FootScanResult {
   archType: 'high' | 'medium' | 'low';

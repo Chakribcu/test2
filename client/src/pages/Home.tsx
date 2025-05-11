@@ -62,9 +62,12 @@ const Home = () => {
           >
             <Hero />
             <Benefits />
+            <Personalization />
             <BrandStory />
             <ProductFeature />
+            <InteractiveElements />
             <PopularProducts />
+            <Community />
             <Testimonials />
             <TrendingProducts />
             <BlogPreview />

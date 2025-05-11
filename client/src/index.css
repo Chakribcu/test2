@@ -244,7 +244,7 @@ html, body {
   }
   
   .auth-modal-content {
-    @apply bg-card/95 backdrop-blur-md rounded-3xl shadow-xl max-w-md w-full p-8 relative animate-fadeUp;
+    @apply bg-card/95 backdrop-blur-md rounded-3xl shadow-xl max-w-md w-full p-8 relative animate-fadeUp overflow-y-auto max-h-[90vh];
     border: 1px solid rgba(255,255,255,0.1);
   }
   
