@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { useCart } from "@/hooks/use-cart";
 import AuthModal from "./AuthModal";
 import { AnimatePresence, motion } from "framer-motion";
 import OptimizedImage from "./ui/optimized-image";
@@ -13,6 +14,7 @@ const Header = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [location] = useLocation();
   const { user, logoutMutation } = useAuth();
+  const { itemCount } = useCart();
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -132,10 +134,12 @@ const Header = () => {
                 <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11M5 9H19L20 21H4L5 9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <span className="hidden lg:inline">Bag</span>
-              {/* Cart count badge */}
-              <span className="absolute -top-1.5 -right-1.5 lg:-top-1.5 lg:right-8 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
-                3
-              </span>
+              {/* Cart count badge - only show when there are items */}
+              {itemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 lg:-top-1.5 lg:right-8 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
+                  {itemCount}
+                </span>
+              )}
             </Link>
             
             {/* User account button */}

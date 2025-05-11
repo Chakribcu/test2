@@ -16,6 +16,7 @@ import Account from "@/pages/Account";
 import AuthPage from "@/pages/auth-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
+import { CartProvider } from "@/hooks/use-cart";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 
@@ -44,10 +45,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <CartProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

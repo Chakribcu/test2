@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fix slow scrolling issues */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Improve performance for animations */
+* {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 :root {
   /* Apple-inspired color palette */
   --background: 0 0% 100%;
