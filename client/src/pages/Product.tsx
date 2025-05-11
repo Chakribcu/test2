@@ -189,26 +189,7 @@ const ProductListing = ({ navigate, toast }: { navigate: (to: string) => void, t
           ))}
         </div>
         
-        {/* Newsletter signup */}
-        <div className="mt-24 bg-slate-50 rounded-2xl p-8 lg:p-12">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
-              <p className="text-muted-foreground mb-0">
-                Join our newsletter to receive updates on new product launches, 
-                wellness tips, and exclusive offers.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              />
-              <Button>Subscribe</Button>
-            </div>
-          </div>
-        </div>
+        {/* We'll use the main Newsletter component from the footer */}
       </div>
     </Layout>
   );
@@ -351,23 +332,7 @@ const ProductDetail = ({
               </div>
             </div>
 
-            {/* Features in cards */}
-            <div className="mb-12">
-              <div className="flex items-center border-b pb-4 mb-6">
-                <h2 className="text-xl font-bold flex-1">Key Features</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {product.features.map((feature, i) => (
-                  <div key={i} className="flex p-4 border rounded-xl bg-card hover:border-primary/50 transition-colors">
-                    <div className="mr-4 mt-1 bg-primary/10 p-1.5 rounded-full h-fit">
-                      <Check className="w-4 h-4 text-primary" />
-                    </div>
-                    <p className="text-sm">{feature}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Features moved to right column */}
           </div>
 
           {/* Right Column - Purchase Info */}
@@ -466,6 +431,24 @@ const ProductDetail = ({
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                   </svg>
                   Secure checkout with 30-day money-back guarantee
+                </div>
+              </div>
+              
+              {/* Key Features section - moved from left column */}
+              <div className="bg-card border rounded-xl p-6 mb-6 shadow-sm">
+                <div className="flex items-center border-b pb-4 mb-6">
+                  <h2 className="text-lg font-bold flex-1">Key Features</h2>
+                </div>
+                
+                <div className="space-y-3">
+                  {product.features.map((feature, i) => (
+                    <div key={i} className="flex p-3 border rounded-lg hover:border-primary/50 transition-colors">
+                      <div className="mr-3 mt-0.5 bg-primary/10 p-1.5 rounded-full h-fit">
+                        <Check className="w-3.5 h-3.5 text-primary" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">{feature}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
               

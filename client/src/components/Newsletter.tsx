@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/use-auth";
 
 const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -12,8 +13,18 @@ const newsletterSchema = z.object({
 
 type NewsletterFormValues = z.infer<typeof newsletterSchema>;
 
-const Newsletter = () => {
+interface NewsletterProps {
+  forcedDisplay?: boolean;
+}
+
+const Newsletter = ({ forcedDisplay = false }: NewsletterProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  
+  // Don't display for logged in users unless forcedDisplay is true
+  if (user && !forcedDisplay) {
+    return null;
+  }
   
   const { register, handleSubmit, reset, formState: { errors } } = useForm<NewsletterFormValues>({
     resolver: zodResolver(newsletterSchema),
