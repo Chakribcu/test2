@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import ProductRecommendations from './ProductRecommendations';
+import ProductRecommendations from '../components/ProductRecommendations';
 
 /**
  * PopularProducts Component

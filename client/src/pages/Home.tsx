@@ -5,6 +5,8 @@ import ProductFeature from "@/components/ProductFeature";
 import Testimonials from "@/components/Testimonials";
 import BlogPreview from "@/components/BlogPreview";
 import ContactForm from "@/components/ContactForm";
+import PopularProducts from "@/components/PopularProducts";
+import TrendingProducts from "@/components/TrendingProducts";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -31,7 +33,9 @@ const Home = () => {
         <Benefits />
         <BrandStory />
         <ProductFeature />
+        <PopularProducts />
         <Testimonials />
+        <TrendingProducts />
         <BlogPreview />
         <ContactForm />
       </motion.div>

@@ -10,7 +10,7 @@ import { Check, Star, ChevronRight, ShoppingCart, Plus, Minus, ShoppingBag } fro
 import ProductCard from "@/components/ui/product-card";
 import ImageSlider from "@/components/ui/image-slider";
 import OptimizedImage from "@/components/ui/optimized-image";
-import ProductRecommendations from "@/components/ProductRecommendations";
+import ProductRecommendations from "../components/ProductRecommendations";
 import { recommendationEngine } from "@/services/recommendationEngine";
 
 // Define product type for TypeScript

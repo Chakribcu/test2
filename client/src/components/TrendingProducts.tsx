@@ -1,4 +1,4 @@
-import ProductRecommendations from './ProductRecommendations';
+import ProductRecommendations from '../components/ProductRecommendations';
 
 /**
  * TrendingProducts Component
