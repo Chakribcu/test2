@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return await res.json();
       } catch (error) {
         // Rethrow with a simplified message
-        throw new Error("Invalid username or password. Please try again.");
+        throw new Error("Invalid email or password. Please try again.");
       }
     },
     onSuccess: (user: SelectUser) => {
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onError: (error: Error) => {
       toast({
         title: "Login failed",
-        description: "Invalid username or password. Please try again.",
+        description: "Invalid email or password. Please try again.",
         variant: "destructive",
       });
     },

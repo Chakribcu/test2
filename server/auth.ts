@@ -131,7 +131,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    console.log("Login attempt:", { username: req.body.username });
+    console.log("Login attempt:", { email: req.body.email });
     
     passport.authenticate("local", (err: any, user: SelectUser | false, info: any) => {
       console.log("Passport authenticate result:", { 
@@ -146,8 +146,8 @@ export function setupAuth(app: Express) {
       }
       
       if (!user) {
-        console.log("Authentication failed: Invalid username or password");
-        return res.status(401).json({ message: "Invalid username or password" });
+        console.log("Authentication failed: Invalid email or password");
+        return res.status(401).json({ message: "Invalid email or password" });
       }
       
       req.login(user, async (err) => {
@@ -164,7 +164,7 @@ export function setupAuth(app: Express) {
           // Continue anyway, this is just for demo purposes
         }
         
-        console.log("Login successful for user:", user.username);
+        console.log("Login successful for user:", user.email);
         res.status(200).json(user);
       });
     })(req, res, next);
