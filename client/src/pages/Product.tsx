@@ -368,147 +368,67 @@ const ProductDetail = ({
                 ))}
               </div>
             </div>
-
-            {/* Customer Reviews Section */}
-            <div className="mb-12">
-              <div className="flex items-center border-b pb-4 mb-6">
-                <h2 className="text-xl font-bold flex-1">Customer Reviews</h2>
-                <div className="flex items-center">
-                  <div className="flex mr-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(product.rating) 
-                            ? "text-amber-400 fill-amber-400" 
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm font-medium">{product.rating} · {product.reviews} reviews</span>
-                </div>
-              </div>
-              
-              {/* Sample reviews - in a real app, these would come from a database */}
-              <div className="space-y-6">
-                <div className="border-b pb-6">
-                  <div className="flex justify-between mb-2">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
-                        JD
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Jane Doe</h4>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3.5 h-3.5 ${i < 5 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-sm text-muted-foreground">2 months ago</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    This product has been amazing for my marathon training. No more chafing issues on my long runs.
-                    I've recommended it to everyone in my running club!
-                  </p>
-                </div>
-                
-                <div className="pb-6">
-                  <div className="flex justify-between mb-2">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
-                        MS
-                      </div>
-                      <div>
-                        <h4 className="font-medium">Michael Smith</h4>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3.5 h-3.5 ${i < 4 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-sm text-muted-foreground">1 month ago</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    Good product overall. I would have given 5 stars but it could last a bit longer.
-                    Still much better than other brands I've tried.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
-          
-          {/* Right Column - Purchasing Information */}
+
+          {/* Right Column - Purchase Info */}
           <div className="lg:w-5/12">
-            <div className="lg:sticky lg:top-24 space-y-8">
-              {/* Product Title and Pricing */}
-              <div className="bg-card rounded-xl border shadow-sm p-6">
-                <h1 className="text-2xl md:text-3xl font-bold mb-2">{product.name}</h1>
-                <div className="flex items-center mb-4">
-                  <div className="flex mr-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(product.rating) 
-                            ? "text-amber-400 fill-amber-400" 
-                            : "text-gray-300"
-                        }`}
-                      />
+            <div className="sticky top-24">
+              {/* Product Title and Price */}
+              <div className="bg-card border rounded-xl p-6 mb-6 shadow-sm">
+                <div className="mb-4">
+                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">{product.name}</h1>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {product.tags.slice(0, 3).map((tag, i) => (
+                      <Badge key={i} variant="secondary">{tag}</Badge>
                     ))}
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {product.rating} · {product.reviews} reviews
-                  </span>
-                </div>
-                
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="text-2xl font-bold">${product.price.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground">Free shipping on orders over $50</p>
+                  <div className="flex items-center mb-4">
+                    <div className="flex mr-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(product.rating) 
+                              ? "text-amber-400 fill-amber-400" 
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-muted-foreground">{product.reviews} reviews</span>
                   </div>
-                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                    In Stock
-                  </Badge>
+                  <div className="flex items-baseline">
+                    <span className="text-2xl sm:text-3xl font-bold">${product.price.toFixed(2)}</span>
+                    <span className="text-muted-foreground ml-2">USD</span>
+                  </div>
                 </div>
                 
                 {/* Quantity Selector */}
                 <div className="mb-6">
-                  <label className="text-sm font-medium block mb-2">Quantity</label>
-                  <div className="flex items-center max-w-[10rem]">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-9 w-9 rounded-r-none"
+                  <p className="font-medium mb-2">Quantity</p>
+                  <div className="inline-flex items-center border rounded-lg">
+                    <button 
+                      className="p-2 hover:bg-muted/50 rounded-l-lg"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      aria-label="Decrease quantity"
                     >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <div className="flex-1 h-9 flex items-center justify-center border-y">
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="px-4 py-2 border-l border-r min-w-[3rem] text-center">
                       {quantity}
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-9 w-9 rounded-l-none"
+                    </span>
+                    <button 
+                      className="p-2 hover:bg-muted/50 rounded-r-lg"
                       onClick={() => setQuantity(quantity + 1)}
+                      aria-label="Increase quantity"
                     >
-                      <Plus className="h-4 w-4" />
-                    </Button>
+                      <Plus className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
                 
-                {/* Add to Cart Button */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* Add to Cart and Buy Now buttons */}
+                <div className="grid grid-cols-2 gap-4">
                   <Button 
                     onClick={handleAddToCart} 
                     disabled={isAddingToCart}
@@ -526,41 +446,59 @@ const ProductDetail = ({
                 
                 {/* Secure checkout message */}
                 <div className="mt-6 flex items-center justify-center text-xs text-muted-foreground">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide-lock mr-1.5">
-                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  <svg className="h-4 w-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                   </svg>
-                  <span>Secure checkout powered by Stripe</span>
+                  Secure checkout with 30-day money-back guarantee
                 </div>
               </div>
               
-              {/* Shipping & Returns */}
-              <div className="bg-card rounded-xl border shadow-sm p-6">
-                <h3 className="font-bold text-base mb-4">Shipping & Returns</h3>
-                <div className="space-y-4 text-sm">
-                  <div className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 text-primary">
-                      <rect width="16" height="13" x="4" y="5" rx="2"/>
-                      <path d="M16 2v3"/>
-                      <path d="M8 2v3"/>
-                      <path d="M4 10h16"/>
+              {/* Policy info */}
+              <div className="flex flex-col space-y-4">
+                {/* Free shipping */}
+                <div className="flex p-3 border rounded-lg hover:border-primary/50 transition-colors">
+                  <div className="flex-shrink-0 mr-3">
+                    <svg className="h-5 w-5 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="1" y="3" width="15" height="13"></rect>
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
                     </svg>
-                    <div>
-                      <p className="font-medium">Free shipping</p>
-                      <p className="text-muted-foreground">2-5 business days</p>
-                    </div>
                   </div>
-                  
-                  <div className="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 text-primary">
-                      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                      <path d="m9 9 3-3 3 3"/>
-                      <path d="M12 6v9"/>
+                  <div>
+                    <h3 className="text-sm font-medium">Free Shipping</h3>
+                    <p className="text-xs text-muted-foreground">On orders over $50</p>
+                  </div>
+                </div>
+                
+                {/* Return policy */}
+                <div className="flex p-3 border rounded-lg hover:border-primary/50 transition-colors">
+                  <div className="flex-shrink-0 mr-3">
+                    <svg className="h-5 w-5 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 12c0 6-4.39 10-9.806 10C7.792 22 4.24 19.665 3 16"></path>
+                      <path d="M2 9c-.15-1.83.5-3.5 1.85-4.85C5.2 2.8 6.87 2.15 8.7 2"></path>
+                      <path d="M14 8c1.85.15 3.5.8 4.85 2.15a7.51 7.51 0 0 1 1.65 2.85"></path>
+                      <path d="m8 16 4-4 4 4"></path>
+                      <path d="M16 12v4"></path>
                     </svg>
-                    <div>
-                      <p className="font-medium">Easy returns</p>
-                      <p className="text-muted-foreground">30-day return policy</p>
-                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium">Easy Returns</h3>
+                    <p className="text-xs text-muted-foreground">30-day return policy</p>
+                  </div>
+                </div>
+                
+                {/* Secure payment */}
+                <div className="flex p-3 border rounded-lg hover:border-primary/50 transition-colors">
+                  <div className="flex-shrink-0 mr-3">
+                    <svg className="h-5 w-5 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium">Secure Payment</h3>
+                    <p className="text-xs text-muted-foreground">Your data is protected</p>
                   </div>
                 </div>
               </div>
@@ -568,24 +506,121 @@ const ProductDetail = ({
           </div>
         </div>
         
-        {/* Multiple recommendation sections with different strategies */}
-        <div className="my-24">
-          {/* Similar Products Recommendations */}
+        {/* Similar Products Recommendations */}
+        <ProductRecommendations 
+          productId={product.id}
+          strategy="similar"
+          title="Similar Products You Might Like"
+          limit={3}
+        />
+        
+        {/* Frequently Bought Together Recommendations */}
+        <div className="mt-24">
           <ProductRecommendations 
             productId={product.id}
-            strategy="similar"
-            title="Similar Products You Might Like"
+            strategy="frequently-bought-together"
+            title="Frequently Bought Together"
             limit={3}
           />
-
-          {/* Frequently Bought Together Recommendations */}
-          <div className="mt-24">
-            <ProductRecommendations 
-              productId={product.id}
-              strategy="frequently-bought-together"
-              title="Frequently Bought Together"
-              limit={3}
-            />
+        </div>
+        
+        {/* Customer Reviews Section - Moved to bottom of page */}
+        <div className="mt-24 mb-12">
+          <div className="flex items-center border-b pb-4 mb-6">
+            <h2 className="text-xl font-bold flex-1">Customer Reviews</h2>
+            <div className="flex items-center">
+              <div className="flex mr-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < Math.floor(product.rating) 
+                        ? "text-amber-400 fill-amber-400" 
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm font-medium">{product.rating} · {product.reviews} reviews</span>
+            </div>
+          </div>
+          
+          {/* Sample reviews - in a real app, these would come from a database */}
+          <div className="space-y-6">
+            <div className="border-b pb-6">
+              <div className="flex justify-between mb-2">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
+                    JD
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Jane Doe</h4>
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3.5 h-3.5 ${i < 5 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-sm text-muted-foreground">3 days ago</span>
+              </div>
+              <p className="text-muted-foreground">This product exceeded my expectations. The quality is exceptional, and it has significantly improved my daily routine. I highly recommend it to anyone who's considering making a purchase.</p>
+            </div>
+            
+            <div className="border-b pb-6">
+              <div className="flex justify-between mb-2">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
+                    JS
+                  </div>
+                  <div>
+                    <h4 className="font-medium">John Smith</h4>
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3.5 h-3.5 ${i < 4 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-sm text-muted-foreground">1 week ago</span>
+              </div>
+              <p className="text-muted-foreground">Great product but shipping took a little longer than expected. The quality makes up for it though. I've been using it daily for the past week and am already seeing results.</p>
+            </div>
+            
+            <div>
+              <div className="flex justify-between mb-2">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 text-primary font-medium">
+                    AT
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Alice Thompson</h4>
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3.5 h-3.5 ${i < 5 ? "text-amber-400 fill-amber-400" : "text-gray-300"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-sm text-muted-foreground">2 weeks ago</span>
+              </div>
+              <p className="text-muted-foreground">Absolutely in love with this product! It fits perfectly into my wellness routine and has made such a difference. The natural ingredients are exactly what I was looking for. Will definitely be purchasing again.</p>
+            </div>
+            
+            <div className="mt-6 text-center">
+              <Button variant="outline">
+                View All Reviews
+              </Button>
+            </div>
           </div>
         </div>
       </div>
