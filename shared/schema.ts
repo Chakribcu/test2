@@ -83,6 +83,7 @@ export const wellnessData = pgTable("wellness_data", {
   activityMinutes: integer("activity_minutes"),
   stepsCount: integer("steps_count"),
   moodScore: integer("mood_score"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const insertWellnessSchema = createInsertSchema(wellnessData);
@@ -100,6 +101,7 @@ export const purchases = pgTable("purchases", {
   productImage: text("product_image"),
   price: numeric("price", { precision: 10, scale: 2 }).notNull(),
   purchaseDate: timestamp("purchase_date").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const insertPurchaseSchema = createInsertSchema(purchases);

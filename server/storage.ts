@@ -48,6 +48,9 @@ export interface IStorage {
   
   // Session store
   sessionStore: session.Store;
+  
+  // Demo data seeding
+  seedWellnessDataIfNeeded(): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -249,11 +252,11 @@ export class MemStorage implements IStorage {
       id,
       userId: data.userId,
       date: data.date || now,
-      sleepHours: data.sleepHours,
-      waterIntake: data.waterIntake,
-      activityMinutes: data.activityMinutes,
-      stepsCount: data.stepsCount,
-      moodScore: data.moodScore,
+      sleepHours: data.sleepHours || null,
+      waterIntake: data.waterIntake || null,
+      activityMinutes: data.activityMinutes || null,
+      stepsCount: data.stepsCount || null,
+      moodScore: data.moodScore || null,
       createdAt: now
     };
     
@@ -301,7 +304,7 @@ export class MemStorage implements IStorage {
       productId: purchase.productId,
       productName: purchase.productName,
       productCategory: purchase.productCategory,
-      productImage: purchase.productImage,
+      productImage: purchase.productImage || null,
       price: purchase.price,
       purchaseDate: purchase.purchaseDate || now,
       createdAt: now
@@ -310,7 +313,64 @@ export class MemStorage implements IStorage {
     this.purchases.set(id, newPurchase);
     return newPurchase;
   }
+  
+  // Demo data seeding
+  async seedWellnessDataIfNeeded(): Promise<void> {
+    // Check if we have users but no wellness data yet
+    if (this.users.size > 0 && this.wellnessRecords.size === 0) {
+      // Seed data for the first user
+      const firstUser = Array.from(this.users.values())[0];
+      
+      // Sample wellness data for the past week
+      const now = new Date();
+      const weekDays = 7;
+      
+      for (let i = 0; i < weekDays; i++) {
+        const date = new Date();
+        date.setDate(now.getDate() - (weekDays - i - 1));
+        
+        await this.createWellnessData({
+          userId: firstUser.id,
+          date,
+          sleepHours: (6.5 + Math.random() * 2).toFixed(1), // Between 6.5 and 8.5 hours
+          waterIntake: Math.floor(1800 + Math.random() * 800), // Between 1800ml and 2600ml
+          activityMinutes: Math.floor(25 + Math.random() * 35), // Between 25 and 60 minutes
+          stepsCount: Math.floor(4000 + Math.random() * 5000), // Between 4000 and 9000 steps
+          moodScore: Math.floor(6 + Math.random() * 4), // Between 6 and 10
+        });
+      }
+      
+      // Sample purchase history
+      const products = [
+        { id: 1, name: "Comfort Plus Insoles", category: "Footwear", price: 39.99, image: "/product-1.jpg" },
+        { id: 2, name: "Bamboo Compression Socks", category: "Accessories", price: 19.99, image: "/product-2.jpg" },
+        { id: 3, name: "Wellness Tea Collection", category: "Wellness", price: 24.99, image: "/product-3.jpg" },
+        { id: 4, name: "Posture Support Cushion", category: "Accessories", price: 49.99, image: "/product-4.jpg" },
+        { id: 5, name: "Premium Walking Shoes", category: "Footwear", price: 129.99, image: "/product-5.jpg" }
+      ];
+      
+      // Create purchase history over the last month
+      for (let i = 0; i < products.length; i++) {
+        const purchaseDate = new Date();
+        purchaseDate.setDate(now.getDate() - Math.floor(Math.random() * 30)); // Within last month
+        
+        const product = products[i];
+        await this.createPurchase({
+          userId: firstUser.id,
+          productId: product.id,
+          productName: product.name,
+          productCategory: product.category,
+          productImage: product.image,
+          price: product.price.toString(),
+          purchaseDate,
+        });
+      }
+      
+      console.log("Seeded wellness data for dashboard demo");
+    }
+  }
 }
 
 // Create and export a singleton instance of storage
-export const storage = new MemStorage();
+const storageInstance = new MemStorage();
+export const storage = storageInstance;
