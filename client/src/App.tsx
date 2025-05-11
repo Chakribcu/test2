@@ -15,6 +15,7 @@ import OrderHistory from "@/pages/OrderHistory";
 import Checkout from "@/pages/Checkout";
 import Account from "@/pages/Account";
 import AuthPage from "@/pages/auth-page";
+import Wishlist from "@/pages/Wishlist";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/auth" component={AuthPage} />
       <Route path="/cart" component={Cart} />
       <Route path="/checkout" component={Checkout} />
+      <Route path="/wishlist" component={Wishlist} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />
       <ProtectedRoute path="/account" component={Account} />
       <Route component={NotFound} />
