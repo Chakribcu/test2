@@ -13,6 +13,8 @@ interface OptimizedImageProps {
   placeholder?: boolean;
   quality?: number;
   onLoad?: () => void;
+  lazyLoad?: boolean;   // For backward compatibility
+  blurEffect?: boolean; // For backward compatibility
 }
 
 /**
