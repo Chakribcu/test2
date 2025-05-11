@@ -10,6 +10,8 @@ import { Check, Star, ChevronRight, ShoppingCart, Plus, Minus, ShoppingBag } fro
 import ProductCard from "@/components/ui/product-card";
 import ImageSlider from "@/components/ui/image-slider";
 import OptimizedImage from "@/components/ui/optimized-image";
+import ProductRecommendations from "@/components/ProductRecommendations";
+import { recommendationEngine } from "@/services/recommendationEngine";
 
 // Define product type for TypeScript
 interface ProductType {
@@ -241,7 +243,10 @@ const ProductDetail = ({
   
   useEffect(() => {
     document.title = `${product.name} | KavinoRa`;
-  }, [product.name]);
+    
+    // Track product view for recommendations
+    recommendationEngine.trackProductView(product.id);
+  }, [product.name, product.id]);
   
   const handleAddToCart = useCallback(() => {
     setIsAddingToCart(true);
@@ -552,74 +557,24 @@ const ProductDetail = ({
           </div>
         </div>
         
-        {/* Related Products */}
-        <div className="mt-24">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold">You Might Also Like</h2>
-            <Button variant="outline" onClick={() => navigate("/product")}>
-              View All Products
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.filter(p => p.id !== product.id).map((relatedProduct) => (
-              <div 
-                key={relatedProduct.id} 
-                className="group rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border bg-card"
-                onClick={() => navigate(`/product/${relatedProduct.id}`)}
-              >
-                <div className="h-72 bg-muted relative overflow-hidden cursor-pointer">
-                  <OptimizedImage 
-                    src={relatedProduct.images[0]} 
-                    alt={relatedProduct.name}
-                    className="w-full h-full group-hover:scale-105 transition-transform duration-500"
-                    objectFit="cover"
-                    lazyLoad={true}
-                    blurEffect={true}
-                  />
-                  
-                  {/* Price badge */}
-                  <div className="absolute top-4 right-4 bg-primary text-white rounded-full px-3 py-1 text-sm font-bold">
-                    ${relatedProduct.price.toFixed(2)}
-                  </div>
-                </div>
-                
-                <div className="p-5">
-                  <h3 className="font-bold text-lg mb-2">{relatedProduct.name}</h3>
-                  <div className="flex items-center mb-3">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(relatedProduct.rating) 
-                              ? "text-amber-400 fill-amber-400" 
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      ({relatedProduct.reviews})
-                    </span>
-                  </div>
-                  
-                  <Button 
-                    className="w-full"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toast({
-                        title: "Added to Cart",
-                        description: `${relatedProduct.name} has been added to your cart`,
-                      });
-                    }}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart
-                  </Button>
-                </div>
-              </div>
-            ))}
+        {/* Multiple recommendation sections with different strategies */}
+        <div className="my-24">
+          {/* Similar Products Recommendations */}
+          <ProductRecommendations 
+            productId={product.id}
+            strategy="similar"
+            title="Similar Products You Might Like"
+            limit={3}
+          />
+
+          {/* Frequently Bought Together Recommendations */}
+          <div className="mt-24">
+            <ProductRecommendations 
+              productId={product.id}
+              strategy="frequently-bought-together"
+              title="Frequently Bought Together"
+              limit={3}
+            />
           </div>
         </div>
       </div>
