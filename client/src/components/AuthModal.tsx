@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
+import { useLocation } from "wouter";
 import { X } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -69,10 +70,14 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
   });
 
   // Form submissions
+  const [, setLocation] = useLocation();
+
   const onLoginSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(data, {
       onSuccess: () => {
         onClose();
+        // Also redirect to home page
+        setLocation("/");
       }
     });
   };
@@ -82,6 +87,8 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
     registerMutation.mutate(registerData, {
       onSuccess: () => {
         onClose();
+        // Also redirect to home page
+        setLocation("/");
       }
     });
   };

@@ -61,12 +61,22 @@ const AuthPage = () => {
   });
 
   const onLoginSubmit = (data: LoginFormValues) => {
-    loginMutation.mutate(data);
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        // Redirect to home page after successful login
+        setLocation("/");
+      }
+    });
   };
 
   const onRegisterSubmit = (data: RegisterFormValues) => {
     const { confirmPassword, ...registerData } = data;
-    registerMutation.mutate(registerData);
+    registerMutation.mutate(registerData, {
+      onSuccess: () => {
+        // Redirect to home page after successful registration
+        setLocation("/");
+      }
+    });
   };
 
   return (
