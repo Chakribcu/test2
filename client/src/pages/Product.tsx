@@ -12,6 +12,7 @@ import ProductCard from "@/components/ui/product-card";
 import ImageSlider from "@/components/ui/image-slider";
 import OptimizedImage from "@/components/ui/optimized-image";
 import ProductRecommendations from "../components/ProductRecommendations";
+import ProductReviews from "@/components/ProductReviews";
 import { recommendationEngine } from "@/services/recommendationEngine";
 
 // Define product type for TypeScript
@@ -188,6 +189,9 @@ const ProductListing = ({ navigate, toast }: { navigate: (to: string) => void, t
             />
           ))}
         </div>
+        
+        {/* Enhanced Product Reviews Section */}
+        {product && <ProductReviews productId={product.id} />}
         
         {/* We'll use the main Newsletter component from the footer */}
       </div>
