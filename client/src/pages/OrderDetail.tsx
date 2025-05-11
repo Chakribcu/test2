@@ -144,50 +144,64 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
           {/* Order Status */}
-          <div className="bg-card p-6 rounded-lg shadow-sm border">
-            <h2 className="text-lg font-semibold mb-4 flex items-center">
-              <Package className="h-5 w-5 mr-2" />
+          <div className="bg-card p-5 rounded-lg shadow-sm border">
+            <h2 className="text-base lg:text-lg font-semibold mb-4 flex items-center">
+              <Package className="h-5 w-5 mr-2 text-primary" />
               Order Status
             </h2>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Order Status</p>
-                <p className="font-medium">{order.status}</p>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-muted-foreground">Order Status:</p>
+                <p className="font-medium text-sm">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getStatusBadgeClass(order.status)}`}>
+                    {order.status}
+                  </span>
+                </p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Payment Status</p>
-                <p className="font-medium">{order.paymentStatus}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-muted-foreground">Payment Status:</p>
+                <p className="font-medium text-sm">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${
+                    order.paymentStatus.toLowerCase() === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {order.paymentStatus}
+                  </span>
+                </p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Shipping Status</p>
-                <p className="font-medium">{order.shippingStatus}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-muted-foreground">Shipping Status:</p>
+                <p className="font-medium text-sm">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getStatusBadgeClass(order.shippingStatus)}`}>
+                    {order.shippingStatus}
+                  </span>
+                </p>
               </div>
             </div>
           </div>
 
           {/* Shipping Information */}
-          <div className="bg-card p-6 rounded-lg shadow-sm border">
-            <h2 className="text-lg font-semibold mb-4 flex items-center">
-              <Truck className="h-5 w-5 mr-2" />
+          <div className="bg-card p-5 rounded-lg shadow-sm border">
+            <h2 className="text-base lg:text-lg font-semibold mb-4 flex items-center">
+              <Truck className="h-5 w-5 mr-2 text-primary" />
               Shipping Information
             </h2>
             <div className="space-y-2">
               <p className="font-medium">{order.shippingAddress.name}</p>
-              <p>{order.shippingAddress.address}</p>
-              <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}</p>
-              <p>{order.shippingAddress.country}</p>
+              <p className="text-sm">{order.shippingAddress.address}</p>
+              <p className="text-sm">{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}</p>
+              <p className="text-sm">{order.shippingAddress.country}</p>
             </div>
           </div>
 
           {/* Payment Information */}
-          <div className="bg-card p-6 rounded-lg shadow-sm border">
-            <h2 className="text-lg font-semibold mb-4 flex items-center">
-              <CreditCard className="h-5 w-5 mr-2" />
+          <div className="bg-card p-5 rounded-lg shadow-sm border md:col-span-2 lg:col-span-1">
+            <h2 className="text-base lg:text-lg font-semibold mb-4 flex items-center">
+              <CreditCard className="h-5 w-5 mr-2 text-primary" />
               Payment Information
             </h2>
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground">Payment Method</p>
                 <p className="font-medium">{order.paymentMethod}</p>
@@ -207,7 +221,9 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         {/* Order Items */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Order Items</h2>
-          <div className="border rounded-lg overflow-hidden">
+          
+          {/* Desktop Table View (hidden on small screens) */}
+          <div className="border rounded-lg overflow-hidden hidden md:block">
             <div className="overflow-x-auto">
               <table className="w-full divide-y divide-border">
                 <thead className="bg-muted">
@@ -261,28 +277,64 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
               </table>
             </div>
           </div>
+          
+          {/* Mobile Card View (shown only on small screens) */}
+          <div className="md:hidden space-y-4">
+            {items.map((item) => (
+              <div key={item.id} className="border rounded-lg overflow-hidden p-4 bg-card">
+                <div className="flex items-start space-x-3">
+                  <div className="h-16 w-16 flex-shrink-0 bg-muted rounded overflow-hidden">
+                    {item.image ? (
+                      <img src={item.image} alt={item.productName} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex items-center justify-center h-full w-full bg-muted text-muted-foreground">
+                        <Package className="h-6 w-6" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium text-base">{item.productName}</h3>
+                    <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Price:</p>
+                        <p>{formatCurrency(parseFloat(item.price))}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Quantity:</p>
+                        <p>{item.quantity}</p>
+                      </div>
+                      <div className="col-span-2">
+                        <p className="text-muted-foreground">Total:</p>
+                        <p className="font-medium">{formatCurrency(parseFloat(item.price) * item.quantity)}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Order Summary */}
-        <div className="bg-card p-6 rounded-lg shadow-sm border max-w-md ml-auto">
+        <div className="bg-card p-6 rounded-lg shadow-sm border max-w-md md:ml-auto">
           <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-          <div className="space-y-2">
-            <div className="flex justify-between">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Subtotal</span>
-              <span>{formatCurrency(subtotal)}</span>
+              <span className="font-medium">{formatCurrency(subtotal)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Shipping</span>
-              <span>{formatCurrency(shipping)}</span>
+              <span className="font-medium">{formatCurrency(shipping)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Tax</span>
-              <span>{formatCurrency(tax)}</span>
+              <span className="font-medium">{formatCurrency(tax)}</span>
             </div>
-            <div className="border-t pt-2 mt-2">
-              <div className="flex justify-between font-semibold">
-                <span>Total</span>
-                <span>{formatCurrency(parseFloat(order.total))}</span>
+            <div className="border-t pt-3 mt-1">
+              <div className="flex justify-between items-center font-semibold">
+                <span className="text-lg">Total</span>
+                <span className="text-lg">{formatCurrency(parseFloat(order.total))}</span>
               </div>
             </div>
           </div>

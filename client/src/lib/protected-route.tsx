@@ -9,7 +9,7 @@ export function ProtectedRoute({
   component: Component,
 }: {
   path: string;
-  component: () => React.JSX.Element | null;
+  component: any; // Allow any component type including those with parameters
 }) {
   const { user, isLoading } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);

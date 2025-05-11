@@ -12,7 +12,8 @@ import TermsOfService from "@/pages/TermsOfService";
 import NotFound from "@/pages/not-found";
 import Cart from "@/pages/cart";
 import OrderHistory from "@/pages/OrderHistory";
-import OrderDetail from "@/pages/OrderDetail";
+// Note: Using relative path since module resolution seems to be failing with alias
+import OrderDetail from "./pages/OrderDetail";
 import Checkout from "@/pages/Checkout";
 import Account from "@/pages/Account";
 import AuthPage from "@/pages/auth-page";

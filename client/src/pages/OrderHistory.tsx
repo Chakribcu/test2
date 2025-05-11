@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Package } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryFn } from "@/lib/queryClient";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -83,7 +83,12 @@ export default function OrderHistory() {
         <h1 className="text-2xl md:text-3xl font-bold mb-8">Your Order History</h1>
         
         {orders.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 max-w-md mx-auto">
+            <div className="mb-6 flex justify-center">
+              <div className="rounded-full bg-primary/10 p-6">
+                <Package className="h-12 w-12 text-primary" />
+              </div>
+            </div>
             <h2 className="text-xl font-medium mb-4">You haven't placed any orders yet</h2>
             <p className="text-muted-foreground mb-6">Start shopping and your orders will appear here</p>
             <Button onClick={() => setLocation("/")} className="mt-4">Browse Products</Button>
