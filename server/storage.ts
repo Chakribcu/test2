@@ -3,7 +3,9 @@ import {
   Contact, InsertContact, contacts,
   Subscription, InsertSubscription, subscriptions,
   WellnessData, InsertWellnessData, wellnessData,
-  Purchase, InsertPurchase, purchases
+  Purchase, InsertPurchase, purchases,
+  Order, InsertOrder, orders,
+  OrderItem, InsertOrderItem, orderItems
 } from "@shared/schema";
 
 // Interface for all storage methods
@@ -46,11 +48,26 @@ export interface IStorage {
   getRecentPurchasesByUserId(userId: number, limit?: number): Promise<Purchase[]>;
   createPurchase(purchase: InsertPurchase): Promise<Purchase>;
   
+  // Order methods
+  getOrder(id: number): Promise<Order | undefined>;
+  getOrderByOrderNumber(orderNumber: string): Promise<Order | undefined>;
+  getOrdersByUserId(userId: number): Promise<Order[]>;
+  createOrder(order: InsertOrder): Promise<Order>;
+  updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
+  updateOrderPaymentStatus(id: number, paymentStatus: string): Promise<Order | undefined>;
+  updateOrderShippingStatus(id: number, shippingStatus: string): Promise<Order | undefined>;
+  
+  // Order Item methods
+  getOrderItems(orderId: number): Promise<OrderItem[]>;
+  createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
+  getOrderWithItems(orderId: number): Promise<{ order: Order; items: OrderItem[] } | undefined>;
+  
   // Session store
   sessionStore: session.Store;
   
   // Demo data seeding
   seedWellnessDataIfNeeded(): Promise<void>;
+  seedOrdersIfNeeded(): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -60,12 +77,17 @@ export class MemStorage implements IStorage {
   private subscriptions: Map<number, Subscription>;
   private wellnessRecords: Map<number, WellnessData>;
   private purchases: Map<number, Purchase>;
+  private orders: Map<number, Order>;
+  private orderItems: Map<number, OrderItem>;
   private userIdCounter: number;
   private contactIdCounter: number;
   private subscriptionIdCounter: number;
   private wellnessIdCounter: number;
   private purchaseIdCounter: number;
+  private orderIdCounter: number;
+  private orderItemIdCounter: number;
   private hasSeededData: boolean;
+  private hasSeededOrders: boolean;
   public sessionStore: session.Store;
 
   constructor() {
@@ -74,12 +96,17 @@ export class MemStorage implements IStorage {
     this.subscriptions = new Map();
     this.wellnessRecords = new Map();
     this.purchases = new Map();
+    this.orders = new Map();
+    this.orderItems = new Map();
     this.userIdCounter = 1;
     this.contactIdCounter = 1;
     this.subscriptionIdCounter = 1;
     this.wellnessIdCounter = 1;
     this.purchaseIdCounter = 1;
+    this.orderIdCounter = 1;
+    this.orderItemIdCounter = 1;
     this.hasSeededData = false;
+    this.hasSeededOrders = false;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -314,6 +341,207 @@ export class MemStorage implements IStorage {
     
     this.purchases.set(id, newPurchase);
     return newPurchase;
+  }
+  
+  // Order methods
+  async getOrder(id: number): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async getOrderByOrderNumber(orderNumber: string): Promise<Order | undefined> {
+    return Array.from(this.orders.values()).find(
+      (order) => order.orderNumber === orderNumber
+    );
+  }
+
+  async getOrdersByUserId(userId: number): Promise<Order[]> {
+    return Array.from(this.orders.values())
+      .filter(order => order.userId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const id = this.orderIdCounter++;
+    const now = new Date();
+    
+    const newOrder: Order = {
+      id,
+      orderNumber: order.orderNumber || `ORD-${Date.now()}-${id}`,
+      userId: order.userId,
+      status: order.status || "processing",
+      paymentStatus: order.paymentStatus || "pending",
+      shippingStatus: order.shippingStatus || "processing",
+      total: order.total,
+      shippingAddress: order.shippingAddress,
+      paymentMethod: order.paymentMethod,
+      createdAt: now,
+      updatedAt: now
+    };
+    
+    this.orders.set(id, newOrder);
+    return newOrder;
+  }
+
+  async updateOrderStatus(id: number, status: string): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+    
+    const updatedOrder: Order = {
+      ...order,
+      status,
+      updatedAt: new Date()
+    };
+    
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async updateOrderPaymentStatus(id: number, paymentStatus: string): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+    
+    const updatedOrder: Order = {
+      ...order,
+      paymentStatus,
+      updatedAt: new Date()
+    };
+    
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async updateOrderShippingStatus(id: number, shippingStatus: string): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+    
+    const updatedOrder: Order = {
+      ...order,
+      shippingStatus,
+      updatedAt: new Date()
+    };
+    
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  // Order Item methods
+  async getOrderItems(orderId: number): Promise<OrderItem[]> {
+    return Array.from(this.orderItems.values())
+      .filter(item => item.orderId === orderId);
+  }
+
+  async createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem> {
+    const id = this.orderItemIdCounter++;
+    const now = new Date();
+    
+    const newOrderItem: OrderItem = {
+      id,
+      orderId: orderItem.orderId,
+      productId: orderItem.productId,
+      productName: orderItem.productName,
+      quantity: orderItem.quantity,
+      price: orderItem.price,
+      image: orderItem.image || null,
+      createdAt: now
+    };
+    
+    this.orderItems.set(id, newOrderItem);
+    return newOrderItem;
+  }
+
+  async getOrderWithItems(orderId: number): Promise<{ order: Order; items: OrderItem[] } | undefined> {
+    const order = await this.getOrder(orderId);
+    if (!order) return undefined;
+    
+    const items = await this.getOrderItems(orderId);
+    return { order, items };
+  }
+  
+  // Seed order data
+  async seedOrdersIfNeeded(): Promise<void> {
+    if (this.hasSeededOrders || this.users.size === 0) {
+      return;
+    }
+
+    // Get the first user to seed data for
+    const userId = 1;
+    const now = new Date();
+    
+    // Sample shipping address
+    const shippingAddress = {
+      name: "John Doe",
+      address: "123 Main St",
+      city: "San Francisco",
+      state: "CA",
+      postalCode: "94105",
+      country: "USA"
+    };
+    
+    // Create some sample orders
+    const orderStatuses = ["processing", "shipped", "delivered", "cancelled"];
+    const paymentStatuses = ["paid", "pending", "failed"];
+    const shippingStatuses = ["processing", "shipped", "delivered"];
+    const paymentMethods = ["Credit Card", "PayPal", "Apple Pay"];
+    
+    for (let i = 0; i < 5; i++) {
+      const orderDate = new Date();
+      orderDate.setDate(now.getDate() - Math.floor(Math.random() * 60)); // Orders within last 60 days
+      
+      const orderStatus = orderStatuses[Math.floor(Math.random() * orderStatuses.length)];
+      const paymentStatus = paymentStatuses[Math.floor(Math.random() * paymentStatuses.length)];
+      const shippingStatus = shippingStatuses[Math.floor(Math.random() * shippingStatuses.length)];
+      const paymentMethod = paymentMethods[Math.floor(Math.random() * paymentMethods.length)];
+      
+      // Create the order
+      const order = await this.createOrder({
+        orderNumber: `ORD-${Date.now()}-${i}`,
+        userId,
+        status: orderStatus,
+        paymentStatus,
+        shippingStatus,
+        total: 0, // Will be updated after adding items
+        shippingAddress,
+        paymentMethod,
+        createdAt: orderDate,
+        updatedAt: orderDate
+      });
+      
+      // Sample products to add to order
+      const products = [
+        { id: 1, name: "Comfort Plus Insoles", price: 39.99, image: "/product-1.jpg" },
+        { id: 2, name: "Bamboo Compression Socks", price: 19.99, image: "/product-2.jpg" },
+        { id: 3, name: "Wellness Tea Collection", price: 24.99, image: "/product-3.jpg" },
+        { id: 4, name: "Posture Support Cushion", price: 49.99, image: "/product-4.jpg" },
+        { id: 5, name: "Premium Walking Shoes", price: 129.99, image: "/product-5.jpg" }
+      ];
+      
+      // Add random number of products to each order
+      let orderTotal = 0;
+      const numItems = Math.floor(Math.random() * 3) + 1; // 1 to 3 items per order
+      const selectedProducts = [...products].sort(() => 0.5 - Math.random()).slice(0, numItems);
+      
+      for (const product of selectedProducts) {
+        const quantity = Math.floor(Math.random() * 2) + 1; // 1 or 2 items of each product
+        const itemTotal = product.price * quantity;
+        orderTotal += itemTotal;
+        
+        await this.createOrderItem({
+          orderId: order.id,
+          productId: product.id,
+          productName: product.name,
+          quantity,
+          price: product.price,
+          image: product.image,
+          createdAt: orderDate
+        });
+      }
+      
+      // Update the order total
+      await this.updateOrderStatus(order.id, order.status);
+    }
+    
+    this.hasSeededOrders = true;
+    console.log("Seeded order data");
   }
   
   // Demo data seeding method

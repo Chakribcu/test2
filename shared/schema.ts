@@ -108,3 +108,40 @@ export const insertPurchaseSchema = createInsertSchema(purchases);
 
 export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
 export type Purchase = typeof purchases.$inferSelect;
+
+// Schema for orders
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  orderNumber: text("order_number").notNull().unique(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  status: text("status").notNull().default("processing"),
+  paymentStatus: text("payment_status").notNull().default("pending"),
+  shippingStatus: text("shipping_status").notNull().default("processing"),
+  total: numeric("total", { precision: 10, scale: 2 }).notNull(),
+  shippingAddress: jsonb("shipping_address").notNull(),
+  paymentMethod: text("payment_method").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Schema for order items
+export const orderItems = pgTable("order_items", {
+  id: serial("id").primaryKey(),
+  orderId: integer("order_id").notNull().references(() => orders.id),
+  productId: integer("product_id").notNull(),
+  productName: text("product_name").notNull(),
+  quantity: integer("quantity").notNull(),
+  price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Create Zod schemas for orders
+export const insertOrderSchema = createInsertSchema(orders);
+export const insertOrderItemSchema = createInsertSchema(orderItems);
+
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
+export type Order = typeof orders.$inferSelect;
+
+export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
+export type OrderItem = typeof orderItems.$inferSelect;

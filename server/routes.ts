@@ -1,4 +1,4 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -8,6 +8,14 @@ import { setupAuth, hashPassword, comparePasswords } from "./auth";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes and middleware
   setupAuth(app);
+  
+  // Automatically seed sample order data for demo
+  app.use(async (req: Request, res: Response, next: NextFunction) => {
+    if (req.isAuthenticated()) {
+      await storage.seedOrdersIfNeeded();
+    }
+    next();
+  });
   
   // Contact form submissions
   app.post("/api/contact", async (req: Request, res: Response) => {
