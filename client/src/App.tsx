@@ -21,6 +21,7 @@ import { CartProvider } from "@/hooks/use-cart";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import ScrollToTop from "@/components/ScrollToTop";
+import NavigationProgress from "@/components/ui/nprogress";
 import { applyScrollOptimizations } from "@/lib/scroll-fix";
 
 function Router() {
@@ -57,6 +58,7 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <ScrollToTop />
+            <NavigationProgress />
             <Router />
           </TooltipProvider>
         </CartProvider>

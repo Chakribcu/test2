@@ -1,113 +1,111 @@
 import { useState, useEffect } from 'react';
-import { getOptimizedImageUrl, getDeviceAppropriateImageSize, generateSrcSet } from '@/lib/image-optimization';
-import { Loading } from './loading';
+import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps {
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   className?: string;
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   priority?: boolean;
-  placeholder?: boolean;
-  quality?: number;
+  loadingStrategy?: 'lazy' | 'eager';
+  placeholderColor?: string;
   onLoad?: () => void;
-  lazyLoad?: boolean;   // For backward compatibility
-  blurEffect?: boolean; // For backward compatibility
+  onError?: () => void;
 }
 
 /**
- * A component that automatically optimizes images
- * - Lazy loads images by default
- * - Provides appropriate srcset for responsive images
- * - Shows loading state while image is loading
- * - Handles errors gracefully
+ * OptimizedImage component for performance-optimized image loading
+ * Features:
+ * - Progressive loading with blur-up effect
+ * - Lazy loading for images below the fold
+ * - Optional priority loading for above-the-fold images
+ * - Placeholder during loading
+ * - Fallback handling for errors
  */
-const OptimizedImage = ({
+export default function OptimizedImage({
   src,
   alt,
   width,
   height,
-  className = '',
   objectFit = 'cover',
+  className,
   priority = false,
-  placeholder = true,
-  quality = 80,
-  onLoad
-}: OptimizedImageProps) => {
-  const [isLoading, setIsLoading] = useState(!priority);
+  loadingStrategy = 'lazy',
+  placeholderColor = '#f3f4f6',
+  onLoad,
+  onError,
+}: OptimizedImageProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
-
-  // Determine appropriate image size based on device
-  const appropriateWidth = width || getDeviceAppropriateImageSize();
   
-  // Generate optimized image URL
-  const optimizedSrc = getOptimizedImageUrl(src, { 
-    width: appropriateWidth, 
-    quality 
-  });
+  // If priority is true, we should set loading to eager
+  const loading = priority ? 'eager' : loadingStrategy;
   
-  // Generate srcset for responsive images
-  const srcSet = generateSrcSet(src);
-
   // Handle image load
-  const handleImageLoad = () => {
-    setIsLoading(false);
+  const handleLoad = () => {
+    setIsLoaded(true);
     if (onLoad) onLoad();
   };
-
+  
   // Handle image error
-  const handleImageError = () => {
-    setIsLoading(false);
+  const handleError = () => {
     setIsError(true);
+    if (onError) onError();
   };
-
-  // Set loading to false if image is cached
-  useEffect(() => {
-    const img = new Image();
-    img.src = optimizedSrc;
-    
-    if (img.complete) {
-      setIsLoading(false);
-    }
-  }, [optimizedSrc]);
-
-  const objectFitClass = {
-    'cover': 'object-cover',
-    'contain': 'object-contain',
-    'fill': 'object-fill',
-    'none': 'object-none',
-    'scale-down': 'object-scale-down'
-  }[objectFit];
-
+  
+  // Generate a tiny placeholder image with the specified color
+  const placeholderImage = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1' width='1' height='1'%3E%3Crect width='1' height='1' fill='${placeholderColor.replace('#', '%23')}' /%3E%3C/svg%3E`;
+  
+  // Style for the image container
+  const containerStyle = {
+    position: 'relative' as const,
+    width: width || '100%',
+    height: height || '100%',
+    backgroundColor: placeholderColor,
+    overflow: 'hidden' as const,
+  };
+  
+  // Style for the image
+  const imageStyle = {
+    objectFit,
+    width: '100%',
+    height: '100%',
+    transition: 'opacity 0.3s ease-in-out',
+    opacity: isLoaded ? 1 : 0,
+  };
+  
   return (
-    <div className={`relative ${className}`}>
-      {isLoading && placeholder && (
-        <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
-          <Loading size="sm" />
-        </div>
-      )}
-      
+    <div style={containerStyle} className={className}>
       {isError ? (
-        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-          <span className="text-sm text-gray-400">Image not available</span>
+        <div className="w-full h-full flex items-center justify-center bg-muted/30 text-muted-foreground text-sm">
+          {alt || 'Image not available'}
         </div>
       ) : (
         <img
-          src={optimizedSrc}
-          srcSet={srcSet}
+          src={src}
           alt={alt}
-          className={`${objectFitClass} w-full h-full ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-          width={width}
-          height={height}
-          loading={priority ? 'eager' : 'lazy'}
-          onLoad={handleImageLoad}
-          onError={handleImageError}
+          style={imageStyle}
+          loading={loading}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={cn(
+            "transition-opacity duration-300",
+            isLoaded ? "opacity-100" : "opacity-0"
+          )}
+        />
+      )}
+      
+      {/* Show a low-quality placeholder while the image is loading */}
+      {!isLoaded && !isError && (
+        <img
+          src={placeholderImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover blur-sm"
         />
       )}
     </div>
   );
-};
-
-export default OptimizedImage;
+}
