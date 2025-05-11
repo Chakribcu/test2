@@ -12,11 +12,11 @@ import TermsOfService from "@/pages/TermsOfService";
 import NotFound from "@/pages/not-found";
 import Cart from "@/pages/cart";
 import OrderHistory from "@/pages/OrderHistory";
+import OrderDetail from "@/pages/OrderDetail";
 import Checkout from "@/pages/Checkout";
 import Account from "@/pages/Account";
 import AuthPage from "@/pages/auth-page";
 import Wishlist from "@/pages/Wishlist";
-import Dashboard from "@/pages/Dashboard";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
@@ -42,8 +42,8 @@ function Router() {
       <Route path="/cart" component={Cart} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/wishlist" component={Wishlist} />
-      <ProtectedRoute path="/dashboard" component={Dashboard} />
       <ProtectedRoute path="/order-history" component={OrderHistory} />
+      <ProtectedRoute path="/order/:id" component={OrderDetail} />
       <ProtectedRoute path="/account" component={Account} />
       <Route component={NotFound} />
     </Switch>
