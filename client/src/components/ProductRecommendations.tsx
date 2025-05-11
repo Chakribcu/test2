@@ -9,6 +9,7 @@ import {
 } from '@/services/recommendationEngine';
 import OptimizedImage from '@/components/ui/optimized-image';
 import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/hooks/use-cart';
 
 interface ProductRecommendationsProps {
   productId?: string;
@@ -35,6 +36,7 @@ const ProductRecommendations = ({
   const [loading, setLoading] = useState(true);
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const { addItem } = useCart();
 
   // Get recommendations when component mounts or inputs change
   useEffect(() => {
@@ -147,6 +149,18 @@ const ProductRecommendations = ({
                 className="w-full"
                 onClick={(e) => {
                   e.stopPropagation();
+                  // Import the useCart hook
+                  const { addItem } = useCart();
+                  
+                  // Add item to cart
+                  addItem({
+                    id: parseInt(product.id),
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    image: product.images[0]
+                  });
+                  
                   toast({
                     title: "Added to Cart",
                     description: `${product.name} has been added to your cart`,
