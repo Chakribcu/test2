@@ -115,8 +115,7 @@ const ProductRecommendations = ({
                 alt={product.name}
                 className="w-full h-full group-hover:scale-105 transition-transform duration-500"
                 objectFit="cover"
-                lazyLoad={true}
-                blurEffect={true}
+                loadingStrategy="lazy"
               />
               
               {/* Price badge */}
@@ -149,8 +148,6 @@ const ProductRecommendations = ({
                 className="w-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Import the useCart hook
-                  const { addItem } = useCart();
                   
                   // Add item to cart
                   addItem({

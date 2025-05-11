@@ -100,7 +100,7 @@ const Header = () => {
           </Link>
           
           {/* Desktop Navigation - Apple Style */}
-          <nav className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
+          <nav className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2 z-10">
             <div className="bg-[#f5f5f7]/80 backdrop-blur-sm rounded-full px-2 py-1 flex space-x-1">
               {[
                 { href: "/", label: "Home" },
@@ -127,14 +127,14 @@ const Header = () => {
           {/* Header Actions - Apple Style */}
           <div className="flex items-center space-x-5 relative z-10">
             {/* Search component */}
-            <div className="hidden md:block">
+            <div className="hidden md:block relative z-10 ml-6">
               <Search />
             </div>
             
             {/* Wishlist button */}
             <Link 
               href="/wishlist" 
-              className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors hidden md:flex items-center text-sm relative"
+              className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors flex items-center text-sm relative"
               aria-label="Wishlist"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
