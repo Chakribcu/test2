@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Layout from "@/components/Layout";
 
 const blogPosts = [
   {
@@ -63,95 +64,97 @@ const Blog = () => {
     document.title = "KavinoRa Journal | Wellness & Skincare Insights";
   }, []);
 
-  const categories = [...new Set(blogPosts.map(post => post.category))];
+  const categories = Array.from(new Set(blogPosts.map(post => post.category)));
 
   return (
-    <div className="pt-12 pb-20">
-      <div className="container mx-auto px-4">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-gray-800 mb-4 text-center">KavinoRa Journal</h1>
-          <p className="text-xl text-center text-gray-600 mb-12">Insights and advice for active lifestyles and wellness journeys</p>
-          
-          <div className="mb-12">
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <button className="bg-teal text-white px-4 py-2 rounded-full font-montserrat text-sm">All Posts</button>
-              {categories.map((category, index) => (
-                <button key={index} className="bg-beige hover:bg-beige-dark text-gray-800 px-4 py-2 rounded-full font-montserrat text-sm transition-all">
-                  {category}
-                </button>
-              ))}
-            </div>
+    <Layout>
+      <div className="pt-12 pb-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-gray-800 mb-4 text-center">KavinoRa Journal</h1>
+            <p className="text-xl text-center text-gray-600 mb-12">Insights and advice for active lifestyles and wellness journeys</p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              {/* Featured Article */}
-              <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all">
-                <img 
-                  src={blogPosts[0].image} 
-                  alt={blogPosts[0].imageAlt} 
-                  className="w-full h-full object-cover" 
-                />
-                <div className="p-8 flex flex-col justify-center">
-                  <span className="text-sm text-teal font-montserrat mb-2">{blogPosts[0].category}</span>
-                  <h2 className="font-montserrat font-bold text-2xl mb-4">{blogPosts[0].title}</h2>
-                  <p className="text-gray-600 mb-6">{blogPosts[0].summary}</p>
-                  <div className="mt-auto">
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span>{blogPosts[0].date}</span>
-                      <span className="mx-2">•</span>
-                      <span>By {blogPosts[0].author}</span>
-                    </div>
-                    <a href="#" className="inline-block text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
-                      Read more <i className="ri-arrow-right-line align-middle ml-1"></i>
-                    </a>
-                  </div>
-                </div>
+            <div className="mb-12">
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <button className="bg-teal text-white px-4 py-2 rounded-full font-montserrat text-sm">All Posts</button>
+                {categories.map((category, index) => (
+                  <button key={index} className="bg-beige hover:bg-beige-dark text-gray-800 px-4 py-2 rounded-full font-montserrat text-sm transition-all">
+                    {category}
+                  </button>
+                ))}
               </div>
               
-              {/* Regular Articles */}
-              {blogPosts.slice(1).map((post, index) => (
-                <article key={index} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                {/* Featured Article */}
+                <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all">
                   <img 
-                    src={post.image} 
-                    alt={post.imageAlt} 
-                    className="w-full h-48 object-cover" 
+                    src={blogPosts[0].image} 
+                    alt={blogPosts[0].imageAlt} 
+                    className="w-full h-full object-cover" 
                   />
-                  <div className="p-6">
-                    <span className="text-sm text-teal font-montserrat mb-2">{post.category}</span>
-                    <h3 className="font-montserrat font-semibold text-xl mb-3">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">{post.summary}</p>
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span>{post.date}</span>
-                      <span className="mx-2">•</span>
-                      <span>By {post.author}</span>
+                  <div className="p-8 flex flex-col justify-center">
+                    <span className="text-sm text-teal font-montserrat mb-2">{blogPosts[0].category}</span>
+                    <h2 className="font-montserrat font-bold text-2xl mb-4">{blogPosts[0].title}</h2>
+                    <p className="text-gray-600 mb-6">{blogPosts[0].summary}</p>
+                    <div className="mt-auto">
+                      <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <span>{blogPosts[0].date}</span>
+                        <span className="mx-2">•</span>
+                        <span>By {blogPosts[0].author}</span>
+                      </div>
+                      <a href="#" className="inline-block text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
+                        Read more <i className="ri-arrow-right-line align-middle ml-1"></i>
+                      </a>
                     </div>
-                    <a href="#" className="text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
-                      Read more <i className="ri-arrow-right-line align-middle ml-1"></i>
-                    </a>
                   </div>
-                </article>
-              ))}
+                </div>
+                
+                {/* Regular Articles */}
+                {blogPosts.slice(1).map((post, index) => (
+                  <article key={index} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all">
+                    <img 
+                      src={post.image} 
+                      alt={post.imageAlt} 
+                      className="w-full h-48 object-cover" 
+                    />
+                    <div className="p-6">
+                      <span className="text-sm text-teal font-montserrat mb-2">{post.category}</span>
+                      <h3 className="font-montserrat font-semibold text-xl mb-3">{post.title}</h3>
+                      <p className="text-gray-600 mb-4">{post.summary}</p>
+                      <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <span>{post.date}</span>
+                        <span className="mx-2">•</span>
+                        <span>By {post.author}</span>
+                      </div>
+                      <a href="#" className="text-teal hover:text-teal-dark font-montserrat font-medium transition-all">
+                        Read more <i className="ri-arrow-right-line align-middle ml-1"></i>
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              
+              <div className="text-center">
+                <button className="inline-block bg-beige hover:bg-beige-dark text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all">
+                  Load More Articles
+                </button>
+              </div>
             </div>
             
-            <div className="text-center">
-              <button className="inline-block bg-beige hover:bg-beige-dark text-gray-800 font-montserrat font-medium py-3 px-8 rounded-full transition-all">
-                Load More Articles
-              </button>
+            <div className="bg-beige-light p-8 rounded-xl text-center">
+              <h2 className="font-montserrat font-bold text-2xl mb-4">Subscribe to Our Newsletter</h2>
+              <p className="text-gray-700 mb-6">Stay updated with our latest articles, product news, and wellness tips delivered straight to your inbox.</p>
+              <form className="flex flex-col sm:flex-row max-w-lg mx-auto gap-4">
+                <input type="email" placeholder="Your email address" className="flex-grow px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal" required />
+                <button type="submit" className="bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap">
+                  Subscribe
+                </button>
+              </form>
             </div>
-          </div>
-          
-          <div className="bg-beige-light p-8 rounded-xl text-center">
-            <h2 className="font-montserrat font-bold text-2xl mb-4">Subscribe to Our Newsletter</h2>
-            <p className="text-gray-700 mb-6">Stay updated with our latest articles, product news, and wellness tips delivered straight to your inbox.</p>
-            <form className="flex flex-col sm:flex-row max-w-lg mx-auto gap-4">
-              <input type="email" placeholder="Your email address" className="flex-grow px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal" required />
-              <button type="submit" className="bg-teal hover:bg-teal-dark text-white font-montserrat font-medium py-3 px-8 rounded-full transition-all whitespace-nowrap">
-                Subscribe
-              </button>
-            </form>
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
