@@ -148,25 +148,25 @@ const AuthPage = () => {
                     className="space-y-5"
                   >
                     <div>
-                      <label htmlFor="login-username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                        Username
+                      <label htmlFor="login-email" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                        Email Address
                       </label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-[#86868b]" />
+                          <Mail className="h-5 w-5 text-[#86868b]" />
                         </div>
                         <input
-                          id="login-username"
-                          type="text"
+                          id="login-email"
+                          type="email"
                           className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                            loginErrors.username ? "ring-2 ring-red-500" : ""
+                            loginErrors.email ? "ring-2 ring-red-500" : ""
                           }`}
-                          placeholder="Enter your username"
-                          {...registerLogin("username")}
+                          placeholder="Enter your email address"
+                          {...registerLogin("email")}
                         />
                       </div>
-                      {loginErrors.username && (
-                        <p className="mt-1.5 text-red-600 text-xs">{loginErrors.username.message}</p>
+                      {loginErrors.email && (
+                        <p className="mt-1.5 text-red-600 text-xs">{loginErrors.email.message}</p>
                       )}
                     </div>
 
@@ -281,25 +281,27 @@ const AuthPage = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                        Username
+                      <label htmlFor="phone" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                        Phone Number (Optional)
                       </label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-[#86868b]" />
+                          <svg className="h-5 w-5 text-[#86868b]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
                         </div>
                         <input
-                          id="username"
-                          type="text"
+                          id="phone"
+                          type="tel"
                           className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                            signupErrors.username ? "ring-2 ring-red-500" : ""
+                            signupErrors.phone ? "ring-2 ring-red-500" : ""
                           }`}
-                          placeholder="Choose a username"
-                          {...registerSignup("username")}
+                          placeholder="Enter your phone number"
+                          {...registerSignup("phone")}
                         />
                       </div>
-                      {signupErrors.username && (
-                        <p className="mt-1.5 text-red-600 text-xs">{signupErrors.username.message}</p>
+                      {signupErrors.phone && (
+                        <p className="mt-1.5 text-red-600 text-xs">{signupErrors.phone.message}</p>
                       )}
                     </div>
 
