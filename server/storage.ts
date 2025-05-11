@@ -31,6 +31,19 @@ export interface IStorage {
   getAllSubscriptions(type?: string): Promise<Subscription[]>;
   createSubscription(subscription: InsertSubscription): Promise<Subscription>;
   
+  // Wellness data methods
+  getWellnessData(id: number): Promise<WellnessData | undefined>;
+  getWellnessDataByUserId(userId: number): Promise<WellnessData[]>;
+  getWellnessDataByDateRange(userId: number, startDate: Date, endDate: Date): Promise<WellnessData[]>;
+  createWellnessData(data: InsertWellnessData): Promise<WellnessData>;
+  updateWellnessData(id: number, data: Partial<Omit<WellnessData, 'id' | 'userId'>>): Promise<WellnessData | undefined>;
+  
+  // Purchase methods
+  getPurchase(id: number): Promise<Purchase | undefined>;
+  getPurchasesByUserId(userId: number): Promise<Purchase[]>;
+  getRecentPurchasesByUserId(userId: number, limit?: number): Promise<Purchase[]>;
+  createPurchase(purchase: InsertPurchase): Promise<Purchase>;
+  
   // Session store
   sessionStore: session.Store;
 }

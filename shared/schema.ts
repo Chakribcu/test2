@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, numeric, date } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -72,3 +72,37 @@ export type Contact = typeof contacts.$inferSelect;
 
 export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
 export type Subscription = typeof subscriptions.$inferSelect;
+
+// Schema for wellness data
+export const wellnessData = pgTable("wellness_data", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  date: timestamp("date").notNull().defaultNow(),
+  sleepHours: numeric("sleep_hours", { precision: 3, scale: 1 }),
+  waterIntake: integer("water_intake"),
+  activityMinutes: integer("activity_minutes"),
+  stepsCount: integer("steps_count"),
+  moodScore: integer("mood_score"),
+});
+
+export const insertWellnessSchema = createInsertSchema(wellnessData);
+
+export type InsertWellnessData = z.infer<typeof insertWellnessSchema>;
+export type WellnessData = typeof wellnessData.$inferSelect;
+
+// Schema for user purchase history
+export const purchases = pgTable("purchases", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  productId: integer("product_id").notNull(),
+  productName: text("product_name").notNull(),
+  productCategory: text("product_category").notNull(),
+  productImage: text("product_image"),
+  price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+  purchaseDate: timestamp("purchase_date").notNull().defaultNow(),
+});
+
+export const insertPurchaseSchema = createInsertSchema(purchases);
+
+export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
+export type Purchase = typeof purchases.$inferSelect;
