@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import ProductRecommendations from "../components/ProductRecommendations";
+import RecentlyViewedProducts from "../components/RecentlyViewedProducts";
 
 interface CartItem {
   id: number;
@@ -236,67 +238,19 @@ const Cart = () => {
                 </CardFooter>
               </Card>
               
-              {/* Recently Viewed / You Might Also Like */}
+              {/* Dynamic Product Recommendations */}
               <div className="mt-12">
-                <h2 className="text-xl font-semibold mb-6">You Might Also Like</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {/* Show other products not in cart */}
-                  {[
-                    {
-                      id: 4,
-                      name: "Recovery Balm",
-                      price: 19.99,
-                      image: "https://i.imgur.com/vbRMEpZ.jpeg"
-                    },
-                    {
-                      id: 5,
-                      name: "Bamboo Water Bottle",
-                      price: 34.99,
-                      image: "https://i.imgur.com/kSDJFN7.jpeg"
-                    },
-                    {
-                      id: 6,
-                      name: "Yoga Mat",
-                      price: 49.99,
-                      image: "https://i.imgur.com/vAr3b3G.jpeg"
-                    }
-                  ].map(product => (
-                    <Card key={product.id} className="overflow-hidden group cursor-pointer hover:border-primary/50 transition-colors">
-                      <div className="aspect-square bg-muted relative overflow-hidden">
-                        <img 
-                          src={product.image} 
-                          alt={product.name}
-                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-medium">{product.name}</h3>
-                        <div className="flex justify-between items-center mt-2">
-                          <span className="font-bold text-primary">${product.price}</span>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCartItems([
-                                ...cartItems,
-                                {
-                                  id: product.id,
-                                  name: product.name,
-                                  price: product.price,
-                                  quantity: 1,
-                                  image: product.image
-                                }
-                              ]);
-                            }}
-                          >
-                            Add to Cart
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                <ProductRecommendations 
+                  strategy="frequently-bought-together"
+                  productId={cartItems.length > 0 ? cartItems[0].id.toString() : undefined}
+                  title="Frequently Bought Together"
+                  limit={3}
+                />
+              </div>
+              
+              {/* Recently Viewed Products */}
+              <div className="mt-12">
+                <RecentlyViewedProducts />
               </div>
             </div>
 

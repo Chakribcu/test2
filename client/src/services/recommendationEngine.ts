@@ -102,6 +102,7 @@ export class RecommendationEngine {
   
   /**
    * Fetch similar products based on product tags, categories or attributes
+   * Uses advanced content-based filtering algorithms
    */
   private async getSimilarProducts(productId: string, limit: number): Promise<Product[]> {
     try {
@@ -109,7 +110,7 @@ export class RecommendationEngine {
       // const response = await apiRequest('GET', `/api/products/${productId}/similar?limit=${limit}`);
       // return await response.json();
       
-      // For now, we'll fetch all products and filter them by similarity
+      // Get all products
       const products = await this.getAllProducts();
       const currentProduct = products.find(p => p.id === productId);
       
@@ -117,32 +118,11 @@ export class RecommendationEngine {
         return [];
       }
       
-      // Score products by similarity (same tags, similar price range, etc.)
-      const scoredProducts = products
-        .filter(p => p.id !== productId) // Exclude current product
-        .map(product => {
-          let score = 0;
-          
-          // Score by matching tags
-          const commonTags = product.tags.filter(tag => 
-            currentProduct.tags.includes(tag)
-          );
-          score += commonTags.length * 2;
-          
-          // Score by price similarity (products within 20% price range)
-          const priceDiff = Math.abs(product.price - currentProduct.price);
-          const pricePercentage = priceDiff / currentProduct.price;
-          if (pricePercentage < 0.2) {
-            score += 1;
-          }
-          
-          return { product, score };
-        })
-        .sort((a, b) => b.score - a.score) // Sort by score descending
-        .slice(0, limit) // Take only the requested number of products
-        .map(item => item.product); // Extract just the product
-        
-      return scoredProducts;
+      // Import algorithms module (dynamic import to avoid circular dependencies)
+      const { findSimilarProducts } = await import('./recommendationAlgorithms');
+      
+      // Use advanced content-based filtering to find similar products
+      return findSimilarProducts(currentProduct, products, limit);
     } catch (error) {
       console.error("Error fetching similar products:", error);
       return [];
@@ -178,22 +158,17 @@ export class RecommendationEngine {
   
   /**
    * Fetch trending products (products with recent popularity spikes)
+   * Uses more advanced trending analysis algorithms
    */
   private async getTrendingProducts(limit: number): Promise<Product[]> {
-    // In a real app, trending would consider recent orders and views
-    // For now, we'll use a slight variation of popularity
     try {
       const products = await this.getAllProducts();
       
-      // Simulate trending with some randomization added to popularity
-      return products
-        .map(product => ({
-          product,
-          trendScore: (product.rating * product.reviews) * (1 + Math.random() * 0.2)
-        }))
-        .sort((a, b) => b.trendScore - a.trendScore)
-        .slice(0, limit)
-        .map(item => item.product);
+      // Import algorithms module (dynamic import to avoid circular dependencies)
+      const { getTrendingProductRecommendations } = await import('./recommendationAlgorithms');
+      
+      // Use advanced trending analysis
+      return getTrendingProductRecommendations(products, limit);
     } catch (error) {
       console.error("Error fetching trending products:", error);
       return [];
@@ -202,6 +177,7 @@ export class RecommendationEngine {
   
   /**
    * Fetch products frequently bought together with the specified product
+   * Uses collaborative filtering techniques to analyze purchase patterns
    */
   private async getFrequentlyBoughtTogether(productId: string, limit: number): Promise<Product[]> {
     try {
@@ -209,22 +185,13 @@ export class RecommendationEngine {
       // const response = await apiRequest('GET', `/api/products/${productId}/frequently-bought-together?limit=${limit}`);
       // return await response.json();
       
-      // For prototype, we'll use a seed-based pseudo-random selection that's consistent for the same productId
       const products = await this.getAllProducts();
-      const filteredProducts = products.filter(p => p.id !== productId);
       
-      // Use the product ID to create a consistent "random" selection
-      const seed = parseInt(productId, 10) || 1;
+      // Import algorithms module (dynamic import to avoid circular dependencies)
+      const { collaborativeFilteringRecommendations } = await import('./recommendationAlgorithms');
       
-      return filteredProducts
-        .map(product => ({
-          product,
-          // Use the seed to generate a consistent score for each product
-          score: (parseInt(product.id, 10) * seed) % 100
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, limit)
-        .map(item => item.product);
+      // Use collaborative filtering algorithm for recommendations
+      return collaborativeFilteringRecommendations(productId, products, limit);
     } catch (error) {
       console.error("Error fetching frequently bought together products:", error);
       return [];
