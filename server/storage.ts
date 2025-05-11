@@ -499,7 +499,7 @@ export class MemStorage implements IStorage {
         status: orderStatus,
         paymentStatus,
         shippingStatus,
-        total: 0, // Will be updated after adding items
+        total: "0", // Will be updated after adding items
         shippingAddress,
         paymentMethod,
         createdAt: orderDate,
@@ -530,7 +530,7 @@ export class MemStorage implements IStorage {
           productId: product.id,
           productName: product.name,
           quantity,
-          price: product.price,
+          price: product.price.toString(),
           image: product.image,
           createdAt: orderDate
         });

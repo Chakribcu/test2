@@ -1,116 +1,53 @@
 import { useAuth } from "@/hooks/use-auth";
 import Layout from "@/components/Layout";
-import { useEffect, useState } from "react";
-import { Redirect } from "wouter";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getQueryFn } from "@/lib/queryClient";
+import { formatDate, formatCurrency } from "@/lib/utils";
+import SEOHead from "@/components/SEOHead";
 
 interface Order {
   id: number;
-  date: string;
-  total: number;
-  status: "processing" | "shipped" | "delivered";
-  items: {
-    id: number;
+  orderNumber: string;
+  userId: number;
+  status: string;
+  paymentStatus: string;
+  shippingStatus: string;
+  total: string;
+  shippingAddress: {
     name: string;
-    quantity: number;
-    price: number;
-    image: string;
-  }[];
+    address: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+  paymentMethod: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Sample order data - in a real app, this would come from an API
-const demoOrders: Order[] = [
-  {
-    id: 1001,
-    date: "2023-05-01",
-    total: 129.95,
-    status: "delivered",
-    items: [
-      {
-        id: 1,
-        name: "MotionMist™ Anti-Chafing Spray",
-        quantity: 2,
-        price: 29.99,
-        image: "https://images.unsplash.com/photo-1556227834-09f1de7a7d14?q=80&w=1887&auto=format&fit=crop"
-      },
-      {
-        id: 2,
-        name: "RevitaRoll™ Recovery Roller",
-        quantity: 1,
-        price: 49.99,
-        image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1740&auto=format&fit=crop"
-      }
-    ]
-  },
-  {
-    id: 1002,
-    date: "2023-04-15",
-    total: 89.97,
-    status: "shipped",
-    items: [
-      {
-        id: 3,
-        name: "EnduraBalm™ Joint Relief",
-        quantity: 1,
-        price: 24.99,
-        image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?q=80&w=1887&auto=format&fit=crop"
-      },
-      {
-        id: 4,
-        name: "StaminaPlus™ Energy Supplement",
-        quantity: 1,
-        price: 39.99,
-        image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1887&auto=format&fit=crop"
-      }
-    ]
-  },
-  {
-    id: 1003,
-    date: "2023-03-22",
-    total: 149.97,
-    status: "delivered",
-    items: [
-      {
-        id: 5,
-        name: "KavinoRa Wellness Tea",
-        quantity: 1,
-        price: 24.99,
-        image: "https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=1887&auto=format&fit=crop"
-      },
-      {
-        id: 6,
-        name: "Mindfulness Journal",
-        quantity: 1,
-        price: 39.95,
-        image: "https://images.unsplash.com/photo-1517971129774-8a2b38fa128e?q=80&w=1887&auto=format&fit=crop"
-      }
-    ]
-  }
-];
-
 export default function OrderHistory() {
-  const { user, isLoading } = useAuth();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading: isLoadingUser } = useAuth();
+  const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    // Simulate API call to fetch orders
-    const fetchOrders = async () => {
-      setLoading(true);
-      // In a real app, this would be an API call
-      setTimeout(() => {
-        setOrders(demoOrders);
-        setLoading(false);
-      }, 500);
-    };
+  // Fetch orders from API
+  const { data, isLoading } = useQuery<{ success: boolean; data: Order[] }>({
+    queryKey: ["/api/orders"],
+    queryFn: getQueryFn({ on401: "returnNull" }),
+    enabled: !!user,
+  });
 
-    if (user) {
-      fetchOrders();
-    }
-  }, [user]);
+  // Redirect to login if not authenticated
+  if (!isLoadingUser && !user) {
+    setLocation("/auth");
+    return null;
+  }
 
-  if (isLoading) {
+  // Loading state
+  if (isLoadingUser || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -118,24 +55,38 @@ export default function OrderHistory() {
     );
   }
 
-  if (!user) {
-    return <Redirect to="/auth" />;
-  }
+  const orders = data?.data || [];
+
+  // Get status badge color
+  const getStatusBadgeClass = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "delivered":
+        return "bg-green-100 text-green-800";
+      case "shipped":
+        return "bg-blue-100 text-blue-800";
+      case "processing":
+        return "bg-yellow-100 text-yellow-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <Layout>
+      <SEOHead 
+        title="Order History | KavinoRa"
+        description="View your order history and track your shipments with KavinoRa."
+      />
       <div className="container mx-auto py-8 px-4 md:px-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-8">Your Order History</h1>
         
-        {loading ? (
-          <div className="flex justify-center my-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : orders.length === 0 ? (
+        {orders.length === 0 ? (
           <div className="text-center py-12">
             <h2 className="text-xl font-medium mb-4">You haven't placed any orders yet</h2>
             <p className="text-muted-foreground mb-6">Start shopping and your orders will appear here</p>
-            <Button onClick={() => window.location.href='/'} className="mt-4">Browse Products</Button>
+            <Button onClick={() => setLocation("/")} className="mt-4">Browse Products</Button>
           </div>
         ) : (
           <div className="space-y-8">
@@ -143,45 +94,48 @@ export default function OrderHistory() {
               <div key={order.id} className="border rounded-lg overflow-hidden shadow-sm">
                 <div className="bg-muted px-4 py-3 flex flex-col md:flex-row justify-between items-start md:items-center">
                   <div>
-                    <p className="font-medium">Order #{order.id}</p>
-                    <p className="text-sm text-muted-foreground">Placed on {new Date(order.date).toLocaleDateString()}</p>
+                    <p className="font-medium">Order #{order.orderNumber}</p>
+                    <p className="text-sm text-muted-foreground">Placed on {formatDate(order.createdAt)}</p>
                   </div>
                   <div className="mt-2 md:mt-0 flex items-center space-x-4">
-                    <span className={`text-sm px-2 py-1 rounded-full ${
-                      order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                      order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
-                      'bg-yellow-100 text-yellow-800'
-                    }`}>
+                    <span className={`text-sm px-2 py-1 rounded-full ${getStatusBadgeClass(order.status)}`}>
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </span>
-                    <span className="font-medium">${order.total.toFixed(2)}</span>
+                    <span className="font-medium">{formatCurrency(Number(order.total))}</span>
                   </div>
                 </div>
                 
                 <div className="p-4">
-                  <h3 className="font-medium mb-3">Items</h3>
-                  <div className="space-y-4">
-                    {order.items.map((item) => (
-                      <div key={item.id} className="flex items-start space-x-4">
-                        <div className="w-16 h-16 bg-muted rounded flex-shrink-0 overflow-hidden">
-                          <img 
-                            src={item.image} 
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
-                        </div>
-                        <p className="font-medium">${item.price.toFixed(2)}</p>
-                      </div>
-                    ))}
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between">
+                      <p className="text-sm text-muted-foreground">Payment Status:</p>
+                      <span className={`text-sm px-2 py-0 rounded-full ${
+                        order.paymentStatus.toLowerCase() === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {order.paymentStatus}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-sm text-muted-foreground">Shipping Status:</p>
+                      <span className={`text-sm px-2 py-0 rounded-full ${getStatusBadgeClass(order.shippingStatus)}`}>
+                        {order.shippingStatus}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-sm text-muted-foreground">Payment Method:</p>
+                      <span className="text-sm">{order.paymentMethod}</span>
+                    </div>
                   </div>
                 </div>
                 
                 <div className="bg-muted px-4 py-3 flex justify-end">
-                  <Button variant="outline" size="sm">View Order Details</Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setLocation(`/order/${order.id}`)}
+                  >
+                    View Order Details
+                  </Button>
                 </div>
               </div>
             ))}

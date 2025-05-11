@@ -254,6 +254,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Order APIs
+  app.get("/api/orders", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ success: false, message: "You must be logged in to access orders" });
+    }
+    
+    try {
+      const userId = req.user.id;
+      const orders = await storage.getOrdersByUserId(userId);
+      
+      res.status(200).json({ 
+        success: true,
+        data: orders
+      });
+    } catch (error) {
+      console.error("Error in /api/orders:", error);
+      res.status(500).json({ success: false, message: "An error occurred while fetching your orders" });
+    }
+  });
+  
+  app.get("/api/orders/:id", async (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ success: false, message: "You must be logged in to access order details" });
+    }
+    
+    try {
+      const orderId = parseInt(req.params.id);
+      const userId = req.user.id;
+      
+      // Get the order with its items
+      const orderWithItems = await storage.getOrderWithItems(orderId);
+      
+      if (!orderWithItems) {
+        return res.status(404).json({ success: false, message: "Order not found" });
+      }
+      
+      // Ensure the order belongs to the current user
+      if (orderWithItems.order.userId !== userId) {
+        return res.status(403).json({ success: false, message: "You don't have permission to view this order" });
+      }
+      
+      res.status(200).json({ 
+        success: true,
+        data: orderWithItems
+      });
+    } catch (error) {
+      console.error("Error in /api/orders/:id:", error);
+      res.status(500).json({ success: false, message: "An error occurred while fetching order details" });
+    }
+  });
+  
   // Helper function to process wellness data for the dashboard
   function processWellnessDataForDashboard(data: WellnessData[]) {
     // If no data, return a default structure
