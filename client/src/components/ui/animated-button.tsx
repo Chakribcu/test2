@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 type AnimatedButtonType = "bounce" | "shine" | "expand" | "pulse" | "ripple" | "circle" | "arrow";
 
-interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface AnimatedButtonProps {
   children: ReactNode;
   animationType?: AnimatedButtonType;
   className?: string;
@@ -12,6 +12,9 @@ interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loadingText?: string;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
+  disabled?: boolean;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 }
 
 export function AnimatedButton({
@@ -51,7 +54,7 @@ export function AnimatedButton({
             transition: { 
               duration: 2, 
               repeat: Infinity,
-              repeatType: "loop" 
+              repeatType: "loop" as const
             }
           }
         };

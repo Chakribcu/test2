@@ -269,7 +269,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                         {item.quantity}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        {formatCurrency(parseFloat(item.price) * item.quantity)}
+                        {formatPrice(parseFloat(item.price) * item.quantity)}
                       </td>
                     </tr>
                   ))}
@@ -297,7 +297,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                     <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                       <div>
                         <p className="text-muted-foreground">Price:</p>
-                        <p>{formatCurrency(parseFloat(item.price))}</p>
+                        <p>{formatPrice(parseFloat(item.price))}</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Quantity:</p>
@@ -305,7 +305,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                       </div>
                       <div className="col-span-2">
                         <p className="text-muted-foreground">Total:</p>
-                        <p className="font-medium">{formatCurrency(parseFloat(item.price) * item.quantity)}</p>
+                        <p className="font-medium">{formatPrice(parseFloat(item.price) * item.quantity)}</p>
                       </div>
                     </div>
                   </div>
@@ -321,20 +321,20 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Subtotal</span>
-              <span className="font-medium">{formatCurrency(subtotal)}</span>
+              <span className="font-medium">{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Shipping</span>
-              <span className="font-medium">{formatCurrency(shipping)}</span>
+              <span className="font-medium">{formatPrice(shipping)}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Tax</span>
-              <span className="font-medium">{formatCurrency(tax)}</span>
+              <span className="font-medium">{formatPrice(tax)}</span>
             </div>
             <div className="border-t pt-3 mt-1">
               <div className="flex justify-between items-center font-semibold">
                 <span className="text-lg">Total</span>
-                <span className="text-lg">{formatCurrency(parseFloat(order.total))}</span>
+                <span className="text-lg">{formatPrice(parseFloat(order.total))}</span>
               </div>
             </div>
           </div>
