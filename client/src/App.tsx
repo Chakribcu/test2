@@ -18,6 +18,7 @@ import AuthPage from "@/pages/auth-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
+import { WishlistProvider } from "@/hooks/use-wishlist";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -55,12 +56,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
-          <TooltipProvider>
-            <Toaster />
-            <ScrollToTop />
-            <NavigationProgress />
-            <Router />
-          </TooltipProvider>
+          <WishlistProvider>
+            <TooltipProvider>
+              <Toaster />
+              <ScrollToTop />
+              <NavigationProgress />
+              <Router />
+            </TooltipProvider>
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>

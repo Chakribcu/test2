@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RefreshCcw, ShieldCheck, Truck } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -150,7 +151,7 @@ export default function Checkout() {
       toast({
         title: "Order Placed Successfully!",
         description: "Thank you for your purchase. We will email you an order confirmation shortly.",
-        variant: "success",
+        variant: "default",
       });
       
       // Redirect to order confirmation page
