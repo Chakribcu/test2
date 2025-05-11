@@ -181,24 +181,24 @@ const AuthModal = ({ isOpen, onClose, initialTab = "login" }: AuthModalProps) =>
                 {/* Login Form */}
                 <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                   <div>
-                    <label htmlFor="login-username" className="block text-sm font-medium mb-1.5">
-                      Username
+                    <label htmlFor="login-email" className="block text-sm font-medium mb-1.5">
+                      Email Address
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Mail className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <input
-                        id="login-username"
-                        type="text"
+                        id="login-email"
+                        type="email"
                         className="input-apple w-full pl-10"
-                        placeholder="Enter your username"
-                        {...loginForm.register("username")}
+                        placeholder="Enter your email address"
+                        {...loginForm.register("email")}
                       />
                     </div>
-                    {loginForm.formState.errors.username && (
+                    {loginForm.formState.errors.email && (
                       <p className="mt-1 text-red-500 text-xs">
-                        {loginForm.formState.errors.username.message}
+                        {loginForm.formState.errors.email.message}
                       </p>
                     )}
                   </div>
