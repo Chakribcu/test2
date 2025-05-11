@@ -191,7 +191,7 @@ const ProductListing = ({ navigate, toast }: { navigate: (to: string) => void, t
         </div>
         
         {/* Enhanced Product Reviews Section */}
-        {product && <ProductReviews productId={product.id} />}
+        {/* Product reviews shown only in detail view */}
         
         {/* We'll use the main Newsletter component from the footer */}
       </div>
