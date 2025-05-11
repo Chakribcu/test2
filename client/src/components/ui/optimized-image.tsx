@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getOptimizedImageUrl, generateSrcSet, getDeviceAppropriateImageSize } from '@/lib/image-optimization';
+import { getOptimizedImageUrl, getDeviceAppropriateImageSize, generateSrcSet } from '@/lib/image-optimization';
+import { Loading } from './loading';
 
 interface OptimizedImageProps {
   src: string;
@@ -7,89 +8,102 @@ interface OptimizedImageProps {
   width?: number;
   height?: number;
   className?: string;
-  sizes?: string;
-  lazyLoad?: boolean;
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  priority?: boolean;
+  placeholder?: boolean;
   quality?: number;
-  blurEffect?: boolean;
+  onLoad?: () => void;
 }
 
 /**
- * OptimizedImage Component
- * 
- * A React component that renders optimized images with support for:
- * - Lazy loading
- * - Responsive sizing
- * - Blur-up loading effect
- * - WebP format when supported
+ * A component that automatically optimizes images
+ * - Lazy loads images by default
+ * - Provides appropriate srcset for responsive images
+ * - Shows loading state while image is loading
+ * - Handles errors gracefully
  */
-export const OptimizedImage = ({
+const OptimizedImage = ({
   src,
   alt,
   width,
   height,
   className = '',
-  sizes = '100vw',
-  lazyLoad = true,
   objectFit = 'cover',
+  priority = false,
+  placeholder = true,
   quality = 80,
-  blurEffect = true,
+  onLoad
 }: OptimizedImageProps) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [deviceWidth, setDeviceWidth] = useState(800);
+  const [isLoading, setIsLoading] = useState(!priority);
+  const [isError, setIsError] = useState(false);
+
+  // Determine appropriate image size based on device
+  const appropriateWidth = width || getDeviceAppropriateImageSize();
   
-  useEffect(() => {
-    setDeviceWidth(getDeviceAppropriateImageSize());
-    
-    const handleResize = () => {
-      setDeviceWidth(getDeviceAppropriateImageSize());
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  // Calculate the optimized URL based on device width and quality
+  // Generate optimized image URL
   const optimizedSrc = getOptimizedImageUrl(src, { 
-    width: width || deviceWidth, 
-    quality,
-    format: 'webp'
+    width: appropriateWidth, 
+    quality 
   });
   
-  // Generate srcSet for responsive images
+  // Generate srcset for responsive images
   const srcSet = generateSrcSet(src);
-  
+
+  // Handle image load
+  const handleImageLoad = () => {
+    setIsLoading(false);
+    if (onLoad) onLoad();
+  };
+
+  // Handle image error
+  const handleImageError = () => {
+    setIsLoading(false);
+    setIsError(true);
+  };
+
+  // Set loading to false if image is cached
+  useEffect(() => {
+    const img = new Image();
+    img.src = optimizedSrc;
+    
+    if (img.complete) {
+      setIsLoading(false);
+    }
+  }, [optimizedSrc]);
+
+  const objectFitClass = {
+    'cover': 'object-cover',
+    'contain': 'object-contain',
+    'fill': 'object-fill',
+    'none': 'object-none',
+    'scale-down': 'object-scale-down'
+  }[objectFit];
+
   return (
-    <div 
-      className={`relative overflow-hidden ${className}`}
-      style={{ width: width ? `${width}px` : '100%', height: height ? `${height}px` : '100%' }}
-    >
-      {/* Low quality placeholder image that shows immediately while main image loads */}
-      {blurEffect && !isLoaded && (
-        <img
-          src={getOptimizedImageUrl(src, { width: 20, quality: 20 })}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover blur-xl transition-opacity duration-300"
-          aria-hidden="true"
-        />
+    <div className={`relative ${className}`}>
+      {isLoading && placeholder && (
+        <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
+          <Loading size="sm" />
+        </div>
       )}
       
-      {/* Main optimized image */}
-      <img
-        src={optimizedSrc}
-        srcSet={srcSet}
-        sizes={sizes}
-        alt={alt}
-        loading={lazyLoad ? 'lazy' : 'eager'}
-        className={`w-full h-full transition-opacity duration-500 ${
-          objectFit === 'cover' ? 'object-cover' :
-          objectFit === 'contain' ? 'object-contain' :
-          objectFit === 'fill' ? 'object-fill' :
-          objectFit === 'none' ? 'object-none' :
-          'object-scale-down'
-        } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        onLoad={() => setIsLoaded(true)}
-      />
+      {isError ? (
+        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+          <span className="text-sm text-gray-400">Image not available</span>
+        </div>
+      ) : (
+        <img
+          src={optimizedSrc}
+          srcSet={srcSet}
+          alt={alt}
+          className={`${objectFitClass} w-full h-full ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          width={width}
+          height={height}
+          loading={priority ? 'eager' : 'lazy'}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+        />
+      )}
     </div>
   );
 };

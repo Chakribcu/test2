@@ -1,70 +1,94 @@
 /**
- * Image Optimization Utility
- * 
- * This utility provides functions for optimizing images in the application.
- * It handles image size, responsive loading, and performance optimizations.
+ * Image optimization utilities
+ * Provides functions for optimizing images in the application
  */
 
-// Function to generate optimized image URLs (for production use with a CDN)
-export function getOptimizedImageUrl(url: string, options: { width?: number; quality?: number; format?: 'webp' | 'jpeg' | 'png' } = {}) {
-  const { width = 800, quality = 80, format = 'webp' } = options;
+interface ImageOptimizationOptions {
+  width?: number;
+  quality?: number;
+  format?: 'webp' | 'jpeg' | 'png';
+}
+
+/**
+ * Returns an optimized version of the image URL
+ * If using a CDN, this would transform the URL to use CDN optimization features
+ */
+export function getOptimizedImageUrl(url: string, options: ImageOptimizationOptions = {}) {
+  // Set defaults
+  const width = options.width || 800;
+  const quality = options.quality || 80;
+  const format = options.format || 'webp';
   
-  // Check if we're using an image that can be optimized
-  if (url.startsWith('https://images.unsplash.com')) {
-    // Unsplash already provides an API for image optimization
-    const params = new URLSearchParams();
-    
-    if (width) params.append('w', width.toString());
-    if (quality) params.append('q', quality.toString());
-    if (format) params.append('fm', format);
-    
-    // Return optimized Unsplash URL
+  // If URL is already using an image service like Cloudinary, Imgix, etc.
+  if (url.includes('cloudinary.com')) {
+    // Apply Cloudinary transformations
+    return url
+      .replace('/upload/', `/upload/q_${quality},w_${width},f_${format}/`);
+  }
+  
+  // If URL is from Unsplash
+  if (url.includes('unsplash.com')) {
+    // Apply Unsplash parameters
     const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}${params.toString()}`;
+    return `${url}${separator}w=${width}&q=${quality}&fm=${format}&fit=crop`;
+  }
+
+  // If URL is from Pixabay 
+  if (url.includes('pixabay.com/get/')) {
+    // Return the URL as is since we can't optimize Pixabay URLs easily
+    return url;
   }
   
-  // For Imgur images
-  if (url.startsWith('https://i.imgur.com')) {
-    // Extract the image ID and create an optimized URL
-    const imgurId = url.split('/').pop()?.split('.')[0];
-    if (imgurId) {
-      return `https://i.imgur.com/${imgurId}_${getImgurSizeCode(width)}.jpg`;
-    }
-  }
-  
-  // For other images, return original for now
+  // For other image URLs, return as is
   return url;
 }
 
-// Function to determine appropriate image sizes for responsive loading
+/**
+ * Returns the appropriate image size based on the device viewport
+ */
+export function getDeviceAppropriateImageSize(): number {
+  // Check if window is defined (browser environment)
+  if (typeof window === 'undefined') return 800;
+  
+  const width = window.innerWidth;
+  
+  // Based on common breakpoints
+  if (width <= 640) return 640; // Mobile
+  if (width <= 768) return 768; // Small tablets
+  if (width <= 1024) return 1024; // Tablets & small laptops
+  if (width <= 1280) return 1280; // Laptops
+  return 1920; // Desktops & large screens
+}
+
+/**
+ * Returns a set of responsive image sizes for different viewports
+ */
 export function getResponsiveImageSizes() {
   return {
-    small: 400,
-    medium: 800,
-    large: 1200
+    mobile: 640,
+    tablet: 768,
+    laptop: 1024,
+    desktop: 1280,
+    large: 1920
   };
 }
 
-// Helper function to get Imgur size code
+/**
+ * For services like Imgur, return the size code for the URL
+ */
 function getImgurSizeCode(width: number): string {
-  if (width <= 160) return 't'; // Tiny Thumbnail
-  if (width <= 320) return 'm'; // Medium Thumbnail
-  if (width <= 640) return 'l'; // Large Thumbnail
-  return 'h'; // Huge Thumbnail
+  if (width <= 320) return 's';
+  if (width <= 640) return 'm';
+  if (width <= 1024) return 'l';
+  return 'h';
 }
 
-// Function to get appropriate image size based on device
-export function getDeviceAppropriateImageSize(): number {
-  if (typeof window === 'undefined') return 800; // Default to medium for SSR
-  
-  const width = window.innerWidth;
-  if (width <= 640) return 400; // Mobile
-  if (width <= 1024) return 800; // Tablet
-  return 1200; // Desktop
-}
-
-// Generate responsive srcset for modern browsers
+/**
+ * Generates a srcset attribute for responsive images
+ */
 export function generateSrcSet(url: string, sizes: number[] = [400, 800, 1200]) {
+  if (!url) return '';
+  
   return sizes
     .map(size => {
       const optimizedUrl = getOptimizedImageUrl(url, { width: size });
@@ -73,24 +97,32 @@ export function generateSrcSet(url: string, sizes: number[] = [400, 800, 1200]) 
     .join(', ');
 }
 
-// Generate responsive sources for picture element
+/**
+ * Generates a set of source elements for a picture element
+ */
 export function generateResponsiveSources(url: string) {
   const sizes = getResponsiveImageSizes();
   
   return [
-    { 
-      media: '(max-width: 640px)', 
-      srcset: getOptimizedImageUrl(url, { width: sizes.small }),
+    {
+      media: '(max-width: 640px)',
+      srcSet: getOptimizedImageUrl(url, { width: sizes.mobile }),
     },
-    { 
-      media: '(max-width: 1024px)', 
-      srcset: getOptimizedImageUrl(url, { width: sizes.medium }),
+    {
+      media: '(max-width: 768px)',
+      srcSet: getOptimizedImageUrl(url, { width: sizes.tablet }),
     },
-    { 
-      media: '(min-width: 1025px)', 
-      srcset: getOptimizedImageUrl(url, { width: sizes.large }),
-    }
+    {
+      media: '(max-width: 1024px)',
+      srcSet: getOptimizedImageUrl(url, { width: sizes.laptop }),
+    },
+    {
+      media: '(max-width: 1280px)',
+      srcSet: getOptimizedImageUrl(url, { width: sizes.desktop }),
+    },
+    {
+      media: '(min-width: 1281px)',
+      srcSet: getOptimizedImageUrl(url, { width: sizes.large }),
+    },
   ];
 }
-
-// Export a React component version for optimized images in the future
