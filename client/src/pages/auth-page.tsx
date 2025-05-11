@@ -7,6 +7,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
 import { Check, User, Mail, Lock, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
+import { SocialButton } from "@/components/ui/social-buttons";
+import { Separator } from "@/components/ui/separator";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -121,221 +123,287 @@ const AuthPage = () => {
               </div>
 
               {isLogin ? (
-                <form
-                  onSubmit={handleLoginSubmit(onLoginSubmit)}
-                  className="space-y-6"
-                >
-                  <div>
-                    <label htmlFor="login-username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                      Username
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-[#86868b]" />
-                      </div>
-                      <input
-                        id="login-username"
-                        type="text"
-                        className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                          loginErrors.username ? "ring-2 ring-red-500" : ""
-                        }`}
-                        placeholder="Enter your username"
-                        {...registerLogin("username")}
-                      />
-                    </div>
-                    {loginErrors.username && (
-                      <p className="mt-1.5 text-red-600 text-xs">{loginErrors.username.message}</p>
-                    )}
+                <div className="space-y-6">
+                  {/* Social Login Buttons */}
+                  <div className="space-y-3">
+                    <SocialButton provider="google" onClick={() => console.log("Google login clicked")} />
+                    <SocialButton provider="apple" onClick={() => console.log("Apple login clicked")} />
+                    <SocialButton provider="facebook" onClick={() => console.log("Facebook login clicked")} />
                   </div>
+                  
+                  {/* Separator */}
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-2 text-xs text-[#86868b]">
+                        OR CONTINUE WITH EMAIL
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <form
+                    onSubmit={handleLoginSubmit(onLoginSubmit)}
+                    className="space-y-5"
+                  >
+                    <div>
+                      <label htmlFor="login-username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                        Username
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-5 w-5 text-[#86868b]" />
+                        </div>
+                        <input
+                          id="login-username"
+                          type="text"
+                          className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                            loginErrors.username ? "ring-2 ring-red-500" : ""
+                          }`}
+                          placeholder="Enter your username"
+                          {...registerLogin("username")}
+                        />
+                      </div>
+                      {loginErrors.username && (
+                        <p className="mt-1.5 text-red-600 text-xs">{loginErrors.username.message}</p>
+                      )}
+                    </div>
 
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <label htmlFor="login-password" className="block text-sm font-medium text-[#1d1d1f]">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <label htmlFor="login-password" className="block text-sm font-medium text-[#1d1d1f]">
+                          Password
+                        </label>
+                        <a href="/forgot-password" className="text-xs text-primary hover:text-primary/80 transition-colors">
+                          Forgot password?
+                        </a>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Lock className="h-5 w-5 text-[#86868b]" />
+                        </div>
+                        <input
+                          id="login-password"
+                          type="password"
+                          className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                            loginErrors.password ? "ring-2 ring-red-500" : ""
+                          }`}
+                          placeholder="Enter your password"
+                          {...registerLogin("password")}
+                        />
+                      </div>
+                      {loginErrors.password && (
+                        <p className="mt-1.5 text-red-600 text-xs">{loginErrors.password.message}</p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-2 py-1">
+                      <input
+                        type="checkbox"
+                        id="remember-me"
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <label htmlFor="remember-me" className="text-sm text-[#1d1d1f]">
+                        Remember me
+                      </label>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3.5 rounded-full transition-colors flex items-center justify-center"
+                      disabled={loginMutation.isPending}
+                    >
+                      {loginMutation.isPending ? (
+                        <div className="flex items-center">
+                          <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                          <span>Signing in...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          <span>Sign In</span>
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </div>
+                      )}
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {/* Social Sign Up Buttons */}
+                  <div className="space-y-3">
+                    <SocialButton provider="google" onClick={() => console.log("Google signup clicked")} />
+                    <SocialButton provider="apple" onClick={() => console.log("Apple signup clicked")} />
+                    <SocialButton provider="facebook" onClick={() => console.log("Facebook signup clicked")} />
+                  </div>
+                  
+                  {/* Separator */}
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-2 text-xs text-[#86868b]">
+                        OR SIGN UP WITH EMAIL
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <form
+                    onSubmit={handleSignupSubmit(onRegisterSubmit)}
+                    className="space-y-5"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label htmlFor="firstName" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                          First Name
+                        </label>
+                        <input
+                          id="firstName"
+                          type="text"
+                          className="w-full px-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                          placeholder="Your first name"
+                          {...registerSignup("firstName")}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="lastName" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                          Last Name
+                        </label>
+                        <input
+                          id="lastName"
+                          type="text"
+                          className="w-full px-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                          placeholder="Your last name"
+                          {...registerSignup("lastName")}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                        Username
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-5 w-5 text-[#86868b]" />
+                        </div>
+                        <input
+                          id="username"
+                          type="text"
+                          className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                            signupErrors.username ? "ring-2 ring-red-500" : ""
+                          }`}
+                          placeholder="Choose a username"
+                          {...registerSignup("username")}
+                        />
+                      </div>
+                      {signupErrors.username && (
+                        <p className="mt-1.5 text-red-600 text-xs">{signupErrors.username.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                        Email
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Mail className="h-5 w-5 text-[#86868b]" />
+                        </div>
+                        <input
+                          id="email"
+                          type="email"
+                          className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                            signupErrors.email ? "ring-2 ring-red-500" : ""
+                          }`}
+                          placeholder="Your email address"
+                          {...registerSignup("email")}
+                        />
+                      </div>
+                      {signupErrors.email && (
+                        <p className="mt-1.5 text-red-600 text-xs">{signupErrors.email.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label htmlFor="password" className="block text-sm font-medium text-[#1d1d1f] mb-2">
                         Password
                       </label>
-                      <a href="#" className="text-xs text-primary hover:text-primary/80 transition-colors">
-                        Forgot password?
-                      </a>
-                    </div>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-[#86868b]" />
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Lock className="h-5 w-5 text-[#86868b]" />
+                        </div>
+                        <input
+                          id="password"
+                          type="password"
+                          className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                            signupErrors.password ? "ring-2 ring-red-500" : ""
+                          }`}
+                          placeholder="Create a password"
+                          {...registerSignup("password")}
+                        />
                       </div>
-                      <input
-                        id="login-password"
-                        type="password"
-                        className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                          loginErrors.password ? "ring-2 ring-red-500" : ""
-                        }`}
-                        placeholder="Enter your password"
-                        {...registerLogin("password")}
-                      />
+                      {signupErrors.password && (
+                        <p className="mt-1.5 text-red-600 text-xs">{signupErrors.password.message}</p>
+                      )}
                     </div>
-                    {loginErrors.password && (
-                      <p className="mt-1.5 text-red-600 text-xs">{loginErrors.password.message}</p>
-                    )}
-                  </div>
 
-                  <button
-                    type="submit"
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3.5 rounded-full transition-colors flex items-center justify-center"
-                    disabled={loginMutation.isPending}
-                  >
-                    {loginMutation.isPending ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-                        <span>Signing in...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <span>Sign In</span>
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </div>
-                    )}
-                  </button>
-                </form>
-              ) : (
-                <form
-                  onSubmit={handleSignupSubmit(onRegisterSubmit)}
-                  className="space-y-6"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                        First Name
+                      <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#1d1d1f] mb-2">
+                        Confirm Password
                       </label>
-                      <input
-                        id="firstName"
-                        type="text"
-                        className="w-full px-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        placeholder="Your first name"
-                        {...registerSignup("firstName")}
-                      />
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Lock className="h-5 w-5 text-[#86868b]" />
+                        </div>
+                        <input
+                          id="confirmPassword"
+                          type="password"
+                          className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                            signupErrors.confirmPassword ? "ring-2 ring-red-500" : ""
+                          }`}
+                          placeholder="Confirm your password"
+                          {...registerSignup("confirmPassword")}
+                        />
+                      </div>
+                      {signupErrors.confirmPassword && (
+                        <p className="mt-1.5 text-red-600 text-xs">{signupErrors.confirmPassword.message}</p>
+                      )}
                     </div>
-                    <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                        Last Name
-                      </label>
-                      <input
-                        id="lastName"
-                        type="text"
-                        className="w-full px-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        placeholder="Your last name"
-                        {...registerSignup("lastName")}
-                      />
-                    </div>
-                  </div>
 
-                  <div>
-                    <label htmlFor="username" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                      Username
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-[#86868b]" />
-                      </div>
-                      <input
-                        id="username"
-                        type="text"
-                        className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                          signupErrors.username ? "ring-2 ring-red-500" : ""
-                        }`}
-                        placeholder="Choose a username"
-                        {...registerSignup("username")}
-                      />
+                    <div className="pt-3">
+                      <button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3.5 rounded-full transition-colors flex items-center justify-center"
+                        disabled={registerMutation.isPending}
+                      >
+                        {registerMutation.isPending ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                            <span>Creating account...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <span>Create Account</span>
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </div>
+                        )}
+                      </button>
+                      
+                      <p className="text-center text-xs text-[#86868b] mt-4">
+                        By creating an account, you agree to our{" "}
+                        <a href="/terms-of-service" className="text-primary hover:underline">
+                          Terms of Service
+                        </a>{" "}
+                        and{" "}
+                        <a href="/privacy-policy" className="text-primary hover:underline">
+                          Privacy Policy
+                        </a>
+                      </p>
                     </div>
-                    {signupErrors.username && (
-                      <p className="mt-1.5 text-red-600 text-xs">{signupErrors.username.message}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                      Email
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-[#86868b]" />
-                      </div>
-                      <input
-                        id="email"
-                        type="email"
-                        className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                          signupErrors.email ? "ring-2 ring-red-500" : ""
-                        }`}
-                        placeholder="Your email address"
-                        {...registerSignup("email")}
-                      />
-                    </div>
-                    {signupErrors.email && (
-                      <p className="mt-1.5 text-red-600 text-xs">{signupErrors.email.message}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-[#86868b]" />
-                      </div>
-                      <input
-                        id="password"
-                        type="password"
-                        className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                          signupErrors.password ? "ring-2 ring-red-500" : ""
-                        }`}
-                        placeholder="Create a password"
-                        {...registerSignup("password")}
-                      />
-                    </div>
-                    {signupErrors.password && (
-                      <p className="mt-1.5 text-red-600 text-xs">{signupErrors.password.message}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#1d1d1f] mb-2">
-                      Confirm Password
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-[#86868b]" />
-                      </div>
-                      <input
-                        id="confirmPassword"
-                        type="password"
-                        className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f7] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                          signupErrors.confirmPassword ? "ring-2 ring-red-500" : ""
-                        }`}
-                        placeholder="Confirm your password"
-                        {...registerSignup("confirmPassword")}
-                      />
-                    </div>
-                    {signupErrors.confirmPassword && (
-                      <p className="mt-1.5 text-red-600 text-xs">{signupErrors.confirmPassword.message}</p>
-                    )}
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3.5 rounded-full transition-colors flex items-center justify-center"
-                    disabled={registerMutation.isPending}
-                  >
-                    {registerMutation.isPending ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-                        <span>Creating account...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <span>Create Account</span>
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </div>
-                    )}
-                  </button>
-                </form>
+                  </form>
+                </div>
               )}
             </div>
 
