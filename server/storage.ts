@@ -1,7 +1,9 @@
 import { 
   User, InsertUser, users,
   Contact, InsertContact, contacts,
-  Subscription, InsertSubscription, subscriptions
+  Subscription, InsertSubscription, subscriptions,
+  WellnessData, InsertWellnessData, wellnessData,
+  Purchase, InsertPurchase, purchases
 } from "@shared/schema";
 
 // Interface for all storage methods
@@ -53,18 +55,26 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private contacts: Map<number, Contact>;
   private subscriptions: Map<number, Subscription>;
+  private wellnessRecords: Map<number, WellnessData>;
+  private purchases: Map<number, Purchase>;
   private userIdCounter: number;
   private contactIdCounter: number;
   private subscriptionIdCounter: number;
+  private wellnessIdCounter: number;
+  private purchaseIdCounter: number;
   public sessionStore: session.Store;
 
   constructor() {
     this.users = new Map();
     this.contacts = new Map();
     this.subscriptions = new Map();
+    this.wellnessRecords = new Map();
+    this.purchases = new Map();
     this.userIdCounter = 1;
     this.contactIdCounter = 1;
     this.subscriptionIdCounter = 1;
+    this.wellnessIdCounter = 1;
+    this.purchaseIdCounter = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -209,6 +219,96 @@ export class MemStorage implements IStorage {
     };
     this.subscriptions.set(id, subscription);
     return subscription;
+  }
+
+  // Wellness data methods
+  async getWellnessData(id: number): Promise<WellnessData | undefined> {
+    return this.wellnessRecords.get(id);
+  }
+
+  async getWellnessDataByUserId(userId: number): Promise<WellnessData[]> {
+    return Array.from(this.wellnessRecords.values())
+      .filter(record => record.userId === userId);
+  }
+
+  async getWellnessDataByDateRange(userId: number, startDate: Date, endDate: Date): Promise<WellnessData[]> {
+    return Array.from(this.wellnessRecords.values())
+      .filter(record => {
+        const recordDate = new Date(record.date);
+        return record.userId === userId && 
+               recordDate >= startDate && 
+               recordDate <= endDate;
+      });
+  }
+
+  async createWellnessData(data: InsertWellnessData): Promise<WellnessData> {
+    const id = this.wellnessIdCounter++;
+    const now = new Date();
+    
+    const wellnessRecord: WellnessData = {
+      id,
+      userId: data.userId,
+      date: data.date || now,
+      sleepHours: data.sleepHours,
+      waterIntake: data.waterIntake,
+      activityMinutes: data.activityMinutes,
+      stepsCount: data.stepsCount,
+      moodScore: data.moodScore,
+      createdAt: now
+    };
+    
+    this.wellnessRecords.set(id, wellnessRecord);
+    return wellnessRecord;
+  }
+
+  async updateWellnessData(id: number, data: Partial<Omit<WellnessData, 'id' | 'userId'>>): Promise<WellnessData | undefined> {
+    const existingRecord = await this.getWellnessData(id);
+    if (!existingRecord) return undefined;
+
+    const updatedRecord: WellnessData = {
+      ...existingRecord,
+      ...data
+    };
+
+    this.wellnessRecords.set(id, updatedRecord);
+    return updatedRecord;
+  }
+
+  // Purchase methods
+  async getPurchase(id: number): Promise<Purchase | undefined> {
+    return this.purchases.get(id);
+  }
+
+  async getPurchasesByUserId(userId: number): Promise<Purchase[]> {
+    return Array.from(this.purchases.values())
+      .filter(purchase => purchase.userId === userId);
+  }
+
+  async getRecentPurchasesByUserId(userId: number, limit: number = 5): Promise<Purchase[]> {
+    return Array.from(this.purchases.values())
+      .filter(purchase => purchase.userId === userId)
+      .sort((a, b) => new Date(b.purchaseDate).getTime() - new Date(a.purchaseDate).getTime())
+      .slice(0, limit);
+  }
+
+  async createPurchase(purchase: InsertPurchase): Promise<Purchase> {
+    const id = this.purchaseIdCounter++;
+    const now = new Date();
+    
+    const newPurchase: Purchase = {
+      id,
+      userId: purchase.userId,
+      productId: purchase.productId,
+      productName: purchase.productName,
+      productCategory: purchase.productCategory,
+      productImage: purchase.productImage,
+      price: purchase.price,
+      purchaseDate: purchase.purchaseDate || now,
+      createdAt: now
+    };
+    
+    this.purchases.set(id, newPurchase);
+    return newPurchase;
   }
 }
 
