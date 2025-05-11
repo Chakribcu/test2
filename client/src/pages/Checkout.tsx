@@ -451,64 +451,14 @@ export default function Checkout() {
                             
                             <TabsContent value="credit-card" className="mb-0">
                               <div className="space-y-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                  <FormField
-                                    control={form.control}
-                                    name="cardName"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Name on Card</FormLabel>
-                                        <FormControl>
-                                          <Input placeholder="John Smith" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  
-                                  <FormField
-                                    control={form.control}
-                                    name="cardNumber"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Card Number</FormLabel>
-                                        <FormControl>
-                                          <Input placeholder="•••• •••• •••• ••••" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
+                                <div className="p-4 bg-muted/40 rounded-lg text-center">
+                                  <p className="text-sm text-muted-foreground">
+                                    Credit card processing is currently unavailable. We're working on implementing secure payment processing. Please try alternative payment methods or check back later.
+                                  </p>
                                 </div>
-                                
-                                <div className="grid grid-cols-2 gap-6">
-                                  <FormField
-                                    control={form.control}
-                                    name="expDate"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Expiration Date</FormLabel>
-                                        <FormControl>
-                                          <Input placeholder="MM/YY" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  
-                                  <FormField
-                                    control={form.control}
-                                    name="cvv"
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Security Code (CVV)</FormLabel>
-                                        <FormControl>
-                                          <Input placeholder="•••" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
+                                <div className="flex items-center space-x-2 mt-2">
+                                  <ShieldCheck className="h-4 w-4 text-green-500" />
+                                  <p className="text-xs text-muted-foreground">Your payment information will be secure and encrypted</p>
                                 </div>
                               </div>
                             </TabsContent>
