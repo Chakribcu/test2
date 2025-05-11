@@ -7,6 +7,7 @@ import BlogPreview from "@/components/BlogPreview";
 import ContactForm from "@/components/ContactForm";
 import PopularProducts from "@/components/PopularProducts";
 import TrendingProducts from "@/components/TrendingProducts";
+import Layout from "@/components/Layout";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -23,23 +24,25 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="overflow-x-hidden">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Hero />
-        <Benefits />
-        <BrandStory />
-        <ProductFeature />
-        <PopularProducts />
-        <Testimonials />
-        <TrendingProducts />
-        <BlogPreview />
-        <ContactForm />
-      </motion.div>
-    </div>
+    <Layout>
+      <div className="overflow-x-hidden">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Hero />
+          <Benefits />
+          <BrandStory />
+          <ProductFeature />
+          <PopularProducts />
+          <Testimonials />
+          <TrendingProducts />
+          <BlogPreview />
+          <ContactForm />
+        </motion.div>
+      </div>
+    </Layout>
   );
 };
 
