@@ -146,7 +146,7 @@ const Cart = () => {
                           alt={item.name}
                           className="w-full h-full"
                           objectFit="cover"
-                          lazyLoad={true}
+                          loadingStrategy="lazy"
                         />
                       </div>
                       

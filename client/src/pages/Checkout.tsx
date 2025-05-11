@@ -57,10 +57,10 @@ const checkoutSchema = z.object({
     // Validation for credit card payment method
     if (data.paymentMethod === "credit-card") {
       return (
-        data.cardNumber?.length >= 16 &&
-        data.cardName?.length >= 2 &&
-        data.expDate?.length >= 5 &&
-        data.cvv?.length >= 3
+        data.cardNumber && data.cardNumber.length >= 16 &&
+        data.cardName && data.cardName.length >= 2 &&
+        data.expDate && data.expDate.length >= 5 &&
+        data.cvv && data.cvv.length >= 3
       );
     }
     return true;
@@ -640,7 +640,7 @@ export default function Checkout() {
                               alt={item.name}
                               className="w-full h-full"
                               objectFit="cover"
-                              lazyLoad={true}
+                              loadingStrategy="lazy"
                             />
                           </div>
                           <div className="flex-grow space-y-1">

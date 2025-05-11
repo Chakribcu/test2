@@ -5,6 +5,7 @@ import { useCart } from "@/hooks/use-cart";
 import AuthModal from "./AuthModal";
 import { AnimatePresence, motion } from "framer-motion";
 import OptimizedImage from "./ui/optimized-image";
+import { Search } from "@/components/ui/search";
 
 // Apple-inspired Header component
 const Header = () => {
@@ -123,13 +124,10 @@ const Header = () => {
           
           {/* Header Actions - Apple Style */}
           <div className="flex items-center space-x-5 relative z-10">
-            {/* Search button */}
-            <button className="text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors hidden md:flex items-center text-sm">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
-                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span className="hidden lg:inline">Search</span>
-            </button>
+            {/* Search component */}
+            <div className="hidden md:block">
+              <Search />
+            </div>
             
             {/* Cart button */}
             <Link 
