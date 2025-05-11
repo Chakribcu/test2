@@ -59,7 +59,7 @@ const Newsletter = ({ forcedDisplay = false, variant = "default" }: NewsletterPr
       <div className="w-full py-6">
         {isSubscribed ? (
           <div className="flex flex-col items-center justify-center text-center space-y-3 py-4">
-            <CheckCircleIcon className="h-10 w-10 text-primary" />
+            <CheckCircle className="h-10 w-10 text-primary" />
             <p className="text-lg font-medium">Thanks for subscribing!</p>
             <p className="text-sm text-muted-foreground">We'll keep you updated with the latest news and offers.</p>
           </div>
@@ -101,13 +101,13 @@ const Newsletter = ({ forcedDisplay = false, variant = "default" }: NewsletterPr
         <div className="max-w-3xl mx-auto text-center">
           {isSubscribed ? (
             <div className="flex flex-col items-center justify-center space-y-4 py-8">
-              <CheckCircleIcon className="h-16 w-16 text-primary" />
+              <CheckCircle className="h-16 w-16 text-primary" />
               <h2 className="text-3xl font-bold">Thanks for subscribing!</h2>
               <p className="text-muted-foreground">We'll keep you updated with the latest product launches, exclusive offers, and wellness tips.</p>
             </div>
           ) : (
             <>
-              <EnvelopeOpenIcon className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <Mail className="h-12 w-12 mx-auto mb-4 text-primary" />
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Connected</h2>
               <p className="mb-8 text-muted-foreground">Sign up to be the first to know about new products, exclusive offers, and wellness tips.</p>
               
