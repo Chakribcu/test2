@@ -12,7 +12,8 @@ import {
   Truck,
   XCircle,
   CheckCircle,
-  Clock
+  Clock,
+  Trash2
 } from "lucide-react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
