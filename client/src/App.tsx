@@ -22,6 +22,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ProductManager from "./pages/ProductManager";
 import Admin from "./pages/Admin";
+import AdminProducts from "./pages/AdminProducts";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
@@ -54,6 +55,7 @@ function Router() {
       <ProtectedRoute path="/order/:id" component={OrderDetail} />
       <ProtectedRoute path="/account" component={Account} />
       <ProtectedRoute path="/admin" component={Admin} />
+      <ProtectedRoute path="/admin/products" component={AdminProducts} />
       <ProtectedRoute path="/admin/product-manager" component={ProductManager} />
       <Route component={NotFound} />
     </Switch>
