@@ -232,26 +232,27 @@ export default function AdminProducts() {
         <Card>
           <CardContent className="pt-6">
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">
-                      <Checkbox 
-                        checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
-                        onCheckedChange={handleSelectAll}
-                        aria-checked={selectedProducts.length > 0 && selectedProducts.length < filteredProducts.length ? "mixed" : undefined}
-                      />
-                    </TableHead>
-                    <TableHead className="w-12">Image</TableHead>
-                    <TableHead>Product</TableHead>
-                    <TableHead>SKU</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
-                    <TableHead className="text-center">Inventory</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="w-12"></TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox 
+                          checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
+                          onCheckedChange={handleSelectAll}
+                          aria-checked={selectedProducts.length > 0 && selectedProducts.length < filteredProducts.length ? "mixed" : undefined}
+                        />
+                      </TableHead>
+                      <TableHead className="w-12">Image</TableHead>
+                      <TableHead>Product</TableHead>
+                      <TableHead className="hidden sm:table-cell">SKU</TableHead>
+                      <TableHead className="hidden md:table-cell">Category</TableHead>
+                      <TableHead className="text-right">Price</TableHead>
+                      <TableHead className="hidden md:table-cell text-center">Inventory</TableHead>
+                      <TableHead className="hidden sm:table-cell">Status</TableHead>
+                      <TableHead className="w-12"></TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {filteredProducts.length === 0 ? (
                     <TableRow>
@@ -276,19 +277,19 @@ export default function AdminProducts() {
                           />
                         </TableCell>
                         <TableCell className="font-medium">{product.name}</TableCell>
-                        <TableCell className="text-muted-foreground">{product.sku}</TableCell>
-                        <TableCell>
+                        <TableCell className="hidden sm:table-cell text-muted-foreground">{product.sku}</TableCell>
+                        <TableCell className="hidden md:table-cell">
                           <Badge variant="outline" className="font-normal">
                             {product.category}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">${product.price.toFixed(2)}</TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="hidden md:table-cell text-center">
                           <span className={product.inventory === 0 ? "text-destructive" : ""}>
                             {product.inventory}
                           </span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden sm:table-cell">
                           <Badge 
                             variant={
                               product.status === "Active" ? "default" :
@@ -332,6 +333,7 @@ export default function AdminProducts() {
                   )}
                 </TableBody>
               </Table>
+            </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between border-t p-4">
