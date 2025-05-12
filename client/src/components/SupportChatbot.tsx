@@ -323,8 +323,8 @@ export function SupportChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 w-96 bg-card rounded-xl shadow-xl z-40 overflow-hidden flex flex-col"
-            style={{ maxHeight: 'calc(100vh - 160px)' }}
+            className="fixed bottom-24 right-6 w-[90vw] sm:w-[350px] md:w-[400px] max-w-[450px] bg-card rounded-xl shadow-xl z-40 overflow-hidden flex flex-col"
+            style={{ maxHeight: 'calc(100vh - 160px)', maxWidth: 'calc(100vw - 48px)' }}
           >
             {/* Chat header */}
             <div className="bg-primary px-4 py-3 text-primary-foreground flex items-center justify-between">
