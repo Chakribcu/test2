@@ -143,12 +143,38 @@ const orders = [
 ];
 
 export default function AdminOrders() {
+  const [ordersData, setOrdersData] = useState<typeof orders>(orders);
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
+  // Cancel an order
+  const cancelOrder = (orderId: number) => {
+    setOrdersData(ordersData.map(order => 
+      order.id === orderId 
+        ? { ...order, status: "Cancelled", paymentStatus: "Refunded" } 
+        : order
+    ));
+  };
+  
+  // Delete an order from the admin view (in a real app this would be archived, not deleted)
+  const deleteOrder = (orderId: number) => {
+    setOrdersData(ordersData.filter(order => order.id !== orderId));
+    // Remove from selected if it was selected
+    setSelectedOrders(selectedOrders.filter(id => id !== orderId));
+  };
+  
+  // Update order status
+  const updateOrderStatus = (orderId: number, newStatus: string) => {
+    setOrdersData(ordersData.map(order => 
+      order.id === orderId 
+        ? { ...order, status: newStatus } 
+        : order
+    ));
+  };
+
   // Filter orders based on search query and status
-  const filteredOrders = orders.filter(order => {
+  const filteredOrders = ordersData.filter(order => {
     const matchesSearch = 
       searchQuery.trim() === "" || 
       order.id.toString().includes(searchQuery) ||
@@ -348,14 +374,24 @@ export default function AdminOrders() {
                                   <Printer className="mr-2 h-4 w-4" /> Print Invoice
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem disabled={order.status === "Cancelled"}>
-                                  <Truck className="mr-2 h-4 w-4" /> Update Tracking
+                                <DropdownMenuItem 
+                                  disabled={order.status === "Cancelled"}
+                                  onClick={() => updateOrderStatus(order.id, "Shipped")}
+                                >
+                                  <Truck className="mr-2 h-4 w-4" /> Mark as Shipped
                                 </DropdownMenuItem>
                                 <DropdownMenuItem 
                                   className={order.status === "Cancelled" ? "text-destructive focus:text-destructive line-through opacity-50" : ""}
                                   disabled={order.status === "Cancelled"}
+                                  onClick={() => cancelOrder(order.id)}
                                 >
                                   <XCircle className="mr-2 h-4 w-4" /> Cancel Order
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  className="text-destructive focus:text-destructive"
+                                  onClick={() => deleteOrder(order.id)}
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" /> Delete
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>

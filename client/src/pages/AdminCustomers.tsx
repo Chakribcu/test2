@@ -138,13 +138,31 @@ const customers = [
 ];
 
 export default function AdminCustomers() {
+  const [customersData, setCustomersData] = useState<typeof customers>(customers);
   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("recent");
+  
+  // Delete a single customer
+  const deleteCustomer = (customerId: number) => {
+    setCustomersData(customersData.filter(customer => customer.id !== customerId));
+    // Remove from selected if it was selected
+    setSelectedCustomers(selectedCustomers.filter(id => id !== customerId));
+  };
+  
+  // Delete multiple customers
+  const deleteSelectedCustomers = () => {
+    if (selectedCustomers.length === 0) return;
+    
+    // Filter out selected customers
+    setCustomersData(customersData.filter(customer => !selectedCustomers.includes(customer.id)));
+    // Clear selection
+    setSelectedCustomers([]);
+  };
 
   // Filter customers based on search query and status
-  const filteredCustomers = customers.filter(customer => {
+  const filteredCustomers = customersData.filter(customer => {
     const matchesSearch = 
       searchQuery.trim() === "" || 
       customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -359,7 +377,10 @@ export default function AdminCustomers() {
                                 <MailIcon className="mr-2 h-4 w-4" /> Send Email
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-destructive focus:text-destructive">
+                              <DropdownMenuItem 
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => deleteCustomer(customer.id)}
+                              >
                                 <Trash2 className="mr-2 h-4 w-4" /> Delete
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -384,7 +405,12 @@ export default function AdminCustomers() {
                     <MailIcon className="h-3.5 w-3.5 mr-1" />
                     Email
                   </Button>
-                  <Button variant="outline" size="sm" className="text-destructive">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-destructive"
+                    onClick={deleteSelectedCustomers}
+                  >
                     <Trash2 className="h-3.5 w-3.5 mr-1" />
                     Delete
                   </Button>
