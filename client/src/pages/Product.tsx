@@ -4,6 +4,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
+import { useProducts } from "@/hooks/use-products";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -119,14 +120,42 @@ const Product = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { products: globalProducts } = useProducts();
   
   // If we're on the main product listing page
   if (!id) {
     return <ProductListing navigate={navigate} toast={toast} />;
   }
   
-  // Product detail page - Find the product
-  const product = products.find(p => p.id === id);
+  // Convert the numeric id from our admin product to string id for the frontend
+  // This allows us to connect the admin products to the frontend products
+  const numId = parseInt(id);
+  
+  // First try to find the product in our global products context
+  const adminProduct = globalProducts.find(p => p.id === numId);
+  
+  // If we find it in our global context, convert it to the frontend product format
+  // Otherwise, fallback to the static products
+  const product = adminProduct 
+    ? {
+        id: adminProduct.id.toString(),
+        name: adminProduct.name,
+        slug: adminProduct.name.toLowerCase().replace(/\s+/g, '-'),
+        price: adminProduct.price,
+        rating: 4.5, // Default values for frontend display
+        reviews: 12,
+        images: [adminProduct.image, adminProduct.image], // Use the admin image
+        description: `High-quality ${adminProduct.name} from KavinoRa's ${adminProduct.category} collection.`,
+        features: [
+          "Premium materials",
+          "Ergonomic design",
+          "Eco-friendly manufacturing",
+          "Extended comfort"
+        ],
+        tags: [adminProduct.category, "Wellness", "Comfort"],
+        inStock: adminProduct.inventory > 0
+      }
+    : products.find(p => p.id === id);
   
   if (!product) {
     return <ProductNotFound navigate={navigate} />;
