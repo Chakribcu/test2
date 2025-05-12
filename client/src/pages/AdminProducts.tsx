@@ -236,8 +236,8 @@ export default function AdminProducts() {
                     <TableHead className="w-12">
                       <Checkbox 
                         checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
-                        indeterminate={selectedProducts.length > 0 && selectedProducts.length < filteredProducts.length}
                         onCheckedChange={handleSelectAll}
+                        aria-checked={selectedProducts.length > 0 && selectedProducts.length < filteredProducts.length ? "mixed" : undefined}
                       />
                     </TableHead>
                     <TableHead className="w-12">Image</TableHead>
