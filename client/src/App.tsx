@@ -20,6 +20,8 @@ import AuthPage from "@/pages/auth-page";
 import Wishlist from "@/pages/Wishlist";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ProductManager from "./pages/ProductManager";
+import Admin from "./pages/Admin";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
@@ -29,6 +31,7 @@ import { queryClient } from "@/lib/queryClient";
 import ScrollToTop from "@/components/ScrollToTop";
 import NavigationProgress from "@/components/ui/nprogress";
 import { applyScrollOptimizations } from "@/lib/scroll-fix";
+import { SupportChatbot } from "@/components/SupportChatbot";
 
 function Router() {
   return (
@@ -50,6 +53,8 @@ function Router() {
       <ProtectedRoute path="/order-history" component={OrderHistory} />
       <ProtectedRoute path="/order/:id" component={OrderDetail} />
       <ProtectedRoute path="/account" component={Account} />
+      <ProtectedRoute path="/admin" component={Admin} />
+      <ProtectedRoute path="/admin/product-manager" component={ProductManager} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -70,6 +75,7 @@ function App() {
               <Toaster />
               <ScrollToTop />
               <NavigationProgress />
+              <SupportChatbot />
               <Router />
             </TooltipProvider>
           </WishlistProvider>
