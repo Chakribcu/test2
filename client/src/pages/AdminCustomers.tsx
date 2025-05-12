@@ -290,26 +290,27 @@ export default function AdminCustomers() {
         <Card>
           <CardContent className="pt-6">
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">
-                      <Checkbox 
-                        checked={selectedCustomers.length === sortedCustomers.length && sortedCustomers.length > 0}
-                        onCheckedChange={handleSelectAll}
-                        aria-checked={selectedCustomers.length > 0 && selectedCustomers.length < sortedCustomers.length ? "mixed" : undefined}
-                      />
-                    </TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Total Spent</TableHead>
-                    <TableHead className="text-center">Orders</TableHead>
-                    <TableHead>Last Order</TableHead>
-                    <TableHead>Joined</TableHead>
-                    <TableHead className="w-12"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox 
+                          checked={selectedCustomers.length === sortedCustomers.length && sortedCustomers.length > 0}
+                          onCheckedChange={handleSelectAll}
+                          aria-checked={selectedCustomers.length > 0 && selectedCustomers.length < sortedCustomers.length ? "mixed" : undefined}
+                        />
+                      </TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead className="hidden sm:table-cell">Status</TableHead>
+                      <TableHead className="hidden md:table-cell text-right">Total Spent</TableHead>
+                      <TableHead className="hidden md:table-cell text-center">Orders</TableHead>
+                      <TableHead className="hidden sm:table-cell">Last Order</TableHead>
+                      <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                      <TableHead className="w-12"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                   {sortedCustomers.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center text-muted-foreground py-6">
@@ -339,7 +340,7 @@ export default function AdminCustomers() {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden sm:table-cell">
                           <Badge variant={customer.status === "Active" ? "default" : "secondary"}>
                             {customer.status === "Active" ? (
                               <CheckCircle className="h-3.5 w-3.5 mr-1" />
@@ -349,10 +350,10 @@ export default function AdminCustomers() {
                             {customer.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right font-medium">${customer.totalSpent.toFixed(2)}</TableCell>
-                        <TableCell className="text-center">{customer.totalOrders}</TableCell>
-                        <TableCell>{format(customer.lastOrderDate, "MMM d, yyyy")}</TableCell>
-                        <TableCell>{format(customer.joinDate, "MMM d, yyyy")}</TableCell>
+                        <TableCell className="hidden md:table-cell text-right font-medium">${customer.totalSpent.toFixed(2)}</TableCell>
+                        <TableCell className="hidden md:table-cell text-center">{customer.totalOrders}</TableCell>
+                        <TableCell className="hidden sm:table-cell">{format(customer.lastOrderDate, "MMM d, yyyy")}</TableCell>
+                        <TableCell className="hidden lg:table-cell">{format(customer.joinDate, "MMM d, yyyy")}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -391,6 +392,7 @@ export default function AdminCustomers() {
                   )}
                 </TableBody>
               </Table>
+            </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between border-t p-4">

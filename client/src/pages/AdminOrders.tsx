@@ -274,25 +274,26 @@ export default function AdminOrders() {
         <Card>
           <CardContent className="pt-6">
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">
-                      <Checkbox 
-                        checked={selectedOrders.length === filteredOrders.length && filteredOrders.length > 0}
-                        onCheckedChange={handleSelectAll}
-                        aria-checked={selectedOrders.length > 0 && selectedOrders.length < filteredOrders.length ? "mixed" : undefined}
-                      />
-                    </TableHead>
-                    <TableHead>Order #</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Payment</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
-                    <TableHead className="w-12"></TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox 
+                          checked={selectedOrders.length === filteredOrders.length && filteredOrders.length > 0}
+                          onCheckedChange={handleSelectAll}
+                          aria-checked={selectedOrders.length > 0 && selectedOrders.length < filteredOrders.length ? "mixed" : undefined}
+                        />
+                      </TableHead>
+                      <TableHead>Order #</TableHead>
+                      <TableHead className="hidden sm:table-cell">Date</TableHead>
+                      <TableHead className="hidden md:table-cell">Customer</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="hidden sm:table-cell">Payment</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                      <TableHead className="w-12"></TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {filteredOrders.length === 0 ? (
                     <TableRow>
@@ -314,8 +315,8 @@ export default function AdminOrders() {
                             />
                           </TableCell>
                           <TableCell className="font-medium">#{order.id}</TableCell>
-                          <TableCell>{format(order.date, "MMM d, yyyy")}</TableCell>
-                          <TableCell>
+                          <TableCell className="hidden sm:table-cell">{format(order.date, "MMM d, yyyy")}</TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <div>
                               <div>{order.customer.name}</div>
                               <div className="text-xs text-muted-foreground">{order.customer.email}</div>
@@ -327,7 +328,7 @@ export default function AdminOrders() {
                               {order.status}
                             </Badge>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden sm:table-cell">
                             <Badge variant="outline" className={`font-normal ${paymentBadge.color}`}>
                               {order.paymentStatus}
                             </Badge>
@@ -379,6 +380,7 @@ export default function AdminOrders() {
                   )}
                 </TableBody>
               </Table>
+            </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between border-t p-4">
