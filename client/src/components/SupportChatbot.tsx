@@ -181,14 +181,14 @@ export function SupportChatbot() {
     
     // Common product questions and answers
     const faqResponses: {[key: string]: string} = {
-      'size': 'We recommend using our foot measuring tool in the app or website for the most accurate size. If you're between sizes, we suggest going up a half size for a more comfortable fit.',
-      'return': 'We offer a 30-day satisfaction guarantee. If you're not completely satisfied, you can return unworn shoes in their original packaging for a full refund or exchange.',
-      'shipping': 'We offer free standard shipping on all orders over $75. Standard shipping takes 3-5 business days, and expedited options are available at checkout.',
-      'material': 'Our wellness shoes are made with sustainable, eco-friendly materials including recycled PET, natural rubber, and organic cotton where possible.',
-      'warranty': 'All KavinoRa products come with a 1-year limited warranty against manufacturing defects under normal use.',
-      'wash': 'Most of our shoes can be spot cleaned with mild soap and water. For detailed care instructions, please check the product-specific care guide that came with your purchase.',
-      'discount': 'We offer a 10% discount for first-time customers when you sign up for our newsletter. We also have seasonal sales and special offers for loyalty program members.',
-      'location': 'KavinoRa products are available in our online store and select retail partners nationwide. Use our store locator to find a retailer near you.',
+      "size": "We recommend using our foot measuring tool in the app or website for the most accurate size. If you're between sizes, we suggest going up a half size for a more comfortable fit.",
+      "return": "We offer a 30-day satisfaction guarantee. If you're not completely satisfied, you can return unworn shoes in their original packaging for a full refund or exchange.",
+      "shipping": "We offer free standard shipping on all orders over $75. Standard shipping takes 3-5 business days, and expedited options are available at checkout.",
+      "material": "Our wellness shoes are made with sustainable, eco-friendly materials including recycled PET, natural rubber, and organic cotton where possible.",
+      "warranty": "All KavinoRa products come with a 1-year limited warranty against manufacturing defects under normal use.",
+      "wash": "Most of our shoes can be spot cleaned with mild soap and water. For detailed care instructions, please check the product-specific care guide that came with your purchase.",
+      "discount": "We offer a 10% discount for first-time customers when you sign up for our newsletter. We also have seasonal sales and special offers for loyalty program members.",
+      "location": "KavinoRa products are available in our online store and select retail partners nationwide. Use our store locator to find a retailer near you."
     };
     
     // Check for keywords in the message to determine response
@@ -404,7 +404,7 @@ export function SupportChatbot() {
                   
                   {message.sender === 'user' && (
                     <Avatar className="h-8 w-8 ml-2 mt-1 flex-shrink-0">
-                      <AvatarImage src={user?.profilePicture || ''} alt={user?.firstName || 'User'} />
+                      <AvatarImage src={''} alt={user?.firstName || 'User'} />
                       <AvatarFallback><UserCircle className="h-4 w-4" /></AvatarFallback>
                     </Avatar>
                   )}
