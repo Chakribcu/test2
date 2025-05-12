@@ -32,6 +32,8 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-cart";
 import { WishlistProvider } from "@/hooks/use-wishlist";
 import { ProductProvider } from "@/hooks/use-products";
+import { OrderProvider } from "@/hooks/use-orders";
+import { SiteSettingsProvider } from "@/hooks/use-site-settings";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -83,13 +85,15 @@ function App() {
         <CartProvider>
           <WishlistProvider>
             <ProductProvider>
-              <TooltipProvider>
-                <Toaster />
-                <ScrollToTop />
-                <NavigationProgress />
-                <SupportChatbot />
-                <Router />
-              </TooltipProvider>
+              <OrderProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <ScrollToTop />
+                  <NavigationProgress />
+                  <SupportChatbot />
+                  <Router />
+                </TooltipProvider>
+              </OrderProvider>
             </ProductProvider>
           </WishlistProvider>
         </CartProvider>

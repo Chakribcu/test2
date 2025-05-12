@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { useOrders } from "@/hooks/use-orders";
 import { 
   Search, 
   Filter, 
@@ -144,35 +145,10 @@ const orders = [
 ];
 
 export default function AdminOrders() {
-  const [ordersData, setOrdersData] = useState<typeof orders>(orders);
+  const { orders: ordersData, updateOrderStatus, cancelOrder, deleteOrder } = useOrders();
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
-
-  // Cancel an order
-  const cancelOrder = (orderId: number) => {
-    setOrdersData(ordersData.map(order => 
-      order.id === orderId 
-        ? { ...order, status: "Cancelled", paymentStatus: "Refunded" } 
-        : order
-    ));
-  };
-  
-  // Delete an order from the admin view (in a real app this would be archived, not deleted)
-  const deleteOrder = (orderId: number) => {
-    setOrdersData(ordersData.filter(order => order.id !== orderId));
-    // Remove from selected if it was selected
-    setSelectedOrders(selectedOrders.filter(id => id !== orderId));
-  };
-  
-  // Update order status
-  const updateOrderStatus = (orderId: number, newStatus: string) => {
-    setOrdersData(ordersData.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus } 
-        : order
-    ));
-  };
 
   // Filter orders based on search query and status
   const filteredOrders = ordersData.filter(order => {
