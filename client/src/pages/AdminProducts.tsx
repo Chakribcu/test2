@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { useProducts } from "@/hooks/use-products";
 import { 
   Plus, 
   Search, 
@@ -113,40 +114,14 @@ const products = [
 ];
 
 export default function AdminProducts() {
-  const [productsData, setProductsData] = useState<typeof products>(products);
+  const { products: productsData, deleteProduct, deleteManyProducts: deleteSelectedProducts, updateProductStatus } = useProducts();
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
-  // Delete a product
-  const deleteProduct = (productId: number) => {
-    setProductsData(productsData.filter(product => product.id !== productId));
-    // Remove from selected if it was selected
-    setSelectedProducts(selectedProducts.filter(id => id !== productId));
-  };
-  
-  // Delete multiple products
-  const deleteSelectedProducts = () => {
-    if (selectedProducts.length === 0) return;
-    
-    // Filter out selected products
-    setProductsData(productsData.filter(product => !selectedProducts.includes(product.id)));
-    // Clear selection
-    setSelectedProducts([]);
-  };
-  
-  // Update product status
-  const updateProductStatus = (productId: number, newStatus: string) => {
-    setProductsData(productsData.map(product => 
-      product.id === productId 
-        ? { ...product, status: newStatus } 
-        : product
-    ));
-  };
-
   // Filter products based on search query, category, and status
-  const filteredProducts = productsData.filter(product => {
+  const filteredProducts = productsData.filter((product) => {
     const matchesSearch = 
       searchQuery.trim() === "" || 
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

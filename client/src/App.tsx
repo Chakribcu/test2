@@ -82,13 +82,15 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
-            <TooltipProvider>
-              <Toaster />
-              <ScrollToTop />
-              <NavigationProgress />
-              <SupportChatbot />
-              <Router />
-            </TooltipProvider>
+            <ProductProvider>
+              <TooltipProvider>
+                <Toaster />
+                <ScrollToTop />
+                <NavigationProgress />
+                <SupportChatbot />
+                <Router />
+              </TooltipProvider>
+            </ProductProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>
