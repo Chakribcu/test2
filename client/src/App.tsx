@@ -86,13 +86,15 @@ function App() {
           <WishlistProvider>
             <ProductProvider>
               <OrderProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <ScrollToTop />
-                  <NavigationProgress />
-                  <SupportChatbot />
-                  <Router />
-                </TooltipProvider>
+                <SiteSettingsProvider>
+                  <TooltipProvider>
+                    <Toaster />
+                    <ScrollToTop />
+                    <NavigationProgress />
+                    <SupportChatbot />
+                    <Router />
+                  </TooltipProvider>
+                </SiteSettingsProvider>
               </OrderProvider>
             </ProductProvider>
           </WishlistProvider>

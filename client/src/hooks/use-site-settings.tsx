@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -154,11 +154,14 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
       return defaultSettings;
     },
     // Disable for now since we don't have a real API
-    enabled: false,
-    onSuccess: (data) => {
-      setSiteSettings(data);
-    }
+    enabled: false
   });
+  
+  // Effect to update settings when fetched
+  useEffect(() => {
+    // Initialize with default settings
+    setSiteSettings(defaultSettings);
+  }, []);
 
   // Update social links mutation
   const updateSocialLinksMutation = useMutation({
